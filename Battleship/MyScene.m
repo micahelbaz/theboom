@@ -30,7 +30,7 @@ typedef struct {
         _game = [[BattleshipGame alloc] init];
         _game.gameCenter.match.delegate = self;
         if(_game.localPlayer.isHost) {
-            [self sendMap];
+            //[self sendMap];
             [_game updateMap:_game.localPlayer.playerFleet];
             [_game updateMap:_game.localPlayer.enemyFleet];
             [self sendFleetLocation];
