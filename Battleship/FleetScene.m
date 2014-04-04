@@ -218,6 +218,7 @@
         for (int i=1; i < receivedMessage.count; i++) {
             [enemyShips addObject:(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]]];
         }
+        _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:enemyShips];
         if (_opponentReady && _youReady) {
             SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
             [self.scene.view presentScene:scene];
