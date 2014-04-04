@@ -148,6 +148,7 @@
     NSMutableArray* message = [[NSMutableArray alloc] init];
     if (doesAccept) {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"acceptCoralRequest"]];
+        [_game.gameMap initializeCoral:_coralPositions];
     }
     else {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"rejectCoralRequest"]];
@@ -211,8 +212,10 @@
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
         [_game.gameMap initializeCoral:_coralPositions];
+        NSLOG("ACCCEEPPPPPPPT");
     }
     if ([type isEqualToString:@"begin"]) {
+        NSLog(@"ASDFASDFADSF");
         _opponentReady = TRUE;
         NSMutableArray *enemyShips = [[NSMutableArray alloc] init];
         for (int i=1; i < receivedMessage.count; i++) {
