@@ -129,6 +129,7 @@
     for (Coordinate* c in _coralPositions) {
        [message addObject:[NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:c.xCoord]]];
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:c.yCoord]]];
+        NSLog(@"%d %d", c.xCoord, c.yCoord);
     }
     
     NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
@@ -160,12 +161,14 @@
     
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
+    NSLog(@"%@", type);
     if ([type isEqualToString:@"coralData"]) {
         _coralPositions = [[NSMutableSet alloc] init];
         for (int i=1; i < receivedMessage.count; i+=2) {
             Coordinate *c = [[Coordinate alloc] init];
             c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
             c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
+            NSLog(@"%d %d", c.xCoord, c.yCoord);
             [_coralPositions addObject:c];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
