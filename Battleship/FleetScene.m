@@ -241,11 +241,23 @@
             [self removeChildrenInArray:remove];
             [self sendCoral];
         }
-        else if ([[nodeTouched.name substringToIndex:4] isEqualToString:@"base"]){
+        else if ([[nodeTouched.name substringToIndex:4] isEqualToString:@"base"] && _configurationSet){
             int index = [[nodeTouched.name substringFromIndex:4] intValue];
-            NSLog(@"%d", index);
             [self placeNextShipAtIndex:index];
             _lastIndex = index;
+            BOOL flag = TRUE;
+            for (int i = 0; i < _placedShip.count; i++) {
+                if ([_placedShip[i] intValue] == -1 ) {
+                    flag = FALSE;
+                }
+            }
+            if (flag) {
+                SKSpriteNode *start = [SKSpriteNode spriteNodeWithImageNamed:@"begingame"];
+                start.position = CGPointMake(CGRectGetMidX(_fleetBackground.frame), (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+                start.name = @"start game";
+                [self addChild:start];
+
+            }
         }
     }
 }
