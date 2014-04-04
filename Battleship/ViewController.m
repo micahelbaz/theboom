@@ -47,7 +47,7 @@
         skView.showsNodeCount = YES;
         
         // Create and configure the scene.
-        SKScene* scene = [FleetScene sceneWithSize:skView.bounds.size];
+        SKScene* scene = [StartScreen sceneWithSize:skView.bounds.size];
         scene.scaleMode = SKSceneScaleModeAspectFill;
 
       

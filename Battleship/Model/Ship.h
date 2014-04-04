@@ -28,6 +28,7 @@
 @property NSMutableArray* viableActions; //of Strings
 
 @property NSMutableArray* visibleCoordinates;
+@property NSMutableArray* visibleCannonCoordinates;
 @property BOOL isDestroyed;
 
 - (instancetype) initWithLocation: (Coordinate*) initialPosition

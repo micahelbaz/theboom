@@ -22,6 +22,7 @@
         [_viableActions addObject:@"Move"];
         [_viableActions addObject:@"Rotate"];
         _visibleCoordinates = [[NSMutableArray alloc]init];
+        _visibleCannonCoordinates = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -57,6 +58,7 @@
     }
     if(host){
     _visibleCoordinates = [[NSMutableArray alloc]init];
+    _visibleCannonCoordinates = [[NSMutableArray alloc]init];
     Coordinate *firstBlock = [[Coordinate alloc] initWithXCoordinate:newCoord.xCoord YCoordinate:newCoord.yCoord initiallyFacing:newCoord.direction];
     if(newCoord.direction == NORTH){
         firstBlock.yCoord-=(self.size-1);
@@ -64,6 +66,7 @@
         int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
         
         int yRange = newCoord.yCoord-self.size+2+self.radarRange.startRange;
+        int xCannonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
        
        
         for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){

@@ -34,7 +34,7 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
+    SKScene * scene = [FleetScene sceneWithSize:self.scene.view.bounds.size];
     [self.scene.view presentScene:scene];
 }
          

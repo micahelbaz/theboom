@@ -47,9 +47,9 @@
         self.radarRange.rangeHeight = 6;
         self.radarRange.rangeWidth = 1;
         self.radarRange.startRange = 0;
-        self.canonRange.rangeHeight = 5;
-        self.canonRange.rangeWidth = 3;
-        self.canonRange.startRange = -1;
+        self.canonRange.rangeHeight = 3;
+        self.canonRange.rangeWidth = 1;
+        self.canonRange.startRange = -2;
     }
     return self;
 }
