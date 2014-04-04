@@ -33,11 +33,9 @@ typedef struct {
             //[self sendMap];
             [_game updateMap:_game.localPlayer.playerFleet];
             [_game updateMap:_game.localPlayer.enemyFleet];
-            [self sendFleetLocation];
             _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
             [self addChild:_mainGameController.containers.overallNode];
-            [self drawRadar];
-        }
+            //[self drawRadar];
     }
     return self;
 }
