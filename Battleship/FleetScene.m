@@ -30,21 +30,19 @@
         _fleetBackground.yScale = self.frame.size.height * 10/_fleetBackground.frame.size.height/30;
         [self addChild:backgroundSprite];
         [self addChild:_fleetBackground];
-       
-        if(_game.localPlayer.isHost){
+        if(_game.localPlayer.isHost) {
             SKSpriteNode *nextconfig = [SKSpriteNode spriteNodeWithImageNamed:@"reefconfig"];
             nextconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ nextconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
              nextconfig.name = @"next configuration";
             [self addChild:nextconfig];
+              [self initializeCoral];
         }
         else{
-            SKSpriteNode *accept = [SKSpriteNode spriteNodeWithImageNamed:@"reefconfig"];
-            nextconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ nextconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
-            nextconfig.name = @"next configuration";
-            [self addChild:nextconfig];
+       
+          
         }
         
-        [self initializeCoral];
+  
         [self initializeFleet];
     }
     return self;

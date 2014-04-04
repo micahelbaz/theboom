@@ -67,6 +67,16 @@
         
         int yRange = newCoord.yCoord-self.size+2+self.radarRange.startRange;
         int xCannonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
+        int yCannonRange = newCoord.yCoord-self.size+2+self.canonRange.startRange;
+        
+        for(int z = xCannonRange; z<=firstBlock.xCoord+self.canonRange.rangeWidth; z++){
+            for(int x = yCannonRange; x<newCoord.yCoord+self.canonRange.rangeWidth; x++){
+                Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:z YCoordinate:x initiallyFacing:NORTH];
+                if([coord isWithinMap]){
+                    [self.visibleCannonCoordinates addObject:coord];
+                }
+            }
+        }
        
        
         for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){
@@ -74,7 +84,6 @@
                 Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:NORTH];
                 if([c isWithinMap]){
                     [self.visibleCoordinates addObject:c];
-                    
                 }
             }
         }
