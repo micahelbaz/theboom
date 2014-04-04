@@ -71,6 +71,29 @@
         [self addChild:base];
     }
 }
+
+-(void) addHostButtons {
+    SKSpriteNode *nextconfig = [SKSpriteNode spriteNodeWithImageNamed:@"reefconfig"];
+    nextconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ nextconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+    nextconfig.name = @"next configuration";
+    [self addChild:nextconfig];
+    SKSpriteNode *sendconfig = [SKSpriteNode spriteNodeWithImageNamed:@"send reef request"];
+    sendconfig.position = CGPointMake(CGRectGetMaxX(_fleetBackground.frame)- sendconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+    sendconfig.name = @"send configuration";
+    [self addChild:sendconfig];
+}
+
+-(void) addJoinButtons {
+    SKSpriteNode *acceptconfig = [SKSpriteNode spriteNodeWithImageNamed:@"accept reef request"];
+    acceptconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ acceptconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+    acceptconfig.name = @"accept configuration";
+    [self addChild:acceptconfig];
+    SKSpriteNode *rejectconfig = [SKSpriteNode spriteNodeWithImageNamed:@"reject config"];
+    rejectconfig.position = CGPointMake(CGRectGetMaxX(_fleetBackground.frame)- rejectconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+    rejectconfig.name = @"reject configuration";
+    [self addChild:rejectconfig];
+}
+
 -(void) initializeCoral {
     [self generateCoral];
     [self addCoral];
@@ -125,16 +148,24 @@
 }
 
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
-    _coralPositions = [[NSMutableSet alloc] init];
+    
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
     if ([type isEqualToString:@"coralData"]) {
+        _coralPositions = [[NSMutableSet alloc] init];
         for (int i=1; i < receivedMessage.count; i+=2) {
             Coordinate *c = [[Coordinate alloc] init];
             c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
             c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             [_coralPositions addObject:c];
         }
+        NSMutableArray *remove = [[NSMutableArray alloc] init];
+        for (SKSpriteNode *button in self.children) {
+            if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"reject configuration"]) {
+                [remove addObject:button];
+            }
+        }
+        [self removeChildrenInArray:remove];
         NSMutableArray *corals = [[NSMutableArray alloc] init];
         for (SKSpriteNode *coral in self.children) {
             if ([coral.name isEqualToString:@"coral"]) {
@@ -144,6 +175,7 @@
         [self removeChildrenInArray:corals];
         [self initializeCoral];
         [self addCoral];
+        [self addJoinButtons];
     }
 }
 
@@ -164,6 +196,13 @@
             [self initializeCoral];
         }
         if ([nodeTouched.name isEqualToString:@"send configuration"]) {
+            NSMutableArray *remove = [[NSMutableArray alloc] init];
+            for (SKSpriteNode *button in self.children) {
+                if ([button.name isEqualToString:@"next configuration"] || [button.name isEqualToString:@"send configuration"]) {
+                    [remove addObject:button];
+                }
+            }
+            [self removeChildrenInArray:remove];
             [self sendCoral];
         }
         else if ([[nodeTouched.name substringToIndex:4] isEqualToString:@"base"]){
