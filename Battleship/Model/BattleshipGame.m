@@ -13,6 +13,14 @@
 -(void)match:(GKMatch*)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID;
 @end
 @implementation BattleshipGame
+
+static BattleshipGame *sharedGame = nil;
++ (BattleshipGame *)sharedInstance {
+    if(!sharedGame){
+        sharedGame = [[BattleshipGame alloc] init];
+    }
+    return sharedGame;
+}
 -(instancetype) init {
     self = [super init];
     if (self) {

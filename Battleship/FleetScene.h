@@ -8,6 +8,13 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "Coordinate.h"
+#import "BattleshipGame.h"
+
 @interface FleetScene : SKScene
 
+@property (nonatomic, strong) BattleshipGame *game;
+@property (nonatomic, strong) SKSpriteNode *fleetBackground;
+@property (nonatomic, strong) NSMutableArray *unplacedShips;
+@property (nonatomic, strong) NSMutableArray* placedShip;
+@property int lastIndex;
 @end

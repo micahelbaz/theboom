@@ -20,6 +20,7 @@
 @property(strong, nonatomic) GCHelper* gameCenter;
 @property(strong, nonatomic) Player* localPlayer;
 
++ (BattleshipGame *)sharedInstance;
 -(instancetype) init;
 -(void)moveShipfrom: (Coordinate*) origin
                  to:(Coordinate*) destination;

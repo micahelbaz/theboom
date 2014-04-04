@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>AA43723E-E5FD-4DB6-9221-E64E9558DCF2</string>
+	<string>0FE6C85B-94AD-4B68-9151-EE479704F52C</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Battleship</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>5B0E7CAB-2723-49E1-9F6D-F8D33A71F003</key>
-		<string>https://github.com/micahelbaz/theboom.git</string>
+		<key>66B96C0A-EBDF-405C-8ADA-5DC6A32FD195</key>
+		<string>ssh://github.com/micahelbaz/theboom.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Battleship.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>5B0E7CAB-2723-49E1-9F6D-F8D33A71F003</key>
+		<key>66B96C0A-EBDF-405C-8ADA-5DC6A32FD195</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/micahelbaz/theboom.git</string>
+	<string>ssh://github.com/micahelbaz/theboom.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>5B0E7CAB-2723-49E1-9F6D-F8D33A71F003</string>
+	<string>66B96C0A-EBDF-405C-8ADA-5DC6A32FD195</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>5B0E7CAB-2723-49E1-9F6D-F8D33A71F003</string>
+			<string>66B96C0A-EBDF-405C-8ADA-5DC6A32FD195</string>
 			<key>IDESourceControlWCCName</key>
 			<string>master4</string>
 		</dict>
