@@ -170,6 +170,7 @@
             c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             NSLog(@"%d %d", c.xCoord, c.yCoord);
             [_coralPositions addObject:c];
+            [self addCoral];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
         for (SKSpriteNode *button in self.children) {
