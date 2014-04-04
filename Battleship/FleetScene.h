@@ -10,11 +10,12 @@
 #import "Coordinate.h"
 #import "BattleshipGame.h"
 
-@interface FleetScene : SKScene
+@interface FleetScene : SKScene <GKMatchDelegate>
 
 @property (nonatomic, strong) BattleshipGame *game;
 @property (nonatomic, strong) SKSpriteNode *fleetBackground;
 @property (nonatomic, strong) NSMutableArray *unplacedShips;
 @property (nonatomic, strong) NSMutableArray* placedShip;
+@property (nonatomic, strong) NSMutableSet *coralPositions;
 @property int lastIndex;
 @end
