@@ -211,17 +211,25 @@
             [self initializeCoral];
         }
         if ([nodeTouched.name isEqualToString:@"accept configuration"]) {
-            _configurationSet = TRUE;
-        }
-        if ([nodeTouched.name isEqualToString:@"reject configuration"]) {
             NSMutableArray *remove = [[NSMutableArray alloc] init];
             for (SKSpriteNode *button in self.children) {
-                if ([button.name isEqualToString:@"next configuration"] || [button.name isEqualToString:@"send configuration"]) {
+                if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"request configuration"]) {
                     [remove addObject:button];
                 }
             }
             [self removeChildrenInArray:remove];
-            [self sendCoral];
+            _configurationSet = TRUE;
+            [self sendResponse:TRUE];
+        }
+        if ([nodeTouched.name isEqualToString:@"reject configuration"]) {
+            NSMutableArray *remove = [[NSMutableArray alloc] init];
+            for (SKSpriteNode *button in self.children) {
+                if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"request configuration"]) {
+                    [remove addObject:button];
+                }
+            }
+            [self removeChildrenInArray:remove];
+            [self sendResponse:FALSE];
         }
         if ([nodeTouched.name isEqualToString:@"send configuration"]) {
             NSMutableArray *remove = [[NSMutableArray alloc] init];
