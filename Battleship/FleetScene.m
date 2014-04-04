@@ -133,6 +133,14 @@
             c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             [_coralPositions addObject:c];
         }
+        NSMutableArray *corals = [[NSMutableArray alloc] init];
+        for (SKSpriteNode *coral in self.children) {
+            if ([coral.name isEqualToString:@"coral"]) {
+                [corals addObject:coral];
+            }
+        }
+        [self removeChildrenInArray:corals];
+        [self initializeCoral];
         [self addCoral];
     }
 }
