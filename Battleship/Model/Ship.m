@@ -93,9 +93,8 @@
         firstBlock.yCoord+=(self.size-1);
         [self.visibleCoordinates addObject:firstBlock];
         int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
-
-
         int yRange = newCoord.yCoord+self.size-2-self.radarRange.startRange;
+         int xCanonRange;
         for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){
             for(int j = yRange; j>newCoord.yCoord-self.radarRange.rangeHeight-self.radarRange.startRange; j--){
                 Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:SOUTH];
@@ -112,7 +111,7 @@
         [self.visibleCoordinates addObject:firstBlock];
         int xRange = (newCoord.xCoord)-self.radarRange.rangeHeight;
         int yRange = firstBlock.yCoord-self.radarRange.rangeWidth;
-        int xCanonRange;
+       
         for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.startRange; i++){
             for(int j = yRange; j>firstBlock.yCoord+self.radarRange.rangeWidth; j--){
                 Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:WEST];
