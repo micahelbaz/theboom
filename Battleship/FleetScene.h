@@ -18,4 +18,5 @@
 @property (nonatomic, strong) NSMutableArray* placedShip;
 @property (nonatomic, strong) NSMutableSet *coralPositions;
 @property int lastIndex;
+@property BOOL configurationSet;
 @end

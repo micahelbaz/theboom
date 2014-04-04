@@ -18,6 +18,7 @@
         _unplacedShips = [[NSMutableArray alloc] init];
         _placedShip = [[NSMutableArray alloc] init];
         _lastIndex = -1;
+        _configurationSet = FALSE;
         SKTexture *textureImage = [SKTexture textureWithImageNamed:@"menu background"];
         SKSpriteNode *backgroundSprite = [SKSpriteNode spriteNodeWithTexture:textureImage];
         backgroundSprite = [SKSpriteNode spriteNodeWithTexture:textureImage];
@@ -79,7 +80,7 @@
     acceptconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ acceptconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
     acceptconfig.name = @"accept configuration";
     [self addChild:acceptconfig];
-    SKSpriteNode *rejectconfig = [SKSpriteNode spriteNodeWithImageNamed:@"reject config"];
+    SKSpriteNode *rejectconfig = [SKSpriteNode spriteNodeWithImageNamed:@"rejectconfig"];
     rejectconfig.position = CGPointMake(CGRectGetMaxX(_fleetBackground.frame)- rejectconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
     rejectconfig.name = @"reject configuration";
     [self addChild:rejectconfig];
@@ -138,6 +139,23 @@
     return false;
 }
 
+-(BOOL)sendResponse:(BOOL) doesAccept {
+    NSError* error;
+    NSMutableArray* message = [[NSMutableArray alloc] init];
+    if (doesAccept) {
+        [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"acceptCoralRequest"]];
+    }
+    else {
+        [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"rejectCoralRequest"]];
+    }
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
+    [_game.gameCenter.match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
+}
+
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -168,6 +186,12 @@
         [self addCoral];
         [self addJoinButtons];
     }
+    if ([type isEqualToString:@"rejectCoralRequest"]) {
+        [self addHostButtons];
+    }
+    if ([type isEqualToString:@"acceptCoralRequest"]) {
+        _configurationSet = TRUE;
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -185,6 +209,19 @@
             }
             [self removeChildrenInArray:corals];
             [self initializeCoral];
+        }
+        if ([nodeTouched.name isEqualToString:@"accept configuration"]) {
+            _configurationSet = TRUE;
+        }
+        if ([nodeTouched.name isEqualToString:@"reject configuration"]) {
+            NSMutableArray *remove = [[NSMutableArray alloc] init];
+            for (SKSpriteNode *button in self.children) {
+                if ([button.name isEqualToString:@"next configuration"] || [button.name isEqualToString:@"send configuration"]) {
+                    [remove addObject:button];
+                }
+            }
+            [self removeChildrenInArray:remove];
+            [self sendCoral];
         }
         if ([nodeTouched.name isEqualToString:@"send configuration"]) {
             NSMutableArray *remove = [[NSMutableArray alloc] init];
