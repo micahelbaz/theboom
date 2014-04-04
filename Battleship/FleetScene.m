@@ -161,6 +161,7 @@
     
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
+    NSLog(@"%@", type);
     if ([type isEqualToString:@"coralData"]) {
         _coralPositions = [[NSMutableSet alloc] init];
         for (int i=1; i < receivedMessage.count; i+=2) {
