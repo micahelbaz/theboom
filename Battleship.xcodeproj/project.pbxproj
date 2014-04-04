@@ -38,6 +38,7 @@
 		8753F39318CB8579009C38B4 /* VisualBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8753F38818CB8579009C38B4 /* VisualBar.m */; };
 		8753F39418CB8A35009C38B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51171530189A390200BE75A9 /* Main.storyboard */; };
 		8784B73618CBDFB9003F3C11 /* MatchScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8784B73518CBDFB9003F3C11 /* MatchScreen.m */; };
+		878C15E918E4D59B00084ED7 /* FleetScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 878C15E818E4D59B00084ED7 /* FleetScene.m */; };
 		879F472E18CBED9900BDDFB2 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 879F472D18CBED9900BDDFB2 /* GCHelper.m */; };
 		87AAA64C18C1386300EF6FED /* StartScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 87AAA64B18C1386300EF6FED /* StartScreen.m */; };
 		87AD0BE318BC6B29001BCD2F /* BattleshipGame.m in Sources */ = {isa = PBXBuildFile; fileRef = 87AD0BC418BC6B28001BCD2F /* BattleshipGame.m */; };
@@ -119,6 +120,8 @@
 		8753F38818CB8579009C38B4 /* VisualBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualBar.m; sourceTree = "<group>"; };
 		8784B73418CBDFB9003F3C11 /* MatchScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchScreen.h; sourceTree = "<group>"; };
 		8784B73518CBDFB9003F3C11 /* MatchScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchScreen.m; sourceTree = "<group>"; };
+		878C15E718E4D59B00084ED7 /* FleetScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FleetScene.h; sourceTree = "<group>"; };
+		878C15E818E4D59B00084ED7 /* FleetScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FleetScene.m; sourceTree = "<group>"; };
 		87964BB518CA6EAC00D38181 /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCHelper.h; path = /Users/robertschneidman/Developer/master4/Battleship/HelperFunctions/GCHelper.h; sourceTree = "<absolute>"; };
 		87964BB618CA6EAC00D38181 /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCHelper.m; path = /Users/robertschneidman/Developer/master4/Battleship/HelperFunctions/GCHelper.m; sourceTree = "<absolute>"; };
 		879F472C18CBED9900BDDFB2 /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHelper.h; sourceTree = "<group>"; };
@@ -234,6 +237,8 @@
 				51171530189A390200BE75A9 /* Main.storyboard */,
 				51171533189A390200BE75A9 /* ViewController.h */,
 				51171534189A390200BE75A9 /* ViewController.m */,
+				878C15E718E4D59B00084ED7 /* FleetScene.h */,
+				878C15E818E4D59B00084ED7 /* FleetScene.m */,
 				87AAA64A18C1386300EF6FED /* StartScreen.h */,
 				87AAA64B18C1386300EF6FED /* StartScreen.m */,
 				51171536189A390200BE75A9 /* MyScene.h */,
@@ -292,6 +297,7 @@
 				9415F99218CA6E340067F500 /* Player.h */,
 				9415F99318CA6E340067F500 /* Player.m */,
 				87AD0BC318BC6B28001BCD2F /* BattleshipGame.h */,
+				87AD0BC418BC6B28001BCD2F /* BattleshipGame.m */,
 				87AD0BC518BC6B28001BCD2F /* Coordinate.h */,
 				87AD0BC618BC6B28001BCD2F /* Coordinate.m */,
 				87AD0BC718BC6B28001BCD2F /* Cruiser.h */,
@@ -299,7 +305,6 @@
 				87AD0BC918BC6B28001BCD2F /* Destroyer.h */,
 				87AD0BCA18BC6B28001BCD2F /* Destroyer.m */,
 				87AD0BCB18BC6B28001BCD2F /* DirectionType.h */,
-				87AD0BC418BC6B28001BCD2F /* BattleshipGame.m */,
 				87AD0BCC18BC6B28001BCD2F /* Fleet.h */,
 				87AD0BCD18BC6B28001BCD2F /* Fleet.m */,
 				87AD0BCE18BC6B28001BCD2F /* Map.h */,
@@ -477,6 +482,7 @@
 				8749A09C18CADDEF006B1B89 /* ShipActionHelper.m in Sources */,
 				87AD0BE318BC6B29001BCD2F /* BattleshipGame.m in Sources */,
 				8753F38D18CB8579009C38B4 /* Helpers.m in Sources */,
+				878C15E918E4D59B00084ED7 /* FleetScene.m in Sources */,
 				879F472E18CBED9900BDDFB2 /* GCHelper.m in Sources */,
 				87AD0BEB18BC6B29001BCD2F /* Range.m in Sources */,
 				87AD0BEA18BC6B29001BCD2F /* RadarBoat.m in Sources */,

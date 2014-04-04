@@ -11,6 +11,5 @@
 #import "GCHelper.h"
 @interface MatchScreen : SKScene
 @property (strong, nonatomic) UIViewController* parentView;
-
 @end
 
