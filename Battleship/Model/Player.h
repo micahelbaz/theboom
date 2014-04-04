@@ -15,7 +15,7 @@
 
 @property (strong, nonatomic) NSMutableArray* booleanGrid;
 @property (strong, nonatomic) NSMutableArray* radarGrid;
-x
+
 @property(strong, nonatomic) Fleet* playerFleet;
 @property (strong, nonatomic) Fleet* enemyFleet;
 @property NSString* playerID;

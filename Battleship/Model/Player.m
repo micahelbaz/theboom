@@ -16,8 +16,7 @@
         _playerID = playerID;
         _isHost = player;
         self.radarGrid = [[NSMutableArray alloc] init];
-        self.dockingCoordinates = [[NSMutableArray alloc]init];
-        self.baseCoordinates = [[NSMutableArray alloc]init];
+    
         
         
         

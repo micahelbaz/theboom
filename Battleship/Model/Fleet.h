@@ -21,7 +21,6 @@
 @property (strong, nonatomic) NSArray* shipArray;
 @property (strong, nonatomic) NSMutableArray* baseCoordinates;
 @property (strong, nonatomic) NSMutableArray* dockingCoordinates;
-
 - (instancetype)initWith:(BOOL)isHost;
 - (Ship*)getShipWithCoord:(Coordinate*) location;
 - (NSMutableArray*)getRotationRangeOf:(Ship*) s;

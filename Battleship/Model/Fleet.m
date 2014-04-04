@@ -36,7 +36,8 @@
         MineLayer *m1;
         MineLayer *m2;
         RadarBoat *r1;
-
+        self.dockingCoordinates = [[NSMutableArray alloc]init];
+        self.baseCoordinates = [[NSMutableArray alloc]init];
         if(isHost){
             cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:5 initiallyFacing:NORTH];
             cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:5 initiallyFacing:NORTH];
