@@ -93,6 +93,7 @@
 
 -(void) addCoral {
     for (Coordinate *c in _coralPositions) {
+ 
         SKSpriteNode *coral = [SKSpriteNode spriteNodeWithImageNamed:@"corals"];
         coral.name = @"coral";
         coral.xScale = _fleetBackground.frame.size.width/24/coral.frame.size.width;
@@ -168,9 +169,7 @@
             Coordinate *c = [[Coordinate alloc] init];
             c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
             c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
-            NSLog(@"%d %d", c.xCoord, c.yCoord);
             [_coralPositions addObject:c];
-            [self addCoral];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
         for (SKSpriteNode *button in self.children) {
@@ -186,9 +185,8 @@
             }
         }
         [self removeChildrenInArray:corals];
-        [self initializeCoral];
-        [self addCoral];
         [self addJoinButtons];
+        [self addCoral];
     }
     if ([type isEqualToString:@"rejectCoralRequest"]) {
         [self addHostButtons];

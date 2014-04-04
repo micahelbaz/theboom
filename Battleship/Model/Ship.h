@@ -33,7 +33,7 @@
 
 - (instancetype) initWithLocation: (Coordinate*) initialPosition
                           andName:(NSString*) nameOfShip;
--(void)positionShip:(Coordinate *)destination isHost:(BOOL)host ;
+-(void)positionShip:(Coordinate *)destination isHost:(BOOL)host dockingArray:(NSMutableArray*)dock;
 - (void)repair;
 - (void)rotate: (Rotation)destination;
 - (NSMutableArray*) getHeadLocationsOfMove;

@@ -60,13 +60,13 @@ static BattleshipGame *sharedGame = nil;
 -(void)moveShipfrom:(Coordinate *)origin to:(Coordinate *)destination {
     Ship* s = [_localPlayer.playerFleet getShipWithCoord:origin];
     [self removeShipFromMap: s];
-    [s positionShip: destination isHost:TRUE];
+    [s positionShip: destination isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
     [self updateMap:_localPlayer.playerFleet];
 }
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination {
     Ship* s = [_localPlayer.enemyFleet getShipWithCoord:origin];
     [self removeShipFromMap: s];
-    [s positionShip: destination isHost:FALSE];
+    [s positionShip: destination isHost:FALSE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
     [self updateMap:_localPlayer.enemyFleet];
 }
 -(NSMutableArray*) getValidMovesFrom:(Coordinate*)origin withRadarPositions:(BOOL)radarPositions {

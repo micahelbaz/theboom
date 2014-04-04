@@ -37,7 +37,7 @@
     }
 }
 
--(void)positionShip:(Coordinate *)destination isHost:(BOOL)host {
+-(void)positionShip:(Coordinate *)destination isHost:(BOOL)host dockingArray:(NSMutableArray*)dock{
     Coordinate* newCoord = [[Coordinate alloc] initWithXCoordinate:destination.xCoord YCoordinate:destination.yCoord initiallyFacing:destination.direction];
     _location = newCoord;
     int i = 0;
@@ -59,6 +59,10 @@
     if(host){
     _visibleCoordinates = [[NSMutableArray alloc]init];
     _visibleCannonCoordinates = [[NSMutableArray alloc]init];
+        for(Coordinate *c in dock){
+            [self.visibleCoordinates addObject:c];
+        }
+
     Coordinate *firstBlock = [[Coordinate alloc] initWithXCoordinate:newCoord.xCoord YCoordinate:newCoord.yCoord initiallyFacing:newCoord.direction];
     if(newCoord.direction == NORTH){
         firstBlock.yCoord-=(self.size-1);
