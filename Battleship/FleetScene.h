@@ -9,7 +9,7 @@
 #import <SpriteKit/SpriteKit.h>
 #import "Coordinate.h"
 #import "BattleshipGame.h"
-
+#import "MyScene.h"
 @interface FleetScene : SKScene <GKMatchDelegate>
 
 @property (nonatomic, strong) BattleshipGame *game;
@@ -19,4 +19,6 @@
 @property (nonatomic, strong) NSMutableSet *coralPositions;
 @property int lastIndex;
 @property BOOL configurationSet;
+@property BOOL youReady;
+@property BOOL opponentReady;
 @end

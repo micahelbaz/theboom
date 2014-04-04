@@ -19,6 +19,8 @@
         _placedShip = [[NSMutableArray alloc] init];
         _lastIndex = -1;
         _configurationSet = FALSE;
+        _youReady = FALSE;
+        _opponentReady = FALSE;
         SKTexture *textureImage = [SKTexture textureWithImageNamed:@"menu background"];
         SKSpriteNode *backgroundSprite = [SKSpriteNode spriteNodeWithTexture:textureImage];
         backgroundSprite = [SKSpriteNode spriteNodeWithTexture:textureImage];
@@ -157,6 +159,21 @@
     return false;
 }
 
+-(BOOL)sendBegin {
+    NSError* error;
+    NSMutableArray* message = [[NSMutableArray alloc] init];
+    [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"begin"]];
+    for (int i = 0; i < _placedShip.count; i++) {
+        [message addObject:[NSKeyedArchiver archivedDataWithRootObject:_placedShip[i]]];
+    }
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
+    [_game.gameCenter.match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
+}
+
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -170,7 +187,6 @@
             c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             NSLog(@"%d %d", c.xCoord, c.yCoord);
             [_coralPositions addObject:c];
-            [self addCoral];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
         for (SKSpriteNode *button in self.children) {
@@ -186,7 +202,6 @@
             }
         }
         [self removeChildrenInArray:corals];
-        [self initializeCoral];
         [self addCoral];
         [self addJoinButtons];
     }
@@ -195,6 +210,18 @@
     }
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
+        [_game.gameMap initializeCoral:_coralPositions];
+    }
+    if ([type isEqualToString:@"begin"]) {
+        _opponentReady = TRUE;
+        NSMutableArray *enemyShips = [[NSMutableArray alloc] init];
+        for (int i=1; i < receivedMessage.count; i++) {
+            [enemyShips addObject:(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]]];
+        }
+        if (_opponentReady && _youReady) {
+            SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
+            [self.scene.view presentScene:scene];
+        }
     }
 }
 
@@ -224,6 +251,7 @@
             [self removeChildrenInArray:remove];
             _configurationSet = TRUE;
             [self sendResponse:TRUE];
+            [_game.gameMap initializeCoral:_coralPositions];
         }
         if ([nodeTouched.name isEqualToString:@"reject configuration"]) {
             NSMutableArray *remove = [[NSMutableArray alloc] init];
@@ -245,6 +273,13 @@
             [self removeChildrenInArray:remove];
             [self sendCoral];
         }
+        if ([nodeTouched.name isEqualToString:@"begingame"]) {
+            _youReady = TRUE;
+            if (_opponentReady && _youReady) {
+                SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
+                [self.scene.view presentScene:scene];
+            }
+        }
         else if ([[nodeTouched.name substringToIndex:4] isEqualToString:@"base"] && _configurationSet){
             int index = [[nodeTouched.name substringFromIndex:4] intValue];
             [self placeNextShipAtIndex:index];
@@ -260,11 +295,12 @@
                 start.position = CGPointMake(CGRectGetMidX(_fleetBackground.frame), (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
                 start.name = @"start game";
                 [self addChild:start];
-
+                _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
             }
         }
     }
 }
+
 
 -(void) placeNextShipAtIndex: (int) index {
     NSMutableArray *removeShip = [[NSMutableArray alloc] init];

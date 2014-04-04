@@ -12,7 +12,7 @@
 
 #pragma mark - TODO: the coordinate setting system is broken. please fix.
 
-- (instancetype)initWith:(BOOL)isHost
+- (instancetype)initWith:(BOOL)isHost andShips:(NSMutableArray*) ships
 {
     self = [super init];
     if(self){
@@ -38,16 +38,50 @@
         RadarBoat *r1;
 
         if(isHost){
-            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:5 initiallyFacing:NORTH];
-            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:5 initiallyFacing:NORTH];
-            destroyer1 = [[Coordinate alloc] initWithXCoordinate:17 YCoordinate:4 initiallyFacing:NORTH];
-            destroyer2 = [[Coordinate alloc] initWithXCoordinate:16 YCoordinate:4 initiallyFacing:NORTH];
-            destroyer3 = [[Coordinate alloc] initWithXCoordinate:15 YCoordinate:4 initiallyFacing:NORTH];
-            torpedo1 = [[Coordinate alloc] initWithXCoordinate:14 YCoordinate:3 initiallyFacing:NORTH];
-            torpedo2 = [[Coordinate alloc] initWithXCoordinate:13 YCoordinate:3 initiallyFacing:NORTH];
-            mineLayer1 = [[Coordinate alloc] initWithXCoordinate:12 YCoordinate:2 initiallyFacing:NORTH];
-            mineLayer2 = [[Coordinate alloc] initWithXCoordinate:11 YCoordinate:2 initiallyFacing:NORTH];
-            radar1 = [[Coordinate alloc] initWithXCoordinate:10 YCoordinate:3 initiallyFacing:NORTH];
+            for (int i = 0; i < ships.count; i++) {
+                if ([ships[i] intValue] == 0) {
+                    cruiser1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:5 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 1) {
+                    cruiser2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:5 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 2) {
+                    destroyer1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:4 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 3) {
+                    destroyer2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:4 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 4) {
+                    destroyer3 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:4 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 5) {
+                    torpedo1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:3 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 6) {
+                    torpedo2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:3 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 7) {
+                    mineLayer1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:2 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 8) {
+                    mineLayer2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:2 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 9) {
+                    radar1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:1 initiallyFacing:NORTH];
+                }
+            }
+            
+            
+//            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:5 initiallyFacing:NORTH];
+//            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:5 initiallyFacing:NORTH];
+//            destroyer1 = [[Coordinate alloc] initWithXCoordinate:17 YCoordinate:4 initiallyFacing:NORTH];
+//            destroyer2 = [[Coordinate alloc] initWithXCoordinate:16 YCoordinate:4 initiallyFacing:NORTH];
+//            destroyer3 = [[Coordinate alloc] initWithXCoordinate:15 YCoordinate:4 initiallyFacing:NORTH];
+//            torpedo1 = [[Coordinate alloc] initWithXCoordinate:14 YCoordinate:3 initiallyFacing:NORTH];
+//            torpedo2 = [[Coordinate alloc] initWithXCoordinate:13 YCoordinate:3 initiallyFacing:NORTH];
+//            mineLayer1 = [[Coordinate alloc] initWithXCoordinate:12 YCoordinate:2 initiallyFacing:NORTH];
+//            mineLayer2 = [[Coordinate alloc] initWithXCoordinate:11 YCoordinate:2 initiallyFacing:NORTH];
+//            radar1 = [[Coordinate alloc] initWithXCoordinate:10 YCoordinate:3 initiallyFacing:NORTH];
             c1 = [[Cruiser alloc] initWithLocation: cruiser1 andName:@"HostCruiser1"];
             c2 = [[Cruiser alloc] initWithLocation: cruiser2 andName:@"HostCruiser2"];
             d1 = [[Destroyer alloc] initWithLocation: destroyer1 andName:@"HostDestroyer1"];
@@ -60,18 +94,48 @@
             r1 = [[RadarBoat alloc] initWithLocation: radar1 andName:@"HostRadarBoat1"];
         }
         else{
-         
-        
-            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:24 initiallyFacing:SOUTH];
-            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:24 initiallyFacing:SOUTH];
-            destroyer1 = [[Coordinate alloc] initWithXCoordinate:17 YCoordinate:25 initiallyFacing:SOUTH];
-            destroyer2 = [[Coordinate alloc] initWithXCoordinate:16 YCoordinate:25 initiallyFacing:SOUTH];
-            destroyer3 = [[Coordinate alloc] initWithXCoordinate:15 YCoordinate:25 initiallyFacing:SOUTH];
-            torpedo1 = [[Coordinate alloc] initWithXCoordinate:14 YCoordinate:26 initiallyFacing:SOUTH];
-            torpedo2 = [[Coordinate alloc] initWithXCoordinate:13 YCoordinate:26 initiallyFacing:SOUTH];
-            mineLayer1 = [[Coordinate alloc] initWithXCoordinate:12 YCoordinate:27 initiallyFacing:SOUTH];
-            mineLayer2 = [[Coordinate alloc] initWithXCoordinate:11 YCoordinate:27 initiallyFacing:SOUTH];
-            radar1 = [[Coordinate alloc] initWithXCoordinate:10 YCoordinate:26 initiallyFacing:SOUTH];
+            for (int i = 0; i < ships.count; i++) {
+                if ([ships[i] intValue] == 0) {
+                    cruiser1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:24 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 1) {
+                    cruiser2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:24 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 2) {
+                    destroyer1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:25 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 3) {
+                    destroyer2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:25 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 4) {
+                    destroyer3 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:25 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 5) {
+                    torpedo1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:26 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 6) {
+                    torpedo2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:26 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 7) {
+                    mineLayer1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:27 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 8) {
+                    mineLayer2 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:27 initiallyFacing:NORTH];
+                }
+                if ([ships[i] intValue] == 9) {
+                    radar1 = [[Coordinate alloc] initWithXCoordinate:19+i YCoordinate:26 initiallyFacing:NORTH];
+                }
+            }
+//            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:24 initiallyFacing:SOUTH];
+//            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:24 initiallyFacing:SOUTH];
+//            destroyer1 = [[Coordinate alloc] initWithXCoordinate:17 YCoordinate:25 initiallyFacing:SOUTH];
+//            destroyer2 = [[Coordinate alloc] initWithXCoordinate:16 YCoordinate:25 initiallyFacing:SOUTH];
+//            destroyer3 = [[Coordinate alloc] initWithXCoordinate:15 YCoordinate:25 initiallyFacing:SOUTH];
+//            torpedo1 = [[Coordinate alloc] initWithXCoordinate:14 YCoordinate:26 initiallyFacing:SOUTH];
+//            torpedo2 = [[Coordinate alloc] initWithXCoordinate:13 YCoordinate:26 initiallyFacing:SOUTH];
+//            mineLayer1 = [[Coordinate alloc] initWithXCoordinate:12 YCoordinate:27 initiallyFacing:SOUTH];
+//            mineLayer2 = [[Coordinate alloc] initWithXCoordinate:11 YCoordinate:27 initiallyFacing:SOUTH];
+//            radar1 = [[Coordinate alloc] initWithXCoordinate:10 YCoordinate:26 initiallyFacing:SOUTH];
             c1 = [[Cruiser alloc] initWithLocation: cruiser1 andName:@"JoinCruiser1"];
             c2 = [[Cruiser alloc] initWithLocation: cruiser2 andName:@"JoinCruiser2"];
             d1 = [[Destroyer alloc] initWithLocation: destroyer1 andName:@"JoinDestroyer1"];

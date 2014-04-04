@@ -20,7 +20,7 @@
 @property int playerID;
 @property (strong, nonatomic) NSArray* shipArray;
 
-- (instancetype)initWith:(BOOL)isHost;
+- (instancetype)initWith:(BOOL)isHost andShips:(NSMutableArray*) ships;
 - (Ship*)getShipWithCoord:(Coordinate*) location;
 - (NSMutableArray*)getRotationRangeOf:(Ship*) s;
 @end

@@ -27,4 +27,5 @@
 -(Coordinate*) collisionLocationOfTorpedo: (Coordinate*) firedFrom;
 -(void) encodeWithCoder: (NSCoder*) coder;
 -(id) initWithCoder:(NSCoder*)coder;
+-(void) initializeCoral:(NSMutableSet *) coralPositions;
 @end
