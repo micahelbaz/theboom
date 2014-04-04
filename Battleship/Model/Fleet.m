@@ -92,6 +92,32 @@
             [m1 positionShip:mineLayer1 isHost:TRUE];
             [m2 positionShip:mineLayer2 isHost:TRUE];
             [r1 positionShip:radar1 isHost:TRUE];
+            
+            if(isHost){
+                for(int i = 10; i<20; i++){
+                    Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:0 initiallyFacing:NONE];
+                    [self.baseCoordinates addObject:c];
+                    Coordinate *coord = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:1 initiallyFacing:NONE];
+                    [self.dockingCoordinates addObject:coord];
+                }
+                Coordinate *leftOfBase = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:0 initiallyFacing:NONE];
+                Coordinate *rightOfBase = [[Coordinate alloc] initWithXCoordinate:20 YCoordinate:0 initiallyFacing:NONE];
+                [self.dockingCoordinates addObject:leftOfBase];
+                [self.dockingCoordinates addObject:rightOfBase];
+            }
+            else{
+                for(int i = 10; i<20; i++){
+                    Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:29 initiallyFacing:NONE];
+                    [self.baseCoordinates addObject:c];
+                    Coordinate *coord = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:28 initiallyFacing:NONE];
+                    [self.dockingCoordinates addObject:coord];
+                    Coordinate *leftOfBase = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:29 initiallyFacing:NONE];
+                    Coordinate *rightOfBase = [[Coordinate alloc] initWithXCoordinate:20 YCoordinate:29 initiallyFacing:NONE];
+                    [self.dockingCoordinates addObject:leftOfBase];
+                    [self.dockingCoordinates addObject:rightOfBase];
+                    
+                }
+            }
         }
         
         
