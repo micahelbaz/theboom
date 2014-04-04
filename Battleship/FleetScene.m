@@ -109,7 +109,11 @@
     NSError* error;
     NSMutableArray* message = [[NSMutableArray alloc] init];
     [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"coralData"]];
-    [message addObject:[NSKeyedArchiver archivedDataWithRootObject:_coralPositions]];
+    for (Coordinate* c in _coralPositions) {
+       [message addObject:[NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:c.xCoord]]];
+        [message addObject:[NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:c.yCoord]]];
+    }
+    
     NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
     [_game.gameCenter.match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataUnreliable error:&error];
     if (error != nil) {
@@ -119,12 +123,16 @@
 }
 
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
-    NSLog(@"test");
-    
+    _coralPositions = [[NSMutableSet alloc] init];
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
     if ([type isEqualToString:@"coralData"]) {
-        _coralPositions = (NSMutableSet*)[NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[1]];
+        for (int i=1; i < receivedMessage.count; i+=2) {
+            Coordinate *c = [[Coordinate alloc] init];
+            c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
+            c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
+            [_coralPositions addObject:c];
+        }
         [self addCoral];
     }
 }
