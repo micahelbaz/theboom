@@ -213,7 +213,7 @@
         if ([nodeTouched.name isEqualToString:@"accept configuration"]) {
             NSMutableArray *remove = [[NSMutableArray alloc] init];
             for (SKSpriteNode *button in self.children) {
-                if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"request configuration"]) {
+                if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"reject configuration"]) {
                     [remove addObject:button];
                 }
             }
@@ -224,7 +224,7 @@
         if ([nodeTouched.name isEqualToString:@"reject configuration"]) {
             NSMutableArray *remove = [[NSMutableArray alloc] init];
             for (SKSpriteNode *button in self.children) {
-                if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"request configuration"]) {
+                if ([button.name isEqualToString:@"accept configuration"] || [button.name isEqualToString:@"reject configuration"]) {
                     [remove addObject:button];
                 }
             }
