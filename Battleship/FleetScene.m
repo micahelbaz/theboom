@@ -212,7 +212,7 @@
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
         [_game.gameMap initializeCoral:_coralPositions];
-        NSLOG("ACCCEEPPPPPPPT");
+        NSLog(@"ACCCEEPPPPPPPT");
     }
     if ([type isEqualToString:@"begin"]) {
         NSLog(@"ASDFASDFADSF");
