@@ -125,7 +125,9 @@
         int yCanonRange = firstBlock.yCoord-self.canonRange.rangeWidth;
         
         for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.startRange; x++){
-            
+            for(int y = yCanonRange; y>firstBlock.yCoord+self.canonRange.rangeWidth; y--){
+                
+            }
         }
        
         for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.startRange; i++){
