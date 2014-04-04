@@ -274,7 +274,8 @@
             [self removeChildrenInArray:remove];
             [self sendCoral];
         }
-        if ([nodeTouched.name isEqualToString:@"begingame"]) {
+        if ([nodeTouched.name isEqualToString:@"start game"]) {
+            [self sendBegin];
             _youReady = TRUE;
             if (_opponentReady && _youReady) {
                 SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
