@@ -13,6 +13,7 @@
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
         _game = [BattleshipGame sharedInstance];
+        _game.gameCenter.match.delegate = self;
         _fleetBackground = [[SKSpriteNode alloc] init];
         _unplacedShips = [[NSMutableArray alloc] init];
         _placedShip = [[NSMutableArray alloc] init];
@@ -29,11 +30,17 @@
         _fleetBackground.yScale = self.frame.size.height * 10/_fleetBackground.frame.size.height/30;
         [self addChild:backgroundSprite];
         [self addChild:_fleetBackground];
-        SKSpriteNode *nextconfig = [SKSpriteNode spriteNodeWithImageNamed:@"reefconfig"];
-        nextconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ nextconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
-        nextconfig.name = @"next configuration";
-        [self addChild:nextconfig];
-        [self initializeCoral];
+        if(_game.localPlayer.isHost) {
+            SKSpriteNode *nextconfig = [SKSpriteNode spriteNodeWithImageNamed:@"reefconfig"];
+            nextconfig.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame)+ nextconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+            nextconfig.name = @"next configuration";
+            [self addChild:nextconfig];
+            SKSpriteNode *sendconfig = [SKSpriteNode spriteNodeWithImageNamed:@"send reef request"];
+            sendconfig.position = CGPointMake(CGRectGetMaxX(_fleetBackground.frame)- sendconfig.frame.size.width/2, (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
+            sendconfig.name = @"send configuration";
+            [self addChild:sendconfig];
+            [self initializeCoral];
+        }
         [self initializeFleet];
     }
     return self;
@@ -63,8 +70,12 @@
     }
 }
 -(void) initializeCoral {
-    NSMutableSet *coralCoords = [self generateCoral];
-    for (Coordinate *c in coralCoords) {
+    [self generateCoral];
+    [self addCoral];
+}
+
+-(void) addCoral {
+    for (Coordinate *c in _coralPositions) {
         SKSpriteNode *coral = [SKSpriteNode spriteNodeWithImageNamed:@"corals"];
         coral.name = @"coral";
         coral.xScale = _fleetBackground.frame.size.width/24/coral.frame.size.width;
@@ -73,14 +84,15 @@
         [self addChild:coral];
     }
 }
--(NSMutableSet*) generateCoral {
-    NSMutableSet *coralPositions = [[NSMutableSet alloc] init];
-    while ([coralPositions count] < 24)    {
+
+-(void) generateCoral {
+    _coralPositions = [[NSMutableSet alloc] init];
+    while ([_coralPositions count] < 24)    {
         int yCoord = arc4random_uniform(10);
         int xCoord = arc4random_uniform(24);
         int breakFlag = 0;
         Coordinate *c = [[Coordinate alloc]initWithXCoordinate:xCoord YCoordinate:yCoord initiallyFacing:NONE];
-        for (Coordinate *contained in coralPositions) {
+        for (Coordinate *contained in _coralPositions) {
             if (contained.xCoord == c.xCoord && contained.yCoord == c.yCoord) {
                 breakFlag = 1;
                 continue;
@@ -89,9 +101,32 @@
         if (breakFlag == 1) {
             continue;
         }
-        [coralPositions addObject:c];
+        [_coralPositions addObject:c];
     }
-    return coralPositions;
+}
+
+-(BOOL)sendCoral {
+    NSError* error;
+    NSMutableArray* message = [[NSMutableArray alloc] init];
+    [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"coralData"]];
+    [message addObject:[NSKeyedArchiver archivedDataWithRootObject:_coralPositions]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
+    [_game.gameCenter.match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
+}
+
+-(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+    NSLog(@"test");
+    
+    NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
+    if ([type isEqualToString:@"coralData"]) {
+        _coralPositions = (NSMutableSet*)[NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[1]];
+        [self addCoral];
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -110,14 +145,14 @@
             [self removeChildrenInArray:corals];
             [self initializeCoral];
         }
+        if ([nodeTouched.name isEqualToString:@"send configuration"]) {
+            [self sendCoral];
+        }
         else if ([[nodeTouched.name substringToIndex:4] isEqualToString:@"base"]){
             int index = [[nodeTouched.name substringFromIndex:4] intValue];
             NSLog(@"%d", index);
-            //if (_lastIndex == -1 || _lastIndex == index) {
             [self placeNextShipAtIndex:index];
             _lastIndex = index;
-            
-            //}
         }
     }
 }
