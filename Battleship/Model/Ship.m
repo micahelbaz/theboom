@@ -126,7 +126,10 @@
         
         for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.startRange; x++){
             for(int y = yCanonRange; y>firstBlock.yCoord+self.canonRange.rangeWidth; y--){
-                
+                Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:y initiallyFacing:WEST];
+                if([coord isWithinMap]){
+                    [self.visibleCannonCoordinates addObject:coord];
+                }
             }
         }
        
