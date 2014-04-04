@@ -147,6 +147,7 @@
     NSMutableArray* message = [[NSMutableArray alloc] init];
     if (doesAccept) {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"acceptCoralRequest"]];
+        [_game.gameMap initializeCoral:_coralPositions];
     }
     else {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"rejectCoralRequest"]];
@@ -211,8 +212,10 @@
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
         [_game.gameMap initializeCoral:_coralPositions];
+        NSLOG("ACCCEEPPPPPPPT");
     }
     if ([type isEqualToString:@"begin"]) {
+        NSLog(@"ASDFASDFADSF");
         _opponentReady = TRUE;
         NSMutableArray *enemyShips = [[NSMutableArray alloc] init];
         for (int i=1; i < receivedMessage.count; i++) {
@@ -274,7 +277,8 @@
             [self removeChildrenInArray:remove];
             [self sendCoral];
         }
-        if ([nodeTouched.name isEqualToString:@"begingame"]) {
+        if ([nodeTouched.name isEqualToString:@"start game"]) {
+            [self sendBegin];
             _youReady = TRUE;
             if (_opponentReady && _youReady) {
                 SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
