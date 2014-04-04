@@ -32,7 +32,7 @@
         [self initializeBase:@"host"];
         
         [self initializeBase:@"join"];
-        [self initializeCoral];
+        //[self initializeCoral];
     }
     
     return self;
@@ -65,24 +65,24 @@
     }
 }
 
--(void) initializeCoral {
-    NSMutableSet *coralPositions = [[NSMutableSet alloc] init];
-    while ([coralPositions count] < 24)    {
-        int yCoord = 10 + arc4random_uniform(10);
-        int xCoord = 3 + arc4random_uniform(24);
-        int breakFlag = 0;
-        Coordinate *c = [[Coordinate alloc]initWithXCoordinate:xCoord YCoordinate:yCoord initiallyFacing:NONE];
-        for (Coordinate *contained in coralPositions) {
-            if (contained.xCoord == c.xCoord && contained.yCoord == c.yCoord) {
-                breakFlag = 1;
-                continue;
-            }
-        }
-        if (breakFlag == 1) {
-            continue;
-        }
-        [coralPositions addObject:c];
-    }
+-(void) initializeCoral:(NSMutableSet *) coralPositions {
+//    NSMutableSet *coralPositions = [[NSMutableSet alloc] init];
+//    while ([coralPositions count] < 24)    {
+//        int yCoord = 10 + arc4random_uniform(10);
+//        int xCoord = 3 + arc4random_uniform(24);
+//        int breakFlag = 0;
+//        Coordinate *c = [[Coordinate alloc]initWithXCoordinate:xCoord YCoordinate:yCoord initiallyFacing:NONE];
+//        for (Coordinate *contained in coralPositions) {
+//            if (contained.xCoord == c.xCoord && contained.yCoord == c.yCoord) {
+//                breakFlag = 1;
+//                continue;
+//            }
+//        }
+//        if (breakFlag == 1) {
+//            continue;
+//        }
+//        [coralPositions addObject:c];
+//    }
     for (Coordinate *contained in coralPositions)
     {
         Terrain t = CORAL;
