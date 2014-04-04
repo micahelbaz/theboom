@@ -16,10 +16,6 @@
         _playerID = playerID;
         _isHost = player;
         self.radarGrid = [[NSMutableArray alloc] init];
-    
-        
-        
-        
 
     }
     //self.playerFleet = [[Fleet alloc] initWith:_isHost];
