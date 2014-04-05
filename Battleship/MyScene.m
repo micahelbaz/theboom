@@ -236,6 +236,10 @@ typedef struct {
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
                 }
             }
+            if ([_nodeTouched.name isEqualToString:@"RepairShip"]) {
+                Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                [s repair];
+            }
         }
         
         // Move location touched
