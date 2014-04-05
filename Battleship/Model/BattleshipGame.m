@@ -47,6 +47,8 @@ static BattleshipGame *sharedGame = nil;
 -(void)updateMap:(Fleet*) updatedFleet{
     for(Ship* ship in updatedFleet.shipArray) {
         for(ShipSegment* seg in ship.blocks) {
+            NSLog(@"%@", seg.shipName);
+            NSLog(@"x:%d, y:%d", seg.location.xCoord, seg.location.yCoord);
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             [_gameMap.grid[seg.location.xCoord] insertObject:seg atIndex:seg.location.yCoord];
         }
@@ -198,13 +200,16 @@ static BattleshipGame *sharedGame = nil;
     return damages;
 }
 
--(NSMutableArray*) getCannonRange:(Coordinate*)origin{
+-(NSMutableArray*) getCanonRange:(Coordinate*)origin{
+
     NSMutableArray * coords = [[NSMutableArray alloc]init];
     for(Ship *s in _localPlayer.playerFleet.shipArray){
-        if(s.location.xCoord == origin.xCoord && s.location.yCoord == origin.yCoord){
-            return s.visibleCannonCoordinates;
+        for(ShipSegment *seg in s.blocks){
+            if(seg.location.xCoord == origin.xCoord && seg.location.yCoord == origin.yCoord){
+                NSLog(@"test");
+                return s.visibleCannonCoordinates;
+            }
         }
-        
     }
     return coords;
 }

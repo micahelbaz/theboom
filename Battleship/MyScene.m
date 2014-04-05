@@ -236,9 +236,6 @@ typedef struct {
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
                 }
             }
-            if([_nodeTouched.name isEqualToString:@"FireCanon"]){
-                
-            }
         }
         
         // Move location touched
@@ -254,45 +251,21 @@ typedef struct {
 }
 
 -(int)getShipIndexFromName:(NSString*) shipName {
-    /*
-    if ([shipName isEqualToString:@"HostCruiser1"] || [shipName isEqualToString:@"JoinCruiser1"]) {
-        return 0;
+    int index = 0;
+    for (Ship *s in _game.localPlayer.playerFleet.shipArray) {
+        if ([shipName isEqualToString:s.shipName]) {
+            return index;
+        }
+        index++;
     }
-    if ([shipName isEqualToString:@"HostCruiser2"] || [shipName isEqualToString:@"JoinCruiser2"]) {
-        return 1;
-    }
-    if ([shipName isEqualToString:@"HostDestroyer1"] || [shipName isEqualToString:@"JoinDestroyer1"]) {
-        return 2;
-    }
-    if ([shipName isEqualToString:@"HostDestroyer2"] || [shipName isEqualToString:@"JoinDestroyer2"]) {
-        return 3;
-    }
-    if ([shipName isEqualToString:@"HostDestroyer3"] || [shipName isEqualToString:@"JoinDestroyer3"]) {
-        return 4;
-    }
-    if ([shipName isEqualToString:@"HostTorpedoBoat1"] || [shipName isEqualToString:@"JoinTorpedoBoat1"]) {
-        return 5;
-    }
-    if ([shipName isEqualToString:@"HostTorpedoBoat2"] || [shipName isEqualToString:@"JoinTorpedoBoat2"]) {
-        return 6;
-    }
-    if ([shipName isEqualToString:@"HostMineLayer1"] || [shipName isEqualToString:@"JoinMineLayer1"]) {
-        return 7;
-    }
-    if ([shipName isEqualToString:@"HostMineLayer2"] || [shipName isEqualToString:@"JoinMineLayer2"]) {
-        return 8;
-    }
+    index = 0;
     for (Ship *s in _game.localPlayer.enemyFleet.shipArray) {
         if ([shipName isEqualToString:s.shipName]) {
             return index;
         }
         index++;
     }
-    */
-    for(Ship *s in _game.localPlayer.playerFleet.shipArray){
-        
-    }
-    return 0;
+    return -1;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {

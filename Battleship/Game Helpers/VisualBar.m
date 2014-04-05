@@ -170,7 +170,7 @@
         [_foreground createTorpedo:_shipActuallyClicked];
     }
     
-    else if([functionSprite.name isEqualToString:@"FireCanon"] || [functionSprite.name isEqualToString:@"FireHeavyCanon"] ){
+    else if([functionSprite.name isEqualToString:@"FireCannon"] || [functionSprite.name isEqualToString:@"FireHeavyCannon"] ){
         [_foreground displayCannonRange:_shipActuallyClicked];
     }
     

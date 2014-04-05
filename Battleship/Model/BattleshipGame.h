@@ -30,6 +30,7 @@
 -(Coordinate*) fireTorpedo: (Coordinate*) origin;
 -(NSMutableArray*) getShipDamages: (Coordinate*) origin;
 -(NSMutableArray*) getValidRotationsFrom:(Coordinate*)origin;
+-(NSMutableArray*) getCanonRange:(Coordinate*)origin;
 -(void)updateMap:(Fleet*) updatedFleet;
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination;
 

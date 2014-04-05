@@ -25,6 +25,8 @@
         _torpedoShot = [[NSMutableArray alloc] init];
         _torpedoShooter = [[NSMutableArray alloc] init];
         _torpedoIntervals = MAX_TORPEDO_INTERVALS;
+        _canonRangeSprites = [[SKNode alloc] init];
+        [_foregroundNode addChild:_canonRangeSprites];
         [_foregroundNode addChild:_movementLocationsSprites];
         [_foregroundNode addChild:_torpedoSprites];
     }
@@ -53,7 +55,17 @@
 
 - (void) displayCannonRange:(SKNode*)shipActuallyClicked{
     [_canonRangeSprites removeAllChildren];
-  //  NSMutableArray* rangeCoordinates = [_game getCanonRange: _helper fromTextureToCoordinate:shipActuallyClicked.position withRadarPositions:false];
+    NSMutableArray* rangeCoordinates = [_game getCanonRange: [_helper fromTextureToCoordinate:shipActuallyClicked.position]];
+    for(Coordinate *c in rangeCoordinates){
+        NSLog(@"x: %d, y: %d", c.xCoord, c.yCoord);
+        SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
+        range.xScale = (tileWidth/range.frame.size.width)*0.95;
+        range.yScale = (tileHeight/range.frame.size.height)*0.95;
+        range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
+                                     c.yCoord * tileHeight + tileHeight/2);
+        range.zPosition = 1;
+        [_movementLocationsSprites addChild:range];
+    }
 }
 
 // Displays the torpedo
