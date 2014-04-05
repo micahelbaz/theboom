@@ -35,7 +35,7 @@ typedef struct {
             [_game updateMap:_game.localPlayer.enemyFleet];
             _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
             [self addChild:_mainGameController.containers.overallNode];
-            [self drawRadar];
+            //[self drawRadar];
     }
     return self;
 }
@@ -127,7 +127,7 @@ typedef struct {
         _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
         [self addChild:_mainGameController.containers.overallNode];
         [self.view addSubview:_mainGameController.console.textView];
-        [self drawRadar];
+        //[self drawRadar];
     }
     else if ([type isEqualToString:@"fleetData"]) {
         Fleet *newFleet = [[Fleet alloc]init];
@@ -245,7 +245,7 @@ typedef struct {
             Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
             [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:[_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position]];
             [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
-            [self drawRadar];
+            //[self drawRadar];
         }
     }
 }

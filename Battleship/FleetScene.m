@@ -182,8 +182,8 @@
         _coralPositions = [[NSMutableSet alloc] init];
         for (int i=1; i < receivedMessage.count; i+=2) {
             Coordinate *c = [[Coordinate alloc] init];
-            c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
-            c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
+            c.xCoord = 23 - [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
+            c.yCoord = 9 - [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             [_coralPositions addObject:c];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
@@ -208,6 +208,10 @@
     }
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
+        for (Coordinate *corals in _coralPositions) {
+            corals.xCoord = 23-corals.xCoord;
+            corals.yCoord = 9 - corals.yCoord;
+        }
         [_game.gameMap initializeCoral:_coralPositions];
     }
     if ([type isEqualToString:@"begin"]) {
@@ -216,7 +220,12 @@
         for (int i=1; i < receivedMessage.count; i++) {
             [enemyShips addObject:(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]]];
         }
-        _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:enemyShips];
+        if (_game.localPlayer.isHost) {
+            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:_placedShip];
+        }
+        else {
+            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+        }
         if (_opponentReady && _youReady) {
             SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
             [self.scene.view presentScene:scene];
@@ -295,7 +304,12 @@
                 start.position = CGPointMake(CGRectGetMidX(_fleetBackground.frame), (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
                 start.name = @"start game";
                 [self addChild:start];
-                _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+                if (_game.localPlayer.isHost) {
+                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+                }
+                else {
+                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:FALSE andShips:_placedShip];
+                }
             }
         }
     }
