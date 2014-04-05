@@ -34,7 +34,6 @@
         for (Coordinate *c in s.visibleCoordinates) {
             [self.radarGrid[c.xCoord] removeObjectAtIndex:c.yCoord];
             [self.radarGrid[c.xCoord] insertObject:[NSNumber numberWithBool:YES] atIndex:c.yCoord];
-            NSLog(@"updateRadarRange: x: %d, y: %d", c.xCoord, c.yCoord);
         }
     }
 }

@@ -86,8 +86,6 @@
     [_visualBar.shipClickedName removeAllChildren];
     [_foreground.movementLocationsSprites removeAllChildren];
     [_game moveShipfrom:oldLoc to:newLoc];
-    NSLog(@"old: %d, %d", oldLoc.xCoord, oldLoc.yCoord);
-    NSLog(@"new: %d, %d", newLoc.xCoord, newLoc.yCoord);
 }
 
 // Animates the ship movement - seems to work imperfectly

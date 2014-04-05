@@ -20,7 +20,7 @@
         self.isDestroyed = FALSE;
         self.radarRange = [[Range alloc]init];
         [_viableActions addObject:@"Move"];
-        [_viableActions addObject:@"Rotate"];
+        //[_viableActions addObject:@"Rotate"];
         _visibleCoordinates = [[NSMutableArray alloc]init];
     }
     return self;
@@ -78,25 +78,15 @@
         
     }
     if(newCoord.direction == SOUTH){
-        NSLog(@"top of function");
         firstBlock.yCoord+=(self.size-1);
         [self.visibleCoordinates addObject:firstBlock];
         int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
-        NSLog(@"firstBloc.xCoord: %d", firstBlock.xCoord);
-        NSLog(@"self.radarRange.rangeWidth: %d", self.radarRange.rangeWidth);
-        
-        NSLog(@"xRange: %d", xRange);
-
         int yRange = newCoord.yCoord+self.size-2-self.radarRange.startRange;
-         NSLog(@"yRange: %d", yRange);
-         NSLog(@"for loop max: %d", firstBlock.xCoord+self.radarRange.rangeWidth);
         for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){
             for(int j = yRange; j>newCoord.yCoord-self.radarRange.rangeHeight-self.radarRange.startRange; j--){
                 Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:SOUTH];
                 if([c isWithinMap]){
-                    NSLog(@"inside if");
                     [self.visibleCoordinates addObject:c];
-                    NSLog(@"x: %d, y: %d", c.xCoord, c.yCoord);
                 }
             }
         }
@@ -321,9 +311,7 @@
     int counter = 0;
     for (int i = 0; i < _size; i++) {
         ShipSegment *s = _blocks[i];
-        NSLog(@"armour %d", s.segmentArmourType);
         if (s.segmentArmourType == DESTROYED) {
-            NSLog(@"armour %d", s.segmentArmourType);
             counter++;
         }
     }

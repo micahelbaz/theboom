@@ -23,18 +23,18 @@ typedef struct {
 -(id)initWithSize:(CGSize)size {
     self = [super initWithSize:size];
     if (self) {
+        _game = [BattleshipGame sharedInstance];
         // Initializing the background - more time efficient as only loads the textures once
         self.backgroundColor = [SKColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
         _moveFromCoordinate = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
         // Creates the battleship game
-        _game = [[BattleshipGame alloc] init];
         _game.gameCenter.match.delegate = self;
             //[self sendMap];
             [_game updateMap:_game.localPlayer.playerFleet];
             [_game updateMap:_game.localPlayer.enemyFleet];
             _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
             [self addChild:_mainGameController.containers.overallNode];
-            //[self drawRadar];
+            [self drawRadar];
     }
     return self;
 }
@@ -160,14 +160,6 @@ typedef struct {
         Ship *s = localShips[shipIndex];
         [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:newPosition];
         [_game moveEnemyShipfrom:oldPosition to:newPosition];
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                if ([_game.gameMap.grid[i][j] isKindOfClass:[ShipSegment class]]) {
-                    NSLog(@"%d,%d",i,j);
-                }
-            }
-        }
-        
     }
     else if([type isEqualToString:@"torpedoHitData"]){
         int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
@@ -175,12 +167,10 @@ typedef struct {
         int newSpeed = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[3]] intValue];
         NSArray* localShips = _game.localPlayer.playerFleet.shipArray;
         Ship *s = localShips[hitIndex];
-        NSLog(@"%d", newSpeed);
         s.speed = newSpeed;
         for(int i=0; i<s.size; i++){
             ShipSegment *seg = s.blocks[i];
             int currentDamage = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: damageArray[i]] intValue];
-            NSLog(@"Damage at %d is %d", i, currentDamage);
             seg.segmentArmourType = currentDamage;
             
         }
@@ -363,9 +353,6 @@ typedef struct {
                 sprite.position = CGPointMake(i * tileWidth + tileWidth/2,
                                               j * tileHeight + tileWidth/2);
                 [self addChild:sprite];
-            }
-            else {
-                NSLog(@"%d,%d", i,j);
             }
         }
     }

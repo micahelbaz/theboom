@@ -131,7 +131,6 @@
     for (Coordinate* c in _coralPositions) {
        [message addObject:[NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:c.xCoord]]];
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:[NSNumber numberWithInt:c.yCoord]]];
-        NSLog(@"%d %d", c.xCoord, c.yCoord);
     }
     
     NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
@@ -147,7 +146,6 @@
     NSMutableArray* message = [[NSMutableArray alloc] init];
     if (doesAccept) {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"acceptCoralRequest"]];
-        [_game.gameMap initializeCoral:_coralPositions];
     }
     else {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"rejectCoralRequest"]];
@@ -179,14 +177,12 @@
     
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
-    NSLog(@"%@", type);
     if ([type isEqualToString:@"coralData"]) {
         _coralPositions = [[NSMutableSet alloc] init];
         for (int i=1; i < receivedMessage.count; i+=2) {
             Coordinate *c = [[Coordinate alloc] init];
-            c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
-            c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
-            NSLog(@"%d %d", c.xCoord, c.yCoord);
+            c.xCoord = 29 - [(NSNumber *) [NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
+            c.yCoord = 29 - [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             [_coralPositions addObject:c];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
@@ -212,10 +208,8 @@
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
         [_game.gameMap initializeCoral:_coralPositions];
-        NSLog(@"ACCCEEPPPPPPPT");
     }
     if ([type isEqualToString:@"begin"]) {
-        NSLog(@"ASDFASDFADSF");
         _opponentReady = TRUE;
         NSMutableArray *enemyShips = [[NSMutableArray alloc] init];
         for (int i=1; i < receivedMessage.count; i++) {

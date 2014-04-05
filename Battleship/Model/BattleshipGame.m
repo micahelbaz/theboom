@@ -21,6 +21,7 @@ static BattleshipGame *sharedGame = nil;
     }
     return sharedGame;
 }
+
 -(instancetype) init {
     self = [super init];
     if (self) {
@@ -169,10 +170,7 @@ static BattleshipGame *sharedGame = nil;
     if ([_gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[ShipSegment class]]) {
         ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
         int shipBlock = shipSeg.block;
-        
         s = [_localPlayer.enemyFleet getShipWithCoord:impactCoord];
-        NSLog(@"%@",s.shipName);
-        NSLog(@"%d",shipBlock);
         [s damageShipWithTorpedoAt:shipBlock];
     }
     return impactCoord;

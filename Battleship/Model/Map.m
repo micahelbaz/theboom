@@ -86,8 +86,8 @@
     for (Coordinate *contained in coralPositions)
     {
         Terrain t = CORAL;
-        [_grid[contained.xCoord] removeObjectAtIndex:contained.yCoord];
-        [_grid[contained.xCoord] insertObject:[NSNumber numberWithInt:t] atIndex:contained.yCoord];
+        [_grid[contained.xCoord+3] removeObjectAtIndex:contained.yCoord+10];
+        [_grid[contained.xCoord+3] insertObject:[NSNumber numberWithInt:t] atIndex:contained.yCoord+10];
     }
 }
 
