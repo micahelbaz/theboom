@@ -208,6 +208,10 @@
     }
     if ([type isEqualToString:@"acceptCoralRequest"]) {
         _configurationSet = TRUE;
+        for (Coordinate *corals in _coralPositions) {
+            corals.xCoord = 23-corals.xCoord;
+            corals.yCoord = 9 - corals.yCoord;
+        }
         [_game.gameMap initializeCoral:_coralPositions];
     }
     if ([type isEqualToString:@"begin"]) {
@@ -216,7 +220,12 @@
         for (int i=1; i < receivedMessage.count; i++) {
             [enemyShips addObject:(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]]];
         }
-        _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:enemyShips];
+        if (_game.localPlayer.isHost) {
+            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:_placedShip];
+        }
+        else {
+            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+        }
         if (_opponentReady && _youReady) {
             SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
             [self.scene.view presentScene:scene];
