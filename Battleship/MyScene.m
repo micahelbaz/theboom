@@ -236,6 +236,9 @@ typedef struct {
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
                 }
             }
+            if([_nodeTouched.name isEqualToString:@"FireCanon"]){
+                
+            }
         }
         
         // Move location touched
@@ -251,6 +254,7 @@ typedef struct {
 }
 
 -(int)getShipIndexFromName:(NSString*) shipName {
+    /*
     if ([shipName isEqualToString:@"HostCruiser1"] || [shipName isEqualToString:@"JoinCruiser1"]) {
         return 0;
     }
@@ -280,6 +284,10 @@ typedef struct {
     }
     if ([shipName isEqualToString:@"HostRadarBoat1"] || [shipName isEqualToString:@"JoinRadarBoat1"]) {
         return 9;
+    }
+    */
+    for(Ship *s in _game.localPlayer.playerFleet.shipArray){
+        
     }
     return 0;
 }

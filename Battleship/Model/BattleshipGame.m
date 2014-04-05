@@ -197,6 +197,17 @@ static BattleshipGame *sharedGame = nil;
     }
     return damages;
 }
+
+-(NSMutableArray*) getCannonRange:(Coordinate*)origin{
+    NSMutableArray * coords = [[NSMutableArray alloc]init];
+    for(Ship *s in _localPlayer.playerFleet.shipArray){
+        if(s.location.xCoord == origin.xCoord && s.location.yCoord == origin.yCoord){
+            return s.visibleCannonCoordinates;
+        }
+        
+    }
+    return coords;
+}
 /*-(NSMutableArray *)getValidRotationsFrom:(Coordinate *)origin {
  Ship* s;
  if (_hostsTurn) {

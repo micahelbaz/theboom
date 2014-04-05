@@ -51,6 +51,11 @@
     
 }
 
+- (void) displayCannonRange:(SKNode*)shipActuallyClicked{
+    [_canonRangeSprites removeAllChildren];
+  //  NSMutableArray* rangeCoordinates = [_game getCanonRange: _helper fromTextureToCoordinate:shipActuallyClicked.position withRadarPositions:false];
+}
+
 // Displays the torpedo
 - (void) createTorpedo:(SKNode*)shipActuallyClicked
 {
