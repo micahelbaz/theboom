@@ -23,19 +23,19 @@ typedef struct {
 -(id)initWithSize:(CGSize)size {
     self = [super initWithSize:size];
     if (self) {
+        _game = [BattleshipGame sharedInstance];
         // Initializing the background - more time efficient as only loads the textures once
         self.backgroundColor = [SKColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
         _moveFromCoordinate = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
         // Creates the battleship game
-        _game = [[BattleshipGame alloc] init];
         _game.gameCenter.match.delegate = self;
-        if(_game.localPlayer.isHost) {
+        //if(_game.localPlayer.isHost) {
             //[self sendMap];
             [_game updateMap:_game.localPlayer.playerFleet];
             [_game updateMap:_game.localPlayer.enemyFleet];
             _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
             [self addChild:_mainGameController.containers.overallNode];
-            //[self drawRadar];
+            [self drawRadar];
     }
     return self;
 }

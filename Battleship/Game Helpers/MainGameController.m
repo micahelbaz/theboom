@@ -20,8 +20,8 @@
         _console = [[Console alloc] initConsole];
         _background = [[Background alloc] initBackgroundWithNode:_containers.backgroundNode
                                                          andGame:_game];
-        _miniMap= [[MiniMap alloc] initMiniMapWithNode:_containers.miniMapNode
-                                               andGame:_game];
+       // _miniMap= [[MiniMap alloc] initMiniMapWithNode:_containers.miniMapNode
+                                               //andGame:_game];
         _foreground = [[Foreground alloc] initForegroundWithNode:_containers.foregroundNode
                                                          andGame:_game
                                                        andHelper:_helper

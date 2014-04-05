@@ -148,7 +148,6 @@
     NSMutableArray* message = [[NSMutableArray alloc] init];
     if (doesAccept) {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"acceptCoralRequest"]];
-        [_game.gameMap initializeCoral:_coralPositions];
     }
     else {
         [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"rejectCoralRequest"]];

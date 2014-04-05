@@ -21,7 +21,6 @@
 @property(strong, nonatomic) Player* localPlayer;
 
 + (BattleshipGame *)sharedInstance;
--(instancetype) init;
 -(void)moveShipfrom: (Coordinate*) origin
                  to:(Coordinate*) destination;
 -(NSMutableArray*) getValidMovesFrom:(Coordinate*)origin
