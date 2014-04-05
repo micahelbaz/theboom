@@ -46,9 +46,9 @@ static BattleshipGame *sharedGame = nil;
 //must remove fleet and then add fleet back
 -(void)updateMap:(Fleet*) updatedFleet{
     for(Ship* ship in updatedFleet.shipArray) {
+        NSLog(@"%@", ship.shipName);
         for(ShipSegment* seg in ship.blocks) {
-            NSLog(@"%@", seg.shipName);
-            NSLog(@"x:%d, y:%d", seg.location.xCoord, seg.location.yCoord);
+            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             [_gameMap.grid[seg.location.xCoord] insertObject:seg atIndex:seg.location.yCoord];
         }
@@ -173,7 +173,7 @@ static BattleshipGame *sharedGame = nil;
         ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
         int shipBlock = shipSeg.block;
         s = [_localPlayer.enemyFleet getShipWithCoord:impactCoord];
-        [s damageShipWithTorpedoAt:shipBlock];
+        [s damageShipWithTorpedoAt:shipBlock and:_localPlayer.playerFleet.dockingCoordinates];
     }
     return impactCoord;
 }

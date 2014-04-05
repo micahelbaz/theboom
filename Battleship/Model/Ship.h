@@ -37,6 +37,7 @@
 - (void)repair;
 - (void)rotate: (Rotation)destination;
 - (NSMutableArray*) getHeadLocationsOfMove;
-- (void)damageShipWithTorpedoAt:(int) blockNumber;
+-(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock;
+-(void) toggleRepairStatus: (NSMutableArray*) dock;
 @end
 

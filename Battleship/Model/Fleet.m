@@ -93,18 +93,16 @@
             m1 = [[MineLayer alloc] initWithLocation: mineLayer1 andName:@"HostMineLayer1"];
             m2 = [[MineLayer alloc] initWithLocation: mineLayer2 andName:@"HostMineLayer2"];
             r1 = [[RadarBoat alloc] initWithLocation: radar1 andName:@"HostRadarBoat1"];
-            [c1 positionShip:cruiser1 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [c2 positionShip:cruiser2 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [d1 positionShip:destroyer1 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [d2 positionShip:destroyer2 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [d3 positionShip:destroyer3 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [t1 positionShip:torpedo1 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [t2 positionShip:torpedo2 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [m1 positionShip:mineLayer1 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [m2 positionShip:mineLayer2 isHost:FALSE dockingArray:self.dockingCoordinates];
-            [r1 positionShip:radar1 isHost:FALSE dockingArray:self.dockingCoordinates];
-
-            
+        [c1 positionShip:cruiser1 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [c2 positionShip:cruiser2 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [d1 positionShip:destroyer1 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [d2 positionShip:destroyer2 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [d3 positionShip:destroyer3 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [t1 positionShip:torpedo1 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [t2 positionShip:torpedo2 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [m1 positionShip:mineLayer1 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [m2 positionShip:mineLayer2 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [r1 positionShip:radar1 isHost:TRUE dockingArray:self.dockingCoordinates];
         }
         else{
             for (int i = 0; i < ships.count; i++) {
@@ -184,18 +182,17 @@
                     
                 }
             }
-            [c1 positionShip:cruiser1 isHost:TRUE dockingArray:self.dockingCoordinates];
-            [c2 positionShip:cruiser2 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [d1 positionShip:destroyer1 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [d2 positionShip:destroyer2 isHost:TRUE dockingArray:self.dockingCoordinates];
-            [d3 positionShip:destroyer3 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [t1 positionShip:torpedo1 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [t2 positionShip:torpedo2 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [m1 positionShip:mineLayer1 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [m2 positionShip:mineLayer2 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            [r1 positionShip:radar1 isHost:TRUE  dockingArray:self.dockingCoordinates];
-            
-            
+        [c1 positionShip:cruiser1 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [c2 positionShip:cruiser2 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [d1 positionShip:destroyer1 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [d2 positionShip:destroyer2 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [d3 positionShip:destroyer3 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [t1 positionShip:torpedo1 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [t2 positionShip:torpedo2 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [m1 positionShip:mineLayer1 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [m2 positionShip:mineLayer2 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [r1 positionShip:radar1 isHost:FALSE dockingArray:self.dockingCoordinates];
+    
         }
      
         
