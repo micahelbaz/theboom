@@ -42,6 +42,11 @@
     _location = newCoord;
     int i = 0;
     for (ShipSegment* seg in self.blocks) {
+        BOOL damaged = FALSE;
+        if(seg.location )
+            if(seg.segmentArmourType < ){
+                damaged = TRUE;
+            }
                 switch (newCoord.direction) {
             case NORTH:
                 seg.location.xCoord = newCoord.xCoord;
@@ -55,6 +60,15 @@
                 break;
         }
         i++;
+    }
+   
+    
+    for(ShipSegment* seg in self.blocks){
+        for(Coordinate *c in dock){
+            if(seg.location.xCoord == c.xCoord && seg.location.yCoord == c.yCoord){
+                
+            }
+        }
     }
     if(host){
     _visibleCoordinates = [[NSMutableArray alloc]init];
