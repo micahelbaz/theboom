@@ -41,6 +41,7 @@
     Coordinate* newCoord = [[Coordinate alloc] initWithXCoordinate:destination.xCoord YCoordinate:destination.yCoord initiallyFacing:destination.direction];
     _location = newCoord;
     int i = 0;
+    BOOL fullHealth = TRUE;
     for (ShipSegment* seg in self.blocks) {
         BOOL damaged = FALSE;
         if(seg.location )

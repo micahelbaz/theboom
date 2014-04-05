@@ -124,7 +124,7 @@
                     mineLayer2 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:27 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 9) {
-                    radar1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:26 initiallyFacing:SOUTH];
+                    radar1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:26 initiallyFacing:SOUTH];
                 }
             }
 //            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:24 initiallyFacing:SOUTH];
