@@ -313,6 +313,7 @@
                 else {
                     _game.localPlayer.playerFleet = [[Fleet alloc] initWith:FALSE andShips:_placedShip];
                 }
+              
             }
         }
     }

@@ -170,6 +170,12 @@
         [_foreground createTorpedo:_shipActuallyClicked];
     }
     
+    else if([functionSprite.name isEqualToString:@"FireCannon"] || [functionSprite.name isEqualToString:@"FireHeavyCannon"] ){
+        [_foreground displayCannonRange:_shipActuallyClicked];
+    }
+    
+    
+    
 }
 
 // Changes the ship name to a representable string

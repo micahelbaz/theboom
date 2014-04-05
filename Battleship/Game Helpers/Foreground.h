@@ -22,6 +22,7 @@
 
 @property (strong, nonatomic) SKNode *movementLocationsSprites;
 @property (strong, nonatomic) SKNode *torpedoSprites;
+@property (strong, nonatomic) SKNode *canonRangeSprites;
 
 @property (strong, nonatomic) NSMutableArray *torpedoShot;
 @property (strong, nonatomic) NSMutableArray *torpedoShooter;
@@ -38,5 +39,6 @@
 - (void) displayMoveAreasForShip:(SKNode*)shipActuallyClicked;
 - (void) createTorpedo:(SKNode*)shipActuallyClicked;
 - (void) animateTorpedo;
+- (void) displayCannonRange:(SKNode*)shipActuallyClicked;
 
 @end
