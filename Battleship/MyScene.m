@@ -161,14 +161,6 @@ typedef struct {
         Ship *s = localShips[shipIndex];
         [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:newPosition];
         [_game moveEnemyShipfrom:oldPosition to:newPosition];
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                if ([_game.gameMap.grid[i][j] isKindOfClass:[ShipSegment class]]) {
-                    NSLog(@"%d,%d",i,j);
-                }
-            }
-        }
-        
     }
     else if([type isEqualToString:@"torpedoHitData"]){
         int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
@@ -176,12 +168,10 @@ typedef struct {
         int newSpeed = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[3]] intValue];
         NSArray* localShips = _game.localPlayer.playerFleet.shipArray;
         Ship *s = localShips[hitIndex];
-        NSLog(@"%d", newSpeed);
         s.speed = newSpeed;
         for(int i=0; i<s.size; i++){
             ShipSegment *seg = s.blocks[i];
             int currentDamage = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: damageArray[i]] intValue];
-            NSLog(@"Damage at %d is %d", i, currentDamage);
             seg.segmentArmourType = currentDamage;
             
         }
@@ -364,9 +354,6 @@ typedef struct {
                 sprite.position = CGPointMake(i * tileWidth + tileWidth/2,
                                               j * tileHeight + tileWidth/2);
                 [self addChild:sprite];
-            }
-            else {
-                NSLog(@"%d,%d", i,j);
             }
         }
     }

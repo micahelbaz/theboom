@@ -20,7 +20,7 @@
         self.isDestroyed = FALSE;
         self.radarRange = [[Range alloc]init];
         [_viableActions addObject:@"Move"];
-        [_viableActions addObject:@"Rotate"];
+        //[_viableActions addObject:@"Rotate"];
         _visibleCoordinates = [[NSMutableArray alloc]init];
         _visibleCannonCoordinates = [[NSMutableArray alloc]init];
     }
@@ -361,9 +361,7 @@
     int counter = 0;
     for (int i = 0; i < _size; i++) {
         ShipSegment *s = _blocks[i];
-        NSLog(@"armour %d", s.segmentArmourType);
         if (s.segmentArmourType == DESTROYED) {
-            NSLog(@"armour %d", s.segmentArmourType);
             counter++;
         }
     }
