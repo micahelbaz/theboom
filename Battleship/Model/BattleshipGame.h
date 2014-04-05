@@ -33,6 +33,6 @@
 -(NSMutableArray*) getCanonRange:(Coordinate*)origin;
 -(void)updateMap:(Fleet*) updatedFleet;
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination;
-
+-(BOOL)isShipDestroyed:(NSString *) shipName;
 
 @end
