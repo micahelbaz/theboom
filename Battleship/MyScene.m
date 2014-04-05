@@ -253,13 +253,19 @@ typedef struct {
 -(int)getShipIndexFromName:(NSString*) shipName {
     int index = 0;
     for (Ship *s in _game.localPlayer.playerFleet.shipArray) {
+        //NSLog(@"%@", s.shipName);
         if ([shipName isEqualToString:s.shipName]) {
+            //NSLog(@"%d", index);
             return index;
         }
         index++;
     }
+    index = 0;
+    
     for (Ship *s in _game.localPlayer.enemyFleet.shipArray) {
+        //NSLog(@"%@", s.shipName);
         if ([shipName isEqualToString:s.shipName]) {
+            //NSLog(@"%d", index);
             return index;
         }
         index++;

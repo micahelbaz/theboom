@@ -46,7 +46,9 @@ static BattleshipGame *sharedGame = nil;
 //must remove fleet and then add fleet back
 -(void)updateMap:(Fleet*) updatedFleet{
     for(Ship* ship in updatedFleet.shipArray) {
+        NSLog(@"%@", ship.shipName);
         for(ShipSegment* seg in ship.blocks) {
+            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             [_gameMap.grid[seg.location.xCoord] insertObject:seg atIndex:seg.location.yCoord];
         }
