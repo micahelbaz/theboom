@@ -30,12 +30,12 @@ typedef struct {
         // Creates the battleship game
         _game.gameCenter.match.delegate = self;
         //if(_game.localPlayer.isHost) {
-            //[self sendMap];
-            [_game updateMap:_game.localPlayer.playerFleet];
-            [_game updateMap:_game.localPlayer.enemyFleet];
-            _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
-            [self addChild:_mainGameController.containers.overallNode];
-            //[self drawRadar];
+        //[self sendMap];
+        [_game updateMap:_game.localPlayer.playerFleet];
+        [_game updateMap:_game.localPlayer.enemyFleet];
+        _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
+        [self addChild:_mainGameController.containers.overallNode];
+        //[self drawRadar];
     }
     return self;
 }
@@ -251,38 +251,22 @@ typedef struct {
 }
 
 -(int)getShipIndexFromName:(NSString*) shipName {
-    if ([shipName isEqualToString:@"HostCruiser1"] || [shipName isEqualToString:@"JoinCruiser1"]) {
-        return 0;
+    int index = 0;
+    for (Ship *s in _game.localPlayer.playerFleet.shipArray) {
+        if ([shipName isEqualToString:s.shipName]) {
+            return index;
+        }
+        index++;
     }
-    if ([shipName isEqualToString:@"HostCruiser2"] || [shipName isEqualToString:@"JoinCruiser2"]) {
-        return 1;
+    for (Ship *s in _game.localPlayer.enemyFleet.shipArray) {
+        if ([shipName isEqualToString:s.shipName]) {
+            return index;
+        }
+        index++;
     }
-    if ([shipName isEqualToString:@"HostDestroyer1"] || [shipName isEqualToString:@"JoinDestroyer1"]) {
-        return 2;
-    }
-    if ([shipName isEqualToString:@"HostDestroyer2"] || [shipName isEqualToString:@"JoinDestroyer2"]) {
-        return 3;
-    }
-    if ([shipName isEqualToString:@"HostDestroyer3"] || [shipName isEqualToString:@"JoinDestroyer3"]) {
-        return 4;
-    }
-    if ([shipName isEqualToString:@"HostTorpedoBoat1"] || [shipName isEqualToString:@"JoinTorpedoBoat1"]) {
-        return 5;
-    }
-    if ([shipName isEqualToString:@"HostTorpedoBoat2"] || [shipName isEqualToString:@"JoinTorpedoBoat2"]) {
-        return 6;
-    }
-    if ([shipName isEqualToString:@"HostMineLayer1"] || [shipName isEqualToString:@"JoinMineLayer1"]) {
-        return 7;
-    }
-    if ([shipName isEqualToString:@"HostMineLayer2"] || [shipName isEqualToString:@"JoinMineLayer2"]) {
-        return 8;
-    }
-    if ([shipName isEqualToString:@"HostRadarBoat1"] || [shipName isEqualToString:@"JoinRadarBoat1"]) {
-        return 9;
-    }
-    return 0;
+    return -1;
 }
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint positionInScene = [touch locationInNode:self];
