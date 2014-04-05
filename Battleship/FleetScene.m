@@ -182,8 +182,8 @@
         _coralPositions = [[NSMutableSet alloc] init];
         for (int i=1; i < receivedMessage.count; i+=2) {
             Coordinate *c = [[Coordinate alloc] init];
-            c.xCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
-            c.yCoord = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
+            c.xCoord = 23 - [(NSNumber *) [NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]] intValue];
+            c.yCoord = 9 - [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i+1]] intValue];
             [_coralPositions addObject:c];
         }
         NSMutableArray *remove = [[NSMutableArray alloc] init];
@@ -295,7 +295,13 @@
                 start.position = CGPointMake(CGRectGetMidX(_fleetBackground.frame), (CGRectGetMaxY(_fleetBackground.frame)+CGRectGetMaxY(self.frame))/2);
                 start.name = @"start game";
                 [self addChild:start];
-                _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+                if(_game.localPlayer.isHost){
+                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+                }
+                else{
+                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+                }
+              
             }
         }
     }

@@ -97,31 +97,31 @@
         else{
             for (int i = 0; i < ships.count; i++) {
                 if ([ships[i] intValue] == 0) {
-                    cruiser1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:24 initiallyFacing:SOUTH];
+                    cruiser1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:24 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 1) {
-                    cruiser2 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:24 initiallyFacing:SOUTH];
+                    cruiser2 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:24 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 2) {
-                    destroyer1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:25 initiallyFacing:SOUTH];
+                    destroyer1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:25 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 3) {
-                    destroyer2 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:25 initiallyFacing:SOUTH];
+                    destroyer2 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:25 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 4) {
-                    destroyer3 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:25 initiallyFacing:SOUTH];
+                    destroyer3 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:25 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 5) {
-                    torpedo1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:26 initiallyFacing:SOUTH];
+                    torpedo1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:26 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 6) {
-                    torpedo2 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:26 initiallyFacing:SOUTH];
+                    torpedo2 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:26 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 7) {
-                    mineLayer1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:27 initiallyFacing:SOUTH];
+                    mineLayer1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:27 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 8) {
-                    mineLayer2 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:27 initiallyFacing:SOUTH];
+                    mineLayer2 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:27 initiallyFacing:SOUTH];
                 }
                 if ([ships[i] intValue] == 9) {
                     radar1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:26 initiallyFacing:SOUTH];
