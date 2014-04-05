@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418428314.274762"
+            timestampString = "418432651.682807"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "213"
-            endingLineNumber = "213"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "-getCanonRange:"
             landmarkType = "5">
             <Locations>
@@ -216,12 +216,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418428314.274762"
+            timestampString = "418432651.682807"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "-getCanonRange:"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "-getShipDamages:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -232,12 +232,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418428314.274762"
+            timestampString = "418432651.682807"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
-            landmarkName = "-getCanonRange:"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
+            landmarkName = "-getShipDamages:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

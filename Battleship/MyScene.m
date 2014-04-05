@@ -93,6 +93,9 @@ typedef struct {
     return false;
 }
 
+
+
+
 -(BOOL)sendTorpedoHit:(int) i{
     NSError* error;
     NSMutableArray* shipDetails = [[NSMutableArray alloc] init];
@@ -142,6 +145,8 @@ typedef struct {
         [_game updateMap:newFleet];
         //[_mainGameController redrawShips];
     }
+    
+ 
     else if([type isEqualToString:@"moveData"]){
         /* 1- NSNumber index of ship in flee
          2- NSnumber new x cord
@@ -243,7 +248,7 @@ typedef struct {
         }
         
         // Move location touched
-        if ([_nodeTouched.parent isEqual:_mainGameController.foreground.movementLocationsSprites] || [_nodeTouched.name isEqual:@"radar"])
+        if ([_nodeTouched.parent isEqual:_mainGameController.foreground.movementLocationsSprites])
         {
             [_mainGameController.ships updateShipLocation:_nodeTouched];
             Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
@@ -251,8 +256,20 @@ typedef struct {
             [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
             //[self drawRadar];
         }
+        if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
+            
+            Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+            [_game damageShipSegment:squareTouched];
+            if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
+                [_mainGameController.console setConsoleText:@"Ship Hit"];
+                ShipSegment *seg = _game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord];
+                [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
+            }
+        }
     }
 }
+
+
 
 -(int)getShipIndexFromName:(NSString*) shipName {
     int index = 0;

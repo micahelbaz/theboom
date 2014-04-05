@@ -64,7 +64,7 @@
         range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
                                      c.yCoord * tileHeight + tileHeight/2);
         range.zPosition = 1;
-        [_movementLocationsSprites addChild:range];
+        [_canonRangeSprites addChild:range];
     }
 }
 

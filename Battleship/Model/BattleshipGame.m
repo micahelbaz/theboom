@@ -179,7 +179,15 @@ static BattleshipGame *sharedGame = nil;
 }
 
 
-
+-(void) damageShipSegment:(Coordinate*)impactCoord{
+    Ship *s;
+    if ([_gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[ShipSegment class]]) {
+        ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
+        int shipBlock = shipSeg.block;
+        s = [_localPlayer.enemyFleet getShipWithCoord:impactCoord];
+        [s damageShipWithTorpedoAt:shipBlock and:_localPlayer.playerFleet.dockingCoordinates];
+    }
+}
 
 
 
