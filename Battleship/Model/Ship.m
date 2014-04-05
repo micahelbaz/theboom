@@ -36,6 +36,7 @@
             break;
         }
     }
+    [self changeSpeed];
 }
 
 -(void) toggleRepairStatus: (NSMutableArray*) dock  {
@@ -405,16 +406,11 @@
     if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
         seg.segmentArmourType--;
     }
-    /*
-     if (blockNumber > 0) {
-     if (![_blocks[blockNumber-1] damageSegmentWithTorpedo] && blockNumber < _size-1) {
-     [_blocks[blockNumber+1] damageSegmentWithTorpedo];
-     }
-     }
-     else {
-     [_blocks[blockNumber+1] damageSegmentWithTorpedo];
-     }
-     */
+    [self changeSpeed];
+    [self toggleRepairStatus:dock];
+}
+
+-(void) changeSpeed {
     int counter = 0;
     for (int i = 0; i < _size; i++) {
         ShipSegment *s = _blocks[i];
@@ -429,6 +425,5 @@
         double doubleSpeed = (double)(_size-counter)/ (double)_size * (double)_maxSpeed;
         _speed = (int) doubleSpeed;
     }
-    [self toggleRepairStatus:dock];
 }
 @end

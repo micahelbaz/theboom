@@ -116,6 +116,28 @@ typedef struct {
     }
     return false;
 }
+
+-(BOOL)sendRapairShip:(int) i{
+    NSError* error;
+    NSMutableArray* shipDetails = [[NSMutableArray alloc] init];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"repairData"]];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:i]]];
+    Ship* s = _game.localPlayer.enemyFleet.shipArray[i];
+    NSMutableArray* shipDamages = [[NSMutableArray alloc] init];
+    for (int j = 0; j < s.size; j++) {
+        ShipSegment *seg = s.blocks[j];
+        [shipDamages addObject:[NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:seg.segmentArmourType]]];
+    }
+    [shipDetails addObject:[NSKeyedArchiver archivedDataWithRootObject:shipDamages]];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:s.speed]]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:shipDetails];
+    [_game.gameCenter.match sendDataToAllPlayers: packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
+
+}
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSLog(@"test");
     
@@ -168,6 +190,23 @@ typedef struct {
         [_game moveEnemyShipfrom:oldPosition to:newPosition];
     }
     else if([type isEqualToString:@"torpedoHitData"]){
+        int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        NSMutableArray *damageArray = (NSMutableArray *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]];
+        int newSpeed = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[3]] intValue];
+        NSArray* localShips = _game.localPlayer.playerFleet.shipArray;
+        Ship *s = localShips[hitIndex];
+        s.speed = newSpeed;
+        for(int i=0; i<s.size; i++){
+            ShipSegment *seg = s.blocks[i];
+            int currentDamage = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: damageArray[i]] intValue];
+            seg.segmentArmourType = currentDamage;
+            
+        }
+        if ([_game isShipDestroyed:s.shipName]) {
+            [_mainGameController.ships removeShipFromScreen:s.shipName];
+        }
+    }
+    else if([type isEqualToString:@"repairData"]){
         int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
         NSMutableArray *damageArray = (NSMutableArray *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]];
         int newSpeed = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[3]] intValue];
@@ -239,11 +278,15 @@ typedef struct {
                     ShipSegment *seg = (ShipSegment*) _game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
                     [_mainGameController.console setConsoleText:@"Ship Hit"];
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
+                    if ([_game isShipDestroyed:seg.shipName]) {
+                        [_mainGameController.ships removeShipFromScreen:seg.shipName];
+                    }
                 }
             }
             if ([_nodeTouched.name isEqualToString:@"RepairShip"]) {
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
                 [s repair];
+                [self sendRapairShip:[self getShipIndexFromName:s.shipName]];
             }
         }
         

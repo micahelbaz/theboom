@@ -174,6 +174,11 @@
     }
 }
 
+-(void) removeShipFromScreen:(NSString *)shipName {
+    NSMutableArray* shipToBeRemoved = [[NSMutableArray alloc] init];
+    [shipToBeRemoved addObject:shipName];
+    [_shipsNode removeChildrenInArray:shipToBeRemoved];
+}
 // Changes the ship name to a representable string
 -(NSString*) shipName: (NSString*) carbon{
     

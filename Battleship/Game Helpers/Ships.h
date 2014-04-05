@@ -47,5 +47,5 @@
 - (void) animateShips;
 - (NSString*) shipName: (NSString*) carbon;
 -(CGPoint)positionShipSprite:(SKNode *)sprite atCoordinate:(Coordinate *)c;
-
+- (void) removeShipFromScreen: (NSString*) shipName;
 @end

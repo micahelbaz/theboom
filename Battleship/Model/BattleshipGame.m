@@ -229,14 +229,31 @@ static BattleshipGame *sharedGame = nil;
     }
     return coords;
 }
-/*-(NSMutableArray *)getValidRotationsFrom:(Coordinate *)origin {
- Ship* s;
- if (_hostsTurn) {
- s = [_hostFleet getShipWithCoord:origin];
- }
- else {
- s = [_joinFleet getShipWithCoord:origin];
- }
- 
- }*/
+
+-(BOOL)isShipDestroyed:(NSString *)shipName {
+    for(Ship *s in _localPlayer.playerFleet.shipArray){
+        if ([s.shipName isEqualToString:shipName]) {
+            if (s.isDestroyed) {
+                for (ShipSegment *seg in s.blocks) {
+                    [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
+                    [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
+                }
+            }
+            return s.isDestroyed;
+        }
+    }
+    for(Ship *s in _localPlayer.enemyFleet.shipArray){
+        if ([s.shipName isEqualToString:shipName]) {
+            if (s.isDestroyed) {
+                for (ShipSegment *seg in s.blocks) {
+                    [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
+                    [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
+                }
+            }
+            return s.isDestroyed;
+        }
+    }
+    return FALSE;
+}
+
 @end
