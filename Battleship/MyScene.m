@@ -30,12 +30,12 @@ typedef struct {
         // Creates the battleship game
         _game.gameCenter.match.delegate = self;
         //if(_game.localPlayer.isHost) {
-            //[self sendMap];
-            [_game updateMap:_game.localPlayer.playerFleet];
-            [_game updateMap:_game.localPlayer.enemyFleet];
-            _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
-            [self addChild:_mainGameController.containers.overallNode];
-            //[self drawRadar];
+        //[self sendMap];
+        [_game updateMap:_game.localPlayer.playerFleet];
+        [_game updateMap:_game.localPlayer.enemyFleet];
+        _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
+        [self addChild:_mainGameController.containers.overallNode];
+        //[self drawRadar];
     }
     return self;
 }
@@ -282,8 +282,11 @@ typedef struct {
     if ([shipName isEqualToString:@"HostMineLayer2"] || [shipName isEqualToString:@"JoinMineLayer2"]) {
         return 8;
     }
-    if ([shipName isEqualToString:@"HostRadarBoat1"] || [shipName isEqualToString:@"JoinRadarBoat1"]) {
-        return 9;
+    for (Ship *s in _game.localPlayer.enemyFleet.shipArray) {
+        if ([shipName isEqualToString:s.shipName]) {
+            return index;
+        }
+        index++;
     }
     */
     for(Ship *s in _game.localPlayer.playerFleet.shipArray){
@@ -291,6 +294,7 @@ typedef struct {
     }
     return 0;
 }
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint positionInScene = [touch locationInNode:self];
