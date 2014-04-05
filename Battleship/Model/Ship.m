@@ -41,8 +41,12 @@
     Coordinate* newCoord = [[Coordinate alloc] initWithXCoordinate:destination.xCoord YCoordinate:destination.yCoord initiallyFacing:destination.direction];
     _location = newCoord;
     int i = 0;
+    BOOL fullHealth = TRUE;
     for (ShipSegment* seg in self.blocks) {
-                switch (newCoord.direction) {
+        if (seg.segmentArmourType != self.shipArmourType) {
+            fullHealth = FALSE;
+        }
+        switch (newCoord.direction) {
             case NORTH:
                 seg.location.xCoord = newCoord.xCoord;
                 seg.location.yCoord = newCoord.yCoord - i;
@@ -55,6 +59,22 @@
                 break;
         }
         i++;
+    }
+    BOOL addRepairShip = FALSE;
+    if (!fullHealth) {
+    for (ShipSegment* seg in self.blocks) {
+        for (Coordinate *c in dock) {
+            if (seg.location.xCoord == c.xCoord && seg.location.yCoord == c.yCoord) {
+                addRepairShip = TRUE;
+            }
+        }
+    }
+    }
+    if (addRepairShip) {
+        [self.viableActions addObject:@"RepairShip"];
+    }
+    else {
+        [self.viableActions removeObject:@"RepairShip"];
     }
     if(host){
     _visibleCoordinates = [[NSMutableArray alloc]init];
