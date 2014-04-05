@@ -18,7 +18,8 @@
         self.blocks = [[NSMutableArray alloc] init];
         self.viableActions = [[NSMutableArray alloc] init];
         self.isDestroyed = FALSE;
-        self.radarRange = [[Range alloc]init];
+        self.radarRange = [[Range alloc] init];
+        self.canonRange = [[Range alloc] init];
         [_viableActions addObject:@"Move"];
         //[_viableActions addObject:@"Rotate"];
         _visibleCoordinates = [[NSMutableArray alloc]init];
@@ -85,6 +86,7 @@
 
     Coordinate *firstBlock = [[Coordinate alloc] initWithXCoordinate:newCoord.xCoord YCoordinate:newCoord.yCoord initiallyFacing:newCoord.direction];
     if(newCoord.direction == NORTH){
+        BOOL shipPresent = FALSE;
         firstBlock.yCoord-=(self.size-1);
         [self.visibleCoordinates addObject:firstBlock];
         int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
@@ -92,12 +94,21 @@
         int yRange = newCoord.yCoord-self.size+2+self.radarRange.startRange;
         int xCannonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
         int yCannonRange = newCoord.yCoord-self.size+2+self.canonRange.startRange;
+   
         
         for(int z = xCannonRange; z<=firstBlock.xCoord+self.canonRange.rangeWidth; z++){
-            for(int x = yCannonRange; x<newCoord.yCoord+self.canonRange.rangeWidth; x++){
+            for(int x = yCannonRange; x<newCoord.yCoord+self.canonRange.rangeHeight; x++){
                 Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:z YCoordinate:x initiallyFacing:NORTH];
                 if([coord isWithinMap]){
-                    [self.visibleCannonCoordinates addObject:coord];
+                    for(ShipSegment *seg in self.blocks){
+                        if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){
+                            shipPresent = TRUE;
+                        }
+                    }
+                    if(!shipPresent){
+                        [self.visibleCoordinates addObject:coord];
+                    }
+ 
                 }
             }
         }
@@ -114,6 +125,7 @@
         
     }
     if(newCoord.direction == SOUTH){
+        
         firstBlock.yCoord+=(self.size-1);
         [self.visibleCoordinates addObject:firstBlock];
         int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
@@ -125,15 +137,32 @@
                 Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:SOUTH];
                 if([c isWithinMap]){
                     [self.visibleCoordinates addObject:c];
+                   
                 }
             }
         }
+        NSLog(@"range width: %d", self.canonRange.rangeWidth);
+        NSLog(@"yStartRange: %d", yCanonRange);
         
         for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.rangeWidth; x++){
+        BOOL shipPresent = FALSE;
             for(int z = yCanonRange; z>newCoord.yCoord-self.canonRange.rangeHeight-self.canonRange.startRange; z--){
+                BOOL shipPresent = FALSE;
                 Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:z initiallyFacing:SOUTH];
                 if([coord isWithinMap]){
-                    [self.visibleCannonCoordinates addObject:coord];
+                     NSLog(@"x: %d, y: %d", coord.xCoord, coord.yCoord);
+                    if([coord isWithinMap]){
+                        for(ShipSegment *seg in self.blocks){
+                            if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){
+                                shipPresent = TRUE;
+                            }
+                        }
+                        if(!shipPresent){
+                            [self.visibleCannonCoordinates addObject:coord];
+                        }
+                    }
+
+               
                 }
             }
         }

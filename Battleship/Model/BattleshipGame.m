@@ -177,6 +177,14 @@ static BattleshipGame *sharedGame = nil;
     }
     return impactCoord;
 }
+
+
+
+
+
+
+
+
 -(Coordinate*) getCoordOfShip: (NSString*) shipName {
     Fleet *currentFleet;
     
