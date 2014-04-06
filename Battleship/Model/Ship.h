@@ -39,5 +39,6 @@
 - (NSMutableArray*) getHeadLocationsOfMove;
 -(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock;
 -(void) toggleRepairStatus: (NSMutableArray*) dock;
+-(void) changeSpeed;
 @end
 
