@@ -196,6 +196,7 @@ typedef struct {
         NSArray* localShips = _game.localPlayer.playerFleet.shipArray;
         Ship *s = localShips[hitIndex];
         s.speed = newSpeed;
+        [s toggleRepairStatus:_game.localPlayer.playerFleet.dockingCoordinates];
         for(int i=0; i<s.size; i++){
             ShipSegment *seg = s.blocks[i];
             int currentDamage = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: damageArray[i]] intValue];
@@ -205,6 +206,7 @@ typedef struct {
         if ([_game isShipDestroyed:s.shipName]) {
             [_mainGameController.ships removeShipFromScreen:s.shipName];
         }
+        [s toggleRepairStatus:_game.localPlayer.playerFleet.dockingCoordinates];
     }
     else if([type isEqualToString:@"repairData"]){
         int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
@@ -246,6 +248,7 @@ typedef struct {
         // Ship touched
         if ([_nodeTouched.parent isEqual:_mainGameController.ships.shipsNode])
         {
+            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
             [_mainGameController.visualBar displayShipDetails:_nodeTouched];
             _shipIndex = [self getShipIndexFromName:_nodeTouched.name];
             Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
@@ -257,6 +260,7 @@ typedef struct {
         // Fire Torpedo button
         if ([_nodeTouched.parent isEqual:_mainGameController.visualBar.shipFunctions])
         {
+            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
             [_mainGameController.visualBar detectFunction:_nodeTouched];
             if ([_nodeTouched.name isEqualToString:@"FireTorpedo"]) {
                 [_mainGameController.console setConsoleText:@"\n"];
@@ -300,13 +304,16 @@ typedef struct {
             //[self drawRadar];
         }
         if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
-            
+            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
             Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
             [_game damageShipSegment:squareTouched];
             if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
                 [_mainGameController.console setConsoleText:@"Ship Hit"];
                 ShipSegment *seg = _game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord];
                 [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
+                if ([_game isShipDestroyed:seg.shipName]) {
+                    [_mainGameController.ships removeShipFromScreen:seg.shipName];
+                }
             }
         }
     }

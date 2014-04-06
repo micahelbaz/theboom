@@ -16,9 +16,9 @@
     if (self) {
         // Creates the console box
         CGRect consoleFrame = CGRectMake(fullScreenWidth+20-visualBarWidth,
-                                         visualBarHeight/2+50,
+                                         visualBarHeight/2+150,
                                          visualBarWidth-40,
-                                         visualBarHeight/2-70);
+                                         visualBarHeight/2-200);
         _textView = [[UITextView alloc]initWithFrame:consoleFrame];
         _textView.clipsToBounds = YES;
         _textView.layer.cornerRadius = 5.0f;

@@ -59,6 +59,7 @@
         }
     }
     if (addRepairShip) {
+        [self.viableActions removeObject:@"RepairShip"];
         [self.viableActions addObject:@"RepairShip"];
     }
     else {
@@ -105,7 +106,9 @@
    
         
         for(int z = xCannonRange; z<=firstBlock.xCoord+self.canonRange.rangeWidth; z++){
+            BOOL shipPresent = FALSE;
             for(int x = yCannonRange; x<newCoord.yCoord+self.canonRange.rangeHeight; x++){
+                BOOL shipPresent = FALSE;
                 Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:z YCoordinate:x initiallyFacing:NORTH];
                 if([coord isWithinMap]){
                     for(ShipSegment *seg in self.blocks){
@@ -114,7 +117,7 @@
                         }
                     }
                     if(!shipPresent){
-                        [self.visibleCoordinates addObject:coord];
+                        [self.visibleCannonCoordinates addObject:coord];
                     }
  
                 }

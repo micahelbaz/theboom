@@ -176,7 +176,11 @@
 
 -(void) removeShipFromScreen:(NSString *)shipName {
     NSMutableArray* shipToBeRemoved = [[NSMutableArray alloc] init];
-    [shipToBeRemoved addObject:shipName];
+    for (SKSpriteNode *child in _shipsNode.children) {
+        if ([child.name isEqualToString:shipName]) {
+            [shipToBeRemoved addObject:child];
+        }
+    }
     [_shipsNode removeChildrenInArray:shipToBeRemoved];
 }
 // Changes the ship name to a representable string

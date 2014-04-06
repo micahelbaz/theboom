@@ -234,6 +234,7 @@ static BattleshipGame *sharedGame = nil;
     for(Ship *s in _localPlayer.playerFleet.shipArray){
         if ([s.shipName isEqualToString:shipName]) {
             if (s.isDestroyed) {
+                NSLog(@"is destroyed");
                 for (ShipSegment *seg in s.blocks) {
                     [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
                     [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
@@ -245,6 +246,7 @@ static BattleshipGame *sharedGame = nil;
     for(Ship *s in _localPlayer.enemyFleet.shipArray){
         if ([s.shipName isEqualToString:shipName]) {
             if (s.isDestroyed) {
+                NSLog(@"is destroyed");
                 for (ShipSegment *seg in s.blocks) {
                     [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
                     [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
