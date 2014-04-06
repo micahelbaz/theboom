@@ -205,6 +205,7 @@ typedef struct {
         if ([_game isShipDestroyed:s.shipName]) {
             [_mainGameController.ships removeShipFromScreen:s.shipName];
         }
+        [s toggleRepairStatus:_game.localPlayer.playerFleet.dockingCoordinates];
     }
     else if([type isEqualToString:@"repairData"]){
         int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
@@ -272,6 +273,7 @@ typedef struct {
                     }
                     else {
                         [_mainGameController.console setConsoleText:@"Base Hit"];
+                       
                     }
                 }
                 else {
@@ -300,7 +302,7 @@ typedef struct {
             //[self drawRadar];
         }
         if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
-            
+            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
             Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
             [_game damageShipSegment:squareTouched];
             if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
