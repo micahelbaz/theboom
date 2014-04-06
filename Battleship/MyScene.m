@@ -202,6 +202,7 @@ typedef struct {
             seg.segmentArmourType = currentDamage;
             
         }
+        [s changeSpeed];
         if ([_game isShipDestroyed:s.shipName]) {
             [_mainGameController.ships removeShipFromScreen:s.shipName];
         }
