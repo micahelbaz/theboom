@@ -196,7 +196,6 @@ typedef struct {
         NSArray* localShips = _game.localPlayer.playerFleet.shipArray;
         Ship *s = localShips[hitIndex];
         s.speed = newSpeed;
-        [s toggleRepairStatus:_game.localPlayer.playerFleet.dockingCoordinates];
         for(int i=0; i<s.size; i++){
             ShipSegment *seg = s.blocks[i];
             int currentDamage = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: damageArray[i]] intValue];
