@@ -94,7 +94,17 @@ typedef struct {
 }
 
 
-
+-(BOOL)sendTurn {
+    NSError* error;
+    NSMutableArray* message = [[NSMutableArray alloc] init];
+    [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"turnTaken"]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
+    [_game.gameCenter.match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
+}
 
 -(BOOL)sendTorpedoHit:(int) i{
     NSError* error;
@@ -136,7 +146,7 @@ typedef struct {
         NSLog(@"error");
     }
     return false;
-
+    
 }
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSLog(@"test");
@@ -168,7 +178,7 @@ typedef struct {
         //[_mainGameController redrawShips];
     }
     
- 
+    
     else if([type isEqualToString:@"moveData"]){
         /* 1- NSNumber index of ship in flee
          2- NSnumber new x cord
@@ -223,6 +233,9 @@ typedef struct {
         }
         
     }
+    else if([type isEqualToString:@"turnTaken"]) {
+        _game.myTurn = TRUE;
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -231,90 +244,99 @@ typedef struct {
         
         CGPoint location = [touch locationInNode:self];
         _nodeTouched = [self nodeAtPoint:location];
-        
-        // Mini map touched
-        if ([_nodeTouched.name isEqualToString:miniMapSpriteName])
-        {
-            _mainGameController.miniMap.initiallyTouched = true;
-        }
-        
-        // Background touched
-        if ([_nodeTouched.parent isEqual:_mainGameController.gestures.gesturesNode]
-            || [_nodeTouched.parent.parent isEqual:_mainGameController.gestures.gesturesNode])
-        {
-            _mainGameController.gestures.initiallyTouched = true;
-        }
-        
-        // Ship touched
-        if ([_nodeTouched.parent isEqual:_mainGameController.ships.shipsNode])
-        {
-            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
-            [_mainGameController.visualBar displayShipDetails:_nodeTouched];
-            _shipIndex = [self getShipIndexFromName:_nodeTouched.name];
-            Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
-            _moveFromCoordinate = s.location;
-        }
-        
-        // Move button
-        // Rotate button
-        // Fire Torpedo button
-        if ([_nodeTouched.parent isEqual:_mainGameController.visualBar.shipFunctions])
-        {
-            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
-            [_mainGameController.visualBar detectFunction:_nodeTouched];
-            if ([_nodeTouched.name isEqualToString:@"FireTorpedo"]) {
-                [_mainGameController.console setConsoleText:@"\n"];
+        if (_game.myTurn) {
+            // Mini map touched
+            if ([_nodeTouched.name isEqualToString:miniMapSpriteName])
+            {
+                _mainGameController.miniMap.initiallyTouched = true;
+            }
+            
+            // Background touched
+            if ([_nodeTouched.parent isEqual:_mainGameController.gestures.gesturesNode]
+                || [_nodeTouched.parent.parent isEqual:_mainGameController.gestures.gesturesNode])
+            {
+                _mainGameController.gestures.initiallyTouched = true;
+            }
+            
+            // Ship touched
+            if ([_nodeTouched.parent isEqual:_mainGameController.ships.shipsNode])
+            {
+                [_mainGameController.foreground.canonRangeSprites removeAllChildren];
+                [_mainGameController.visualBar displayShipDetails:_nodeTouched];
+                _shipIndex = [self getShipIndexFromName:_nodeTouched.name];
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
-                Coordinate* impactCoord = [_game fireTorpedo:s.location];
-                if ([_game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[NSNumber class]]) {
-                    Terrain terType = [_game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] intValue];
-                    if (terType == CORAL) {
-                        [_mainGameController.console setConsoleText:@"Coral Hit"];
-                    }
-                    else if (terType == WATER) {
-                        [_mainGameController.console setConsoleText:@"Shot Fell into the Water"];
+                _moveFromCoordinate = s.location;
+            }
+            
+            // Move button
+            // Rotate button
+            // Fire Torpedo button
+            if ([_nodeTouched.parent isEqual:_mainGameController.visualBar.shipFunctions])
+            {
+                [_mainGameController.foreground.canonRangeSprites removeAllChildren];
+                [_mainGameController.visualBar detectFunction:_nodeTouched];
+                if ([_nodeTouched.name isEqualToString:@"FireTorpedo"]) {
+                    [_mainGameController.console setConsoleText:@"\n"];
+                    Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                    Coordinate* impactCoord = [_game fireTorpedo:s.location];
+                    if ([_game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[NSNumber class]]) {
+                        Terrain terType = [_game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] intValue];
+                        if (terType == CORAL) {
+                            [_mainGameController.console setConsoleText:@"Coral Hit"];
+                        }
+                        else if (terType == WATER) {
+                            [_mainGameController.console setConsoleText:@"Shot Fell into the Water"];
+                        }
+                        else {
+                            [_mainGameController.console setConsoleText:@"Base Hit"];
+                            
+                        }
                     }
                     else {
-                        [_mainGameController.console setConsoleText:@"Base Hit"];
-                       
+                        ShipSegment *seg = (ShipSegment*) _game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
+                        [_mainGameController.console setConsoleText:@"Ship Hit"];
+                        [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
+                        if ([_game isShipDestroyed:seg.shipName]) {
+                            [_mainGameController.ships removeShipFromScreen:seg.shipName];
+                        }
                     }
+                    [self sendTurn];
+                    _game.myTurn = FALSE;
                 }
-                else {
-                    ShipSegment *seg = (ShipSegment*) _game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
+                if ([_nodeTouched.name isEqualToString:@"RepairShip"]) {
+                    Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                    [s repair];
+                    [self sendRapairShip:[self getShipIndexFromName:s.shipName]];
+                    [self sendTurn];
+                    _game.myTurn = FALSE;
+                }
+            }
+            
+            // Move location touched
+            if ([_nodeTouched.parent isEqual:_mainGameController.foreground.movementLocationsSprites])
+            {
+                [_mainGameController.ships updateShipLocation:_nodeTouched];
+                Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:[_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position]];
+                [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
+                //[self drawRadar];
+                [self sendTurn];
+                _game.myTurn = FALSE;
+            }
+            if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
+                [_mainGameController.foreground.canonRangeSprites removeAllChildren];
+                Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+                [_game damageShipSegment:squareTouched];
+                if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
                     [_mainGameController.console setConsoleText:@"Ship Hit"];
+                    ShipSegment *seg = _game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord];
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
                     if ([_game isShipDestroyed:seg.shipName]) {
                         [_mainGameController.ships removeShipFromScreen:seg.shipName];
                     }
                 }
-            }
-            if ([_nodeTouched.name isEqualToString:@"RepairShip"]) {
-                Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
-                [s repair];
-                [self sendRapairShip:[self getShipIndexFromName:s.shipName]];
-            }
-        }
-        
-        // Move location touched
-        if ([_nodeTouched.parent isEqual:_mainGameController.foreground.movementLocationsSprites])
-        {
-            [_mainGameController.ships updateShipLocation:_nodeTouched];
-            Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
-            [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:[_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position]];
-            [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
-            //[self drawRadar];
-        }
-        if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
-            [_mainGameController.foreground.canonRangeSprites removeAllChildren];
-            Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
-            [_game damageShipSegment:squareTouched];
-            if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
-                [_mainGameController.console setConsoleText:@"Ship Hit"];
-                ShipSegment *seg = _game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord];
-                [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
-                if ([_game isShipDestroyed:seg.shipName]) {
-                    [_mainGameController.ships removeShipFromScreen:seg.shipName];
-                }
+                [self sendTurn];
+                _game.myTurn = FALSE;
             }
         }
     }
