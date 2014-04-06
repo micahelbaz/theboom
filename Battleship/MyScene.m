@@ -276,6 +276,7 @@ typedef struct {
                     }
                     else {
                         [_mainGameController.console setConsoleText:@"Base Hit"];
+                       
                     }
                 }
                 else {
