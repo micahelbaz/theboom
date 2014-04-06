@@ -3,12 +3,11 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "RadarBoat.png"
+      "filename" : "RadarBoatE.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "RadarBoat@2x.png"
+      "scale" : "2x"
     }
   ],
   "info" : {
