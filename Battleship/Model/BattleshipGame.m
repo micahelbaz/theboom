@@ -37,9 +37,6 @@ static BattleshipGame *sharedGame = nil;
             _myTurn = false;
         }
         _gameMap = [[Map alloc] init];
-        if (_myTurn) {
-            
-        }
     }
     return self;
 }
