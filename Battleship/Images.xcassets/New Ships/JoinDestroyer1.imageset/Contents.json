@@ -3,12 +3,11 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "Destroyer.png"
+      "filename" : "DestroyerE.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "Destroyer@2x.png"
+      "scale" : "2x"
     }
   ],
   "info" : {
