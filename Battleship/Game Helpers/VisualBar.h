@@ -12,6 +12,7 @@
 #import "Helpers.h"
 #import "BattleshipGame.h"
 #import "Foreground.h"
+#import "Player.h"
 
 @interface VisualBar : NSObject
 

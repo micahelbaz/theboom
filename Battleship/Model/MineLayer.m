@@ -19,6 +19,7 @@
         self.speed = 6;
         self.shipArmourType = HEAVY_ARMOUR;
         [self.viableActions addObject:@"FireCannon"];
+        [self.viableActions addObject:@"DropMine"];
         for (int i = 0; i < self.size; i++) {
             Coordinate* segCoord = [[Coordinate alloc] init];
             segCoord.direction = initialPosition.direction;

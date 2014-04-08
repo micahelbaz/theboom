@@ -67,6 +67,23 @@
 {
     SKLabelNode *shipLabel = [SKLabelNode labelNodeWithFontNamed:@"displayedText"];
     [shipLabel setText:[self shipName:_shipActuallyClicked.name]];
+    if([_shipActuallyClicked.name isEqualToString:@"JoinMineLayer1"] || [_shipActuallyClicked.name isEqualToString:@"JoinMineLayer2"] || [_shipActuallyClicked.name isEqualToString:@"HostMineLayer1"] || [_shipActuallyClicked.name isEqualToString:@"HostMineLayer2"]){
+        NSLog(@"MINE LAYER");
+        SKLabelNode *numMines = [SKLabelNode labelNodeWithFontNamed:@"displayedText"];
+        int shipIndex = [_game getShipIndexWithName:_shipActuallyClicked.name];
+        MineLayer *s = _game.localPlayer.playerFleet.shipArray[shipIndex];
+        int numberMines = s.numMines;
+        NSString *mineString = [NSString stringWithFormat:@"%d", numberMines];
+        NSString *string = @"Mines: ";
+        NSString *mineText = [NSString stringWithFormat:@"%@%@", string, mineString];
+        [numMines setText:mineText];
+        [numMines setFontSize:17];
+        [numMines setFontName:@"28DaysLater"];
+        [numMines setPosition:CGPointMake(fullScreenWidth - visualBarWidth/2,
+                                          visualBarHeight - positionFromTop- 55)];
+        [_shipClickedName addChild:numMines];
+       
+    }
     [shipLabel setFontSize:30];
     [shipLabel setFontName:@"28DaysLater"];
     positionFromTop += shipLabel.frame.size.height;
@@ -173,7 +190,9 @@
     else if([functionSprite.name isEqualToString:@"FireCannon"] || [functionSprite.name isEqualToString:@"FireHeavyCannon"] ){
         [_foreground displayCannonRange:_shipActuallyClicked];
     }
-    
+    else if([functionSprite.name isEqualToString:@"DropMine"]){
+        [_foreground displayMineRange:_shipActuallyClicked];
+    }
     
     
 }
