@@ -64,13 +64,13 @@ NSString *const torpedoImageName = @"TorpedoBig";
 
 // Heights and Widths of screen
 CGFloat const fullScreenWidth = (CGFloat)1024;
-CGFloat const fullScreenHeight = (CGFloat)768;
+CGFloat const fullScreenHeight = (CGFloat)768/31*30;
 
 CGFloat const visualBarWidth = fullScreenWidth / VISUAL_BAR_RATIO;
-CGFloat const visualBarHeight = fullScreenHeight;
+CGFloat const visualBarHeight = (CGFloat)768/31*30;
 
 CGFloat const tileWidth  = (fullScreenWidth - visualBarWidth) / GRID_SIZE;
-CGFloat const tileHeight = visualBarHeight / GRID_SIZE;
+CGFloat const tileHeight = fullScreenHeight / GRID_SIZE;
 
 CGFloat const miniMapWidth = fullScreenHeight / MINI_MAP_RATIO;
 CGFloat const miniMapHeight = fullScreenHeight / MINI_MAP_RATIO;

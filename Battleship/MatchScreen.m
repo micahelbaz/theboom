@@ -34,8 +34,10 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    SKScene * scene = [FleetScene sceneWithSize:self.scene.view.bounds.size];
-    [self.scene.view presentScene:scene];
+    if ([GCHelper sharedInstance:nil].match.playerIDs[0] != 0) {
+        SKScene * scene = [FleetScene sceneWithSize:self.scene.view.bounds.size];
+        [self.scene.view presentScene:scene];
+    }
 }
          
 @end

@@ -107,6 +107,7 @@
     }
 }
 -(void)removeBaseFromScreen:(int)xCoord and:(int)yCoord {
+    NSLog(@"base to be deleted %d , %d", xCoord, yCoord);
     NSString *name = [[NSString alloc] init];
     NSMutableString *tempString = [[NSMutableString alloc] init];
     if (yCoord == 0) {

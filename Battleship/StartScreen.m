@@ -32,8 +32,10 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    SKScene * scene = [MatchScreen sceneWithSize:self.scene.view.bounds.size];
-    [self.scene.view presentScene:scene];
+    if ([GCHelper sharedInstance:nil].localPlayer.playerID != 0) {
+        SKScene * scene = [MatchScreen sceneWithSize:self.scene.view.bounds.size];
+        [self.scene.view presentScene:scene];
+    }
 }
 
 #pragma mark GCHelperDelegate

@@ -38,6 +38,7 @@
 		8753F39318CB8579009C38B4 /* VisualBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8753F38818CB8579009C38B4 /* VisualBar.m */; };
 		8753F39418CB8A35009C38B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51171530189A390200BE75A9 /* Main.storyboard */; };
 		8784B73618CBDFB9003F3C11 /* MatchScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8784B73518CBDFB9003F3C11 /* MatchScreen.m */; };
+		8788EDD318F4A28200E2B7E7 /* Kamikaze.m in Sources */ = {isa = PBXBuildFile; fileRef = 8788EDD218F4A28200E2B7E7 /* Kamikaze.m */; };
 		878C15E918E4D59B00084ED7 /* FleetScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 878C15E818E4D59B00084ED7 /* FleetScene.m */; };
 		879F472E18CBED9900BDDFB2 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 879F472D18CBED9900BDDFB2 /* GCHelper.m */; };
 		87AAA64C18C1386300EF6FED /* StartScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 87AAA64B18C1386300EF6FED /* StartScreen.m */; };
@@ -120,6 +121,8 @@
 		8753F38818CB8579009C38B4 /* VisualBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualBar.m; sourceTree = "<group>"; };
 		8784B73418CBDFB9003F3C11 /* MatchScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchScreen.h; sourceTree = "<group>"; };
 		8784B73518CBDFB9003F3C11 /* MatchScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchScreen.m; sourceTree = "<group>"; };
+		8788EDD118F4A28200E2B7E7 /* Kamikaze.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Kamikaze.h; sourceTree = "<group>"; };
+		8788EDD218F4A28200E2B7E7 /* Kamikaze.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Kamikaze.m; sourceTree = "<group>"; };
 		878C15E718E4D59B00084ED7 /* FleetScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FleetScene.h; sourceTree = "<group>"; };
 		878C15E818E4D59B00084ED7 /* FleetScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FleetScene.m; sourceTree = "<group>"; };
 		87964BB518CA6EAC00D38181 /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCHelper.h; path = /Users/robertschneidman/Developer/master4/Battleship/HelperFunctions/GCHelper.h; sourceTree = "<absolute>"; };
@@ -326,6 +329,8 @@
 				87AD0BDE18BC6B28001BCD2F /* TorpedoBoat.h */,
 				87AD0BDF18BC6B28001BCD2F /* TorpedoBoat.m */,
 				87AD0BE218BC6B28001BCD2F /* WeaponType.h */,
+				8788EDD118F4A28200E2B7E7 /* Kamikaze.h */,
+				8788EDD218F4A28200E2B7E7 /* Kamikaze.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -478,6 +483,7 @@
 				87AD0BED18BC6B29001BCD2F /* ShipSegment.m in Sources */,
 				8753F38E18CB8579009C38B4 /* MainGameController.m in Sources */,
 				87AD0BEC18BC6B29001BCD2F /* Ship.m in Sources */,
+				8788EDD318F4A28200E2B7E7 /* Kamikaze.m in Sources */,
 				8753F39018CB8579009C38B4 /* Names.m in Sources */,
 				8749A09C18CADDEF006B1B89 /* ShipActionHelper.m in Sources */,
 				87AD0BE318BC6B29001BCD2F /* BattleshipGame.m in Sources */,

@@ -164,8 +164,6 @@ typedef struct {
 }
 
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
-    NSLog(@"test");
-    
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
     if ([type isEqualToString:@"mapData"]) {
@@ -312,6 +310,7 @@ typedef struct {
                             [_mainGameController.console setConsoleText:@"Base Hit"];
                             [_mainGameController.background removeBaseFromScreen:impactCoord.xCoord and:impactCoord.yCoord];
                             [self sendBaseHit:impactCoord.xCoord and:impactCoord.yCoord];
+                            [_game removeBaseSquare:impactCoord];
                         }
                     }
                     else {
@@ -346,6 +345,7 @@ typedef struct {
                 _game.myTurn = FALSE;
             }
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
+                NSLog(@"CANNON HIT TO BASE");
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 [_game damageShipSegment:squareTouched];
@@ -367,6 +367,7 @@ typedef struct {
                     }
                     else {
                         [_mainGameController.console setConsoleText:@"Base Hit"];
+                        [self sendBaseHit:squareTouched.xCoord and:squareTouched.yCoord];
                         [_mainGameController.background removeBaseFromScreen:squareTouched.xCoord and:squareTouched.yCoord];
                         [_game removeBaseSquare:squareTouched];
                     }
