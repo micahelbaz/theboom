@@ -17,9 +17,10 @@
 @property (strong, nonatomic) SKNode *backgroundNode;
 @property (strong, nonatomic) BattleshipGame *game;
 
+
 - (instancetype) initBackgroundWithNode:(SKNode*) backgroundNode
                                 andGame:(BattleshipGame*) game;
-
+-(void) addMine:(Coordinate *) mineLocation;
 - (void) scrollBackgrounds;
 -(void) removeBaseFromScreen: (int) xCoord and:(int) yCoord;
 @end
