@@ -13,6 +13,7 @@
 #import "TorpedoBoat.h"
 #import "RadarBoat.h"
 #import "MineLayer.h"
+#import "Kamikaze.h"
 #import "Constants.h"
 
 @interface Fleet : NSObject

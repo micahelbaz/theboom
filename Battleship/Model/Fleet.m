@@ -26,6 +26,7 @@
         Coordinate *mineLayer1;
         Coordinate *mineLayer2;
         Coordinate *radar1;
+        Coordinate *kamakaze1;
         Cruiser *c1;
         Cruiser *c2;
         Destroyer *d1;
@@ -36,6 +37,7 @@
         MineLayer *m1;
         MineLayer *m2;
         RadarBoat *r1;
+        Kamikaze *k1;
         self.dockingCoordinates = [[NSMutableArray alloc]init];
         self.baseCoordinates = [[NSMutableArray alloc]init];
         if(isHost){
@@ -71,7 +73,7 @@
                     radar1 = [[Coordinate alloc] initWithXCoordinate:10+i YCoordinate:3 initiallyFacing:NORTH];
                 }
             }
-            
+            kamakaze1 = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:0 initiallyFacing:NORTH];
             
 //            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:5 initiallyFacing:NORTH];
 //            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:5 initiallyFacing:NORTH];
@@ -93,6 +95,7 @@
             m1 = [[MineLayer alloc] initWithLocation: mineLayer1 andName:@"HostMineLayer1"];
             m2 = [[MineLayer alloc] initWithLocation: mineLayer2 andName:@"HostMineLayer2"];
             r1 = [[RadarBoat alloc] initWithLocation: radar1 andName:@"HostRadarBoat1"];
+            k1 = [[Kamikaze alloc] initWithLocation:kamakaze1 andName:@"HostKamikaze1"];
         [c1 positionShip:cruiser1 isHost:TRUE dockingArray:self.dockingCoordinates];
         [c2 positionShip:cruiser2 isHost:TRUE dockingArray:self.dockingCoordinates];
         [d1 positionShip:destroyer1 isHost:TRUE dockingArray:self.dockingCoordinates];
@@ -103,6 +106,7 @@
         [m1 positionShip:mineLayer1 isHost:TRUE dockingArray:self.dockingCoordinates];
         [m2 positionShip:mineLayer2 isHost:TRUE dockingArray:self.dockingCoordinates];
         [r1 positionShip:radar1 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [k1 positionShip:kamakaze1 isHost:TRUE dockingArray:self.dockingCoordinates];
         }
         else{
             for (int i = 0; i < ships.count; i++) {
@@ -136,6 +140,7 @@
                 if ([ships[i] intValue] == 9) {
                     radar1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:26 initiallyFacing:SOUTH];
                 }
+                kamakaze1 = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:29 initiallyFacing:SOUTH];
             }
 //            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:24 initiallyFacing:SOUTH];
 //            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:24 initiallyFacing:SOUTH];
@@ -192,11 +197,12 @@
         [m1 positionShip:mineLayer1 isHost:FALSE dockingArray:self.dockingCoordinates];
         [m2 positionShip:mineLayer2 isHost:FALSE dockingArray:self.dockingCoordinates];
         [r1 positionShip:radar1 isHost:FALSE dockingArray:self.dockingCoordinates];
+        [k1 positionShip:kamakaze1 isHost:FALSE dockingArray:self.dockingCoordinates];
     
         }
      
         
-        self.shipArray = [NSArray arrayWithObjects:c1,c2,d1,d2,d3,t1,t2,m1,m2,r1, nil];
+        self.shipArray = [NSArray arrayWithObjects:c1,c2,d1,d2,d3,t1,t2,m1,m2,r1, k1, nil];
     }
     return self;
 }

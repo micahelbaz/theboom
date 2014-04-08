@@ -46,8 +46,15 @@
     return self;
 }
 -(NSMutableArray *)getMoveLocations {
+    NSMutableArray *movementLocations = [[NSMutableArray alloc] init];
     for (int i = -2; i <= 2; i++) {
         for (int i = -2; i <= 2; i++) {
+            Coordinate *c = [[Coordinate alloc] initWithXCoordinate:self.location.xCoord + i YCoordinate:self.location.yCoord + i initiallyFacing:self.location.direction];
+            if ([c isWithinMap]) {
+                if (c.xCoord != self.location.xCoord && c.yCoord != self.location.yCoord) {
+                    [movementLocations addObject:c];
+                }
+            }
         }
     }
     return nil;
