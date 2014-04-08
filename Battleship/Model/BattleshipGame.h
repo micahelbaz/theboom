@@ -40,4 +40,6 @@
 -(BOOL)isShipDestroyed:(NSString *) shipName;
 -(void)removeBaseSquare:(Coordinate*) destroyedBaseSquare;
 -(void)updateDockingZone;
+-(void) isAbleToDropMine:(MineLayer *)mineLayer;
+
 @end
