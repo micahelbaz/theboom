@@ -43,9 +43,7 @@ static BattleshipGame *sharedGame = nil;
 //must remove fleet and then add fleet back
 -(void)updateMap:(Fleet*) updatedFleet{
     for(Ship* ship in updatedFleet.shipArray) {
-        NSLog(@"%@", ship.shipName);
         for(ShipSegment* seg in ship.blocks) {
-            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             [_gameMap.grid[seg.location.xCoord] insertObject:seg atIndex:seg.location.yCoord];
         }
@@ -62,22 +60,12 @@ static BattleshipGame *sharedGame = nil;
     [self removeShipFromMap: s];
     [s positionShip: destination isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
     [self updateMap:_localPlayer.playerFleet];
-    for(Ship* ship in _localPlayer.playerFleet.shipArray){
-        if([ship isKindOfClass:[MineLayer class]]){
-            [self isAbleToDropMine:(MineLayer*)ship];
-        }
-    }
 }
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination {
     Ship* s = [_localPlayer.enemyFleet getShipWithCoord:origin];
     [self removeShipFromMap: s];
     [s positionShip: destination isHost:FALSE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
     [self updateMap:_localPlayer.enemyFleet];
-    for(Ship* ship in _localPlayer.playerFleet.shipArray){
-        if([ship isKindOfClass:[MineLayer class]]){
-            [self isAbleToDropMine:(MineLayer*)ship];
-        }
-    }
 }
 -(NSMutableArray*) getValidMovesFrom:(Coordinate*)origin withRadarPositions:(BOOL)radarPositions {
     Ship* s = [_localPlayer.playerFleet getShipWithCoord:origin];
@@ -224,7 +212,7 @@ static BattleshipGame *sharedGame = nil;
 }
 
 -(NSMutableArray*) getCanonRange:(Coordinate*)origin{
-
+    
     NSMutableArray * coords = [[NSMutableArray alloc]init];
     for(Ship *s in _localPlayer.playerFleet.shipArray){
         for(ShipSegment *seg in s.blocks){
@@ -237,27 +225,10 @@ static BattleshipGame *sharedGame = nil;
     return coords;
 }
 
--(int)getShipIndexWithName:(NSString*)shipName{
-        int index = 0;
-        for (Ship *s in self.localPlayer.playerFleet.shipArray) {
-            //NSLog(@"%@", s.shipName);
-            if ([shipName isEqualToString:s.shipName]) {
-                //NSLog(@"%d", index);
-                return index;
-            }
-            index++;
-        }
-        index = 0;
-        
-        return -1;
-}
-
-
 -(BOOL)isShipDestroyed:(NSString *)shipName {
     for(Ship *s in _localPlayer.playerFleet.shipArray){
         if ([s.shipName isEqualToString:shipName]) {
             if (s.isDestroyed) {
-                NSLog(@"is destroyed");
                 for (ShipSegment *seg in s.blocks) {
                     [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
                     [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
@@ -269,7 +240,6 @@ static BattleshipGame *sharedGame = nil;
     for(Ship *s in _localPlayer.enemyFleet.shipArray){
         if ([s.shipName isEqualToString:shipName]) {
             if (s.isDestroyed) {
-                NSLog(@"is destroyed");
                 for (ShipSegment *seg in s.blocks) {
                     [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
                     [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
@@ -345,7 +315,6 @@ static BattleshipGame *sharedGame = nil;
                 }
             }
         }
-
     }
 endOfMethod:;
 }

@@ -146,8 +146,23 @@ typedef struct {
         NSLog(@"error");
     }
     return false;
+}
+
+-(BOOL)sendBaseHit:(int) xCoord and: (int) yCoord{
+    NSError* error;
+    NSMutableArray* shipDetails = [[NSMutableArray alloc] init];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"baseHitData"]];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:xCoord]]];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:yCoord]]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:shipDetails];
+    [_game.gameCenter.match sendDataToAllPlayers: packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
     
 }
+
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSLog(@"test");
     
@@ -233,6 +248,12 @@ typedef struct {
         }
         
     }
+    else if([type isEqualToString:@"baseHitData"]){
+        int hitCoordX =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        int hitCoordY =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]] intValue];
+        [_mainGameController.background removeBaseFromScreen:hitCoordX and:hitCoordY];
+        [_game removeBaseSquare:[[Coordinate alloc] initWithXCoordinate:hitCoordX YCoordinate:hitCoordY initiallyFacing:NONE]];
+    }
     else if([type isEqualToString:@"turnTaken"]) {
         _game.myTurn = TRUE;
     }
@@ -289,7 +310,8 @@ typedef struct {
                         }
                         else {
                             [_mainGameController.console setConsoleText:@"Base Hit"];
-                            
+                            [_mainGameController.background removeBaseFromScreen:impactCoord.xCoord and:impactCoord.yCoord];
+                            [self sendBaseHit:impactCoord.xCoord and:impactCoord.yCoord];
                         }
                     }
                     else {
@@ -333,6 +355,20 @@ typedef struct {
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
                     if ([_game isShipDestroyed:seg.shipName]) {
                         [_mainGameController.ships removeShipFromScreen:seg.shipName];
+                    }
+                }
+                if ([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[NSNumber class]]) {
+                    Terrain terType = [_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] intValue];
+                    if (terType == CORAL) {
+                        [_mainGameController.console setConsoleText:@"Coral Hit"];
+                    }
+                    else if (terType == WATER) {
+                        [_mainGameController.console setConsoleText:@"Shot Fell into the Water"];
+                    }
+                    else {
+                        [_mainGameController.console setConsoleText:@"Base Hit"];
+                        [_mainGameController.background removeBaseFromScreen:squareTouched.xCoord and:squareTouched.yCoord];
+                        [_game removeBaseSquare:squareTouched];
                     }
                 }
                 [self sendTurn];

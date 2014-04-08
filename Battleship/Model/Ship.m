@@ -153,16 +153,12 @@
                 }
             }
         }
-        NSLog(@"range width: %d", self.canonRange.rangeWidth);
-        NSLog(@"yStartRange: %d", yCanonRange);
-        
         for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.rangeWidth; x++){
         BOOL shipPresent = FALSE;
             for(int z = yCanonRange; z>newCoord.yCoord-self.canonRange.rangeHeight-self.canonRange.startRange; z--){
                 BOOL shipPresent = FALSE;
                 Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:z initiallyFacing:SOUTH];
                 if([coord isWithinMap]){
-                     NSLog(@"x: %d, y: %d", coord.xCoord, coord.yCoord);
                     if([coord isWithinMap]){
                         for(ShipSegment *seg in self.blocks){
                             if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){

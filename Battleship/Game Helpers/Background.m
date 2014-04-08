@@ -54,29 +54,39 @@
                 switch (terType)
                 {
                     case HOST_BASE:
+                    {
                         sprite = [SKSpriteNode spriteNodeWithImageNamed:miniMapGreenBaseImageName];
-                        sprite.name = hostBaseSpriteName;
+                        NSMutableString *name = [[NSMutableString alloc] init];
+                        [name appendString:@"hostbase"];
+                        NSString *string = [name stringByAppendingFormat:@"%i", i];
+                        sprite.name = string;
                         sprite.zRotation =  M_PI / 2;
                         sprite.xScale = tileWidth/sprite.frame.size.height;
                         sprite.yScale = tileHeight/sprite.frame.size.width;
                         sprite.position = CGPointMake(i * tileWidth + sprite.frame.size.width/2,
                                                       j * tileHeight + sprite.frame.size.height/2);
                         [_backgroundNode addChild:sprite];
+                    }
                         break;
-                        
                     case JOIN_BASE:
+                    {
                         sprite = [SKSpriteNode spriteNodeWithImageNamed:miniMapRedBaseImageName];
-                        sprite.name = joinBaseSpriteName;
+                        NSMutableString *name = [[NSMutableString alloc] init];
+                        [name appendString:@"joinbase"];
+                        NSString *string = [name stringByAppendingFormat:@"%i", i];
+                        sprite.name = string;
                         sprite.zRotation = 3 * M_PI / 2;
                         sprite.xScale = tileWidth/sprite.frame.size.height;
                         sprite.yScale = tileHeight/sprite.frame.size.width;
                         sprite.position = CGPointMake(i * tileWidth + sprite.frame.size.width/2,
                                                       j * tileHeight + sprite.frame.size.height/2);
                         [_backgroundNode addChild:sprite];
+                    }
                         break;
                         
                         // need to add an if visible clause
                     case CORAL:
+                    {
                         sprite = [SKSpriteNode spriteNodeWithImageNamed:coralImageName];
                         sprite.name = coralSpriteName;
                         sprite.zRotation = M_PI / 2;
@@ -85,6 +95,7 @@
                         sprite.position = CGPointMake(i * tileWidth + sprite.frame.size.width/2,
                                                       j * tileHeight + sprite.frame.size.height/2);
                         [_backgroundNode addChild:sprite];
+                    }
                         break;
                         
                     default:
@@ -95,7 +106,25 @@
         }
     }
 }
-
+-(void)removeBaseFromScreen:(int)xCoord and:(int)yCoord {
+    NSString *name = [[NSString alloc] init];
+    NSMutableString *tempString = [[NSMutableString alloc] init];
+    if (yCoord == 0) {
+        [tempString appendString:@"hostbase"];
+        name = [tempString stringByAppendingFormat:@"%i", xCoord];
+    }
+    else {
+        [tempString appendString:@"joinbase"];
+        name = [tempString stringByAppendingFormat:@"%i", xCoord];
+    }
+    NSMutableArray* shipToBeRemoved = [[NSMutableArray alloc] init];
+    for (SKSpriteNode *child in _backgroundNode.children) {
+        if ([child.name isEqualToString:name]) {
+            [shipToBeRemoved addObject:child];
+        }
+    }
+    [_backgroundNode removeChildrenInArray:shipToBeRemoved];
+}
 // Scolls the background screens
 - (void) scrollBackgrounds {
     SKNode* background1 = [_backgroundNode childNodeWithName:background1SpriteName];
