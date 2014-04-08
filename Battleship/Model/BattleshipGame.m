@@ -92,6 +92,7 @@ static BattleshipGame *sharedGame = nil;
         
         for(ShipSegment* seg in ship.blocks) {
             
+            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
             
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             
@@ -163,17 +164,19 @@ static BattleshipGame *sharedGame = nil;
 -(NSMutableArray*) getValidMovesFrom:(Coordinate*)origin withRadarPositions:(BOOL)radarPositions {
     
     Ship* s = [_localPlayer.playerFleet getShipWithCoord:origin];
-    
-    
-    
-    
-    
-    
-    
-    NSMutableArray *validMoves = [s getHeadLocationsOfMove];
-    
     NSMutableArray *movesToBeRemoved = [[NSMutableArray alloc] init];
     
+    
+    
+    NSMutableArray *validMoves = [[NSMutableArray alloc] init];
+    if ([s isKindOfClass:[Kamikaze class]]) {
+        Kamikaze *k = (Kamikaze*) s;
+        validMoves = [k getMoveLocations];
+        
+    }
+    else {
+        validMoves = [s getHeadLocationsOfMove];
+    }
     for (NSMutableArray* move in validMoves) {
         
         for(Coordinate* segmentLocation in move) {
