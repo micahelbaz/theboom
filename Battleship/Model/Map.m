@@ -83,7 +83,6 @@
 //        }
 //        [coralPositions addObject:c];
 //    }
-    NSLog(@"coral is set");
     for (Coordinate *contained in coralPositions)
     {
         Terrain t = CORAL;

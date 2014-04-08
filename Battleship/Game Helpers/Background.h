@@ -21,5 +21,5 @@
                                 andGame:(BattleshipGame*) game;
 
 - (void) scrollBackgrounds;
-
+-(void) removeBaseFromScreen: (int) xCoord and:(int) yCoord;
 @end

@@ -57,7 +57,6 @@
     [_canonRangeSprites removeAllChildren];
     NSMutableArray* rangeCoordinates = [_game getCanonRange: [_helper fromTextureToCoordinate:shipActuallyClicked.position]];
     for(Coordinate *c in rangeCoordinates){
-        NSLog(@"x: %d, y: %d", c.xCoord, c.yCoord);
         SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
         range.xScale = (tileWidth/range.frame.size.width)*0.95;
         range.yScale = (tileHeight/range.frame.size.height)*0.95;

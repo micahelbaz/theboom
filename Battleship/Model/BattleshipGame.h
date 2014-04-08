@@ -12,6 +12,8 @@
 #import "Ship.h"
 #import "Player.h"
 #import "GCHelper.h"
+#import "TerrainType.h"
+
 @interface BattleshipGame : NSObject 
 
 @property BOOL myTurn;
@@ -35,5 +37,6 @@
 -(void)updateMap:(Fleet*) updatedFleet;
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination;
 -(BOOL)isShipDestroyed:(NSString *) shipName;
-
+-(void)removeBaseSquare:(Coordinate*) destroyedBaseSquare;
+-(void)updateDockingZone;
 @end

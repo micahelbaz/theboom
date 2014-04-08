@@ -43,9 +43,7 @@ static BattleshipGame *sharedGame = nil;
 //must remove fleet and then add fleet back
 -(void)updateMap:(Fleet*) updatedFleet{
     for(Ship* ship in updatedFleet.shipArray) {
-        NSLog(@"%@", ship.shipName);
         for(ShipSegment* seg in ship.blocks) {
-            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             [_gameMap.grid[seg.location.xCoord] insertObject:seg atIndex:seg.location.yCoord];
         }
@@ -214,7 +212,7 @@ static BattleshipGame *sharedGame = nil;
 }
 
 -(NSMutableArray*) getCanonRange:(Coordinate*)origin{
-
+    
     NSMutableArray * coords = [[NSMutableArray alloc]init];
     for(Ship *s in _localPlayer.playerFleet.shipArray){
         for(ShipSegment *seg in s.blocks){
@@ -231,7 +229,6 @@ static BattleshipGame *sharedGame = nil;
     for(Ship *s in _localPlayer.playerFleet.shipArray){
         if ([s.shipName isEqualToString:shipName]) {
             if (s.isDestroyed) {
-                NSLog(@"is destroyed");
                 for (ShipSegment *seg in s.blocks) {
                     [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
                     [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
@@ -243,7 +240,6 @@ static BattleshipGame *sharedGame = nil;
     for(Ship *s in _localPlayer.enemyFleet.shipArray){
         if ([s.shipName isEqualToString:shipName]) {
             if (s.isDestroyed) {
-                NSLog(@"is destroyed");
                 for (ShipSegment *seg in s.blocks) {
                     [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
                     [_gameMap.grid[seg.location.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:seg.location.yCoord];
@@ -253,6 +249,94 @@ static BattleshipGame *sharedGame = nil;
         }
     }
     return FALSE;
+}
+
+-(void) removeBaseSquare:(Coordinate *)destroyedBaseSquare {
+    [_gameMap.grid[destroyedBaseSquare.xCoord] removeObjectAtIndex:destroyedBaseSquare.yCoord];
+    [_gameMap.grid[destroyedBaseSquare.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:destroyedBaseSquare.yCoord];
+    if (_localPlayer.isHost) {
+        if (destroyedBaseSquare.yCoord == 0) {
+            [self updateDockingZone];
+        }
+    }
+    else {
+        if (destroyedBaseSquare.yCoord == 29) {
+            [self updateDockingZone];
+        }
+    }
+    Fleet *p = _localPlayer.playerFleet;
+    NSMutableArray *a = p.dockingCoordinates;
+    for (Coordinate *c in a) {
+        NSLog(@"%d , %d", c.xCoord, c.yCoord);
+        
+    }
+}
+-(void)updateDockingZone {
+    _localPlayer.playerFleet.dockingCoordinates = [[NSMutableArray alloc] init];
+    if(_localPlayer.isHost) {
+        for (int i = 10; i < 20; i++) {
+            if ([_gameMap.grid[i][0] isKindOfClass:[NSNumber class]]) {
+                Terrain t = [_gameMap.grid[i][0] intValue];
+                if (t == HOST_BASE) {
+                    Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:0 initiallyFacing:NONE];
+                    [self addAdjacentSquaresToDockingZone:c];
+                }
+                
+            }
+        }
+    }
+    else {
+        for (int i = 10; i < 20; i++) {
+            if ([_gameMap.grid[i][29] isKindOfClass:[NSNumber class]]) {
+                Terrain t = [_gameMap.grid[i][29] intValue];
+                if (t == HOST_BASE) {
+                    Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:29 initiallyFacing:NONE];
+                    [self addAdjacentSquaresToDockingZone:c];
+                }
+                
+            }
+        }
+    }
+}
+-(void) addAdjacentSquaresToDockingZone: (Coordinate*) c {
+    if (c.yCoord == 0) {
+        for (int i = -1; i <=1; i++) {
+            for (int j = 0; j <=1; j++) {
+                if ((i != 0 && j == 0) || (i == 0 && j == 1)) {
+                        Coordinate *dockCoord = [[Coordinate alloc] initWithXCoordinate:c.xCoord+i YCoordinate:c.yCoord+j initiallyFacing:NONE];
+                    if ([dockCoord isWithinMap]) {
+                        [_localPlayer.playerFleet.dockingCoordinates addObject:dockCoord];
+                        if ([_gameMap.grid[dockCoord.xCoord][dockCoord.yCoord] isKindOfClass:[NSNumber class]]) {
+                            Terrain t = [_gameMap.grid[dockCoord.xCoord][dockCoord.yCoord] intValue];
+                            if (t == HOST_BASE) {
+                                [_localPlayer.playerFleet.dockingCoordinates removeObject:dockCoord];
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        for (int i = -1; i <=1; i++) {
+            for (int j = 0; j <=1; j++) {
+                if ((i != 0 && j == 0) || (i == 0 && j == 1)) {
+                        Coordinate *dockCoord = [[Coordinate alloc] initWithXCoordinate:c.xCoord+i YCoordinate:c.yCoord-j initiallyFacing:NONE];
+                        if ([c isWithinMap]) {
+                        [_localPlayer.playerFleet.dockingCoordinates addObject:dockCoord];
+                        if ([_gameMap.grid[dockCoord.xCoord][dockCoord.yCoord] isKindOfClass:[NSNumber class]]) {
+                            Terrain t = [_gameMap.grid[dockCoord.xCoord][dockCoord.yCoord] intValue];
+                            if (t == JOIN_BASE) {
+                                [_localPlayer.playerFleet.dockingCoordinates removeObject:dockCoord];
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @end
