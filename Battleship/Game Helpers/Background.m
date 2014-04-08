@@ -126,6 +126,27 @@
     }
     [_backgroundNode removeChildrenInArray:shipToBeRemoved];
 }
+
+-(void) addMine:(Coordinate *) mineLocation{
+    SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
+    NSMutableString *name = [[NSMutableString alloc]init];
+    [name appendString:@"mine"];
+    [name stringByAppendingFormat:@"%i", mineLocation.xCoord];
+    [name appendString:@"y"];
+    [name stringByAppendingFormat:@"%i", mineLocation.yCoord];
+
+    sprite.name = name;
+    sprite.zRotation =  M_PI / 2;
+    sprite.xScale = tileWidth/sprite.frame.size.height;
+    sprite.yScale = tileHeight/sprite.frame.size.width;
+    sprite.position = CGPointMake(mineLocation.xCoord * tileWidth + sprite.frame.size.width/2,
+                                  mineLocation.yCoord * tileHeight + sprite.frame.size.height/2);
+    [_backgroundNode addChild:sprite];
+//    NSMutableString *string = (NSMutableString*)[name stringByAppendingFormat:@"%i", mineLocation.xCoord];
+//    [name appendString:@"y"];
+    
+    
+}
 // Scolls the background screens
 - (void) scrollBackgrounds {
     SKNode* background1 = [_backgroundNode childNodeWithName:background1SpriteName];

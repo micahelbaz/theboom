@@ -38,7 +38,9 @@
 // Displays the ship movements
 - (void)displayMoveAreasForShip:(SKNode*)shipActuallyClicked
 {
+    
     [_movementLocationsSprites removeAllChildren];
+    [_mineRangeSprites removeAllChildren];
     NSMutableArray* validMoves = [_game getValidMovesFrom:
                                   [_helper fromTextureToCoordinate:shipActuallyClicked.position]
                                        withRadarPositions:false];
@@ -70,19 +72,40 @@
 }
 
 - (void) displayMineRange:(SKNode*)shipActuallyAclicked{
-    Coordinate *shipLocation = [_helper fromTextureToCoordinate:shipActuallyAclicked.position];
+    [_mineRangeSprites removeAllChildren];
+    Coordinate *shipLocation = [_game.localPlayer.playerFleet getShipWithCoord:[_helper fromTextureToCoordinate:shipActuallyAclicked.position]].location;
     if(shipLocation.direction == NORTH){
-        int xRange = shipLocation.xCoord-1;
-        int yRange = shipLocation.yCoord-1;
-        for(int i = xRange; i < xRange+3; i++){
-            for(int j = yRange; j<yRange+3; j++){
-                Coordinate *c = [[Coordinate alloc]init];
-                c.xCoord = i;
-                c.yCoord = j;
-                c.direction = NORTH;
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        rightOfShip1.xCoord = shipLocation.xCoord+1;
+        rightOfShip1.yCoord = shipLocation.yCoord;
+        rightOfShip2.xCoord = shipLocation.xCoord+1;
+        rightOfShip2.yCoord = shipLocation.yCoord-1;
+        leftOfShip1.xCoord = shipLocation.xCoord-1;
+        leftOfShip1.yCoord = shipLocation.yCoord;
+        leftOfShip2.xCoord = shipLocation.xCoord-1;
+        leftOfShip2.yCoord = shipLocation.yCoord-1;
+        aboveShip.yCoord = shipLocation.yCoord+1;
+        aboveShip.xCoord = shipLocation.xCoord;
+        belowShip.xCoord = shipLocation.xCoord;
+        belowShip.yCoord = shipLocation.yCoord-2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        
+        
+        for(Coordinate *c in coordinates){
                 if([c isWithinMap]){
-                    if ([_game.gameMap.grid[i][j] isKindOfClass:[NSNumber class]]) {
-                        Terrain terType = [_game.gameMap.grid[i][j] intValue];
+                    if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                        Terrain terType = [_game.gameMap.grid[c.xCoord][c.yCoord] intValue];
                         if(terType == WATER){
                             SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
                             range.xScale = (tileWidth/range.frame.size.width)*0.95;
@@ -97,47 +120,37 @@
                 }
             }
         }
+
+    else{
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
         Coordinate *aboveShip = [[Coordinate alloc]init];
         Coordinate *belowShip = [[Coordinate alloc]init];
-        belowShip.xCoord = shipLocation.xCoord;
+        rightOfShip1.xCoord = shipLocation.xCoord+1;
+        rightOfShip1.yCoord = shipLocation.yCoord;
+        rightOfShip2.xCoord = shipLocation.xCoord+1;
+        rightOfShip2.yCoord = shipLocation.yCoord+1;
+        leftOfShip1.xCoord = shipLocation.xCoord-1;
+        leftOfShip1.yCoord = shipLocation.yCoord;
+        leftOfShip2.xCoord = shipLocation.xCoord-1;
+        leftOfShip2.yCoord = shipLocation.yCoord+1;
+        aboveShip.yCoord = shipLocation.yCoord-1;
         aboveShip.xCoord = shipLocation.xCoord;
-        aboveShip.yCoord = shipLocation.yCoord+1;
-        belowShip.yCoord = shipLocation.yCoord-2;
-        belowShip.direction = NORTH;
-        aboveShip.direction = NORTH;
-        NSMutableArray *coords = [[NSMutableArray alloc]init];
-        [coords addObject:aboveShip];
-        [coords addObject:belowShip];
-        for(Coordinate *coord in coords){
-            if([coord isWithinMap]){
-                if ([_game.gameMap.grid[coord.xCoord][coord.yCoord] isKindOfClass:[NSNumber class]]) {
-                    Terrain terType = [_game.gameMap.grid[coord.xCoord][coord.yCoord] intValue];
-                    if(terType == WATER){
-                        SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
-                        range.xScale = (tileWidth/range.frame.size.width)*0.95;
-                        range.yScale = (tileHeight/range.frame.size.height)*0.95;
-                        range.position = CGPointMake(coord.xCoord * tileWidth + tileWidth/2,
-                                                     coord.yCoord * tileHeight + tileHeight/2);
-                        range.zPosition = 1;
-                        [_mineRangeSprites addChild:range];
-                    }
-                }
-            }
-
-        }
-    }
-    else{
-        int xRange = shipLocation.xCoord-1;
-        int yRange = shipLocation.yCoord;
-        for(int i = xRange; i < xRange+3; i++){
-            for(int j = yRange; j<yRange+2; j++){
-                Coordinate *c = [[Coordinate alloc]init];
-                c.xCoord = i;
-                c.yCoord = j;
-                c.direction = SOUTH;
+        belowShip.xCoord = shipLocation.xCoord;
+        belowShip.yCoord = shipLocation.yCoord+2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        for(Coordinate *c in coordinates){
                 if([c isWithinMap]){
-                    if ([_game.gameMap.grid[i][j] isKindOfClass:[NSNumber class]]) {
-                        Terrain terType = [_game.gameMap.grid[i][j] intValue];
+                    if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                        Terrain terType = [_game.gameMap.grid[c.xCoord][c.yCoord] intValue];
                         if(terType == WATER){
                             SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
                             range.xScale = (tileWidth/range.frame.size.width)*0.95;
@@ -152,36 +165,6 @@
                 }
             }
         }
-        
-    }
-    Coordinate *aboveShip = [[Coordinate alloc]init];
-    Coordinate *belowShip = [[Coordinate alloc]init];
-    belowShip.xCoord = shipLocation.xCoord;
-    aboveShip.xCoord = shipLocation.xCoord;
-    aboveShip.yCoord = shipLocation.yCoord-1;
-    belowShip.yCoord = shipLocation.yCoord+2;
-    belowShip.direction = NORTH;
-    aboveShip.direction = NORTH;
-    NSMutableArray *coords = [[NSMutableArray alloc]init];
-    [coords addObject:aboveShip];
-    [coords addObject:belowShip];
-    for(Coordinate *coord in coords){
-        if([coord isWithinMap]){
-            if ([_game.gameMap.grid[coord.xCoord][coord.yCoord] isKindOfClass:[NSNumber class]]) {
-                Terrain terType = [_game.gameMap.grid[coord.xCoord][coord.yCoord] intValue];
-                if(terType == WATER){
-                    SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
-                    range.xScale = (tileWidth/range.frame.size.width)*0.95;
-                    range.yScale = (tileHeight/range.frame.size.height)*0.95;
-                    range.position = CGPointMake(coord.xCoord * tileWidth + tileWidth/2,
-                                                 coord.yCoord * tileHeight + tileHeight/2);
-                    range.zPosition = 1;
-                    [_mineRangeSprites addChild:range];
-                }
-            }
-        }
-        
-    }
 }
 
 // Displays the torpedo

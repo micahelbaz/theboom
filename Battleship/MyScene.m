@@ -344,6 +344,17 @@ typedef struct {
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
+            if([_nodeTouched.parent isEqual:_mainGameController.foreground.mineRangeSprites]){
+                [_mainGameController.foreground.mineRangeSprites removeAllChildren];
+                Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+                [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
+                
+             
+                [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:MINE] atIndex:squareTouched.yCoord];
+                   [_mainGameController.background addMine:squareTouched];
+                
+                
+            }
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
                 NSLog(@"CANNON HIT TO BASE");
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
@@ -375,6 +386,7 @@ typedef struct {
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
+            
         }
     }
 }
