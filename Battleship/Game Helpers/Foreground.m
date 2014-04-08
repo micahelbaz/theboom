@@ -27,10 +27,12 @@
         _torpedoIntervals = MAX_TORPEDO_INTERVALS;
         _canonRangeSprites = [[SKNode alloc] init];
         _mineRangeSprites = [[SKNode alloc]init];
+        _pickupMineRangeSprites = [[SKNode alloc] init];
         [_foregroundNode addChild:_canonRangeSprites];
         [_foregroundNode addChild:_movementLocationsSprites];
         [_foregroundNode addChild:_torpedoSprites];
         [_foregroundNode addChild:_mineRangeSprites];
+        [_foregroundNode addChild:_pickupMineRangeSprites];
     }
     return self;
 }
@@ -165,6 +167,103 @@
                 }
             }
         }
+}
+
+
+- (void) displayPickupMineRange:(SKNode*)shipActuallyAclicked{
+    [_mineRangeSprites removeAllChildren];
+    Coordinate *shipLocation = [_game.localPlayer.playerFleet getShipWithCoord:[_helper fromTextureToCoordinate:shipActuallyAclicked.position]].location;
+    if(shipLocation.direction == NORTH){
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        rightOfShip1.xCoord = shipLocation.xCoord+1;
+        rightOfShip1.yCoord = shipLocation.yCoord;
+        rightOfShip2.xCoord = shipLocation.xCoord+1;
+        rightOfShip2.yCoord = shipLocation.yCoord-1;
+        leftOfShip1.xCoord = shipLocation.xCoord-1;
+        leftOfShip1.yCoord = shipLocation.yCoord;
+        leftOfShip2.xCoord = shipLocation.xCoord-1;
+        leftOfShip2.yCoord = shipLocation.yCoord-1;
+        aboveShip.yCoord = shipLocation.yCoord+1;
+        aboveShip.xCoord = shipLocation.xCoord;
+        belowShip.xCoord = shipLocation.xCoord;
+        belowShip.yCoord = shipLocation.yCoord-2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        
+        
+        for(Coordinate *c in coordinates){
+            if([c isWithinMap]){
+                if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    Terrain terType = [_game.gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    if(terType == WATER){
+                        SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
+                        range.xScale = (tileWidth/range.frame.size.width)*0.95;
+                        range.yScale = (tileHeight/range.frame.size.height)*0.95;
+                        range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
+                                                     c.yCoord * tileHeight + tileHeight/2);
+                        range.zPosition = 1;
+                        
+                        [_pickupMineRangeSprites addChild:range];
+                    }
+                }
+            }
+        }
+    }
+    
+    else{
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        rightOfShip1.xCoord = shipLocation.xCoord+1;
+        rightOfShip1.yCoord = shipLocation.yCoord;
+        rightOfShip2.xCoord = shipLocation.xCoord+1;
+        rightOfShip2.yCoord = shipLocation.yCoord+1;
+        leftOfShip1.xCoord = shipLocation.xCoord-1;
+        leftOfShip1.yCoord = shipLocation.yCoord;
+        leftOfShip2.xCoord = shipLocation.xCoord-1;
+        leftOfShip2.yCoord = shipLocation.yCoord+1;
+        aboveShip.yCoord = shipLocation.yCoord-1;
+        aboveShip.xCoord = shipLocation.xCoord;
+        belowShip.xCoord = shipLocation.xCoord;
+        belowShip.yCoord = shipLocation.yCoord+2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        for(Coordinate *c in coordinates){
+            if([c isWithinMap]){
+                if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    Terrain terType = [_game.gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    if(terType == WATER){
+                        SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
+                        range.xScale = (tileWidth/range.frame.size.width)*0.95;
+                        range.yScale = (tileHeight/range.frame.size.height)*0.95;
+                        range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
+                                                     c.yCoord * tileHeight + tileHeight/2);
+                        range.zPosition = 1;
+                        
+                        [_pickupMineRangeSprites addChild:range];
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Displays the torpedo

@@ -193,6 +193,9 @@
     else if([functionSprite.name isEqualToString:@"DropMine"]){
         [_foreground displayMineRange:_shipActuallyClicked];
     }
+    else if([functionSprite.name isEqualToString:@"PickupMine"]){
+        [_foreground displayPickupMineRange:_shipActuallyClicked];
+    }
     
     
 }

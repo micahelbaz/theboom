@@ -147,6 +147,17 @@
     
     
 }
+
+-(void)removeMine(*Coordinate) mineLocation{
+    for(SKNode *n in _backgroundNode.children){
+        if([[n.name substringWithRange:NSMakeRange(0, 3)] isEqualToString:@"mine"]){
+            //if(n.name substringWithRange:NSMakeRange(4, 5) isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.xCoord]){
+                
+            //}
+        }
+    }
+}
+
 // Scolls the background screens
 - (void) scrollBackgrounds {
     SKNode* background1 = [_backgroundNode childNodeWithName:background1SpriteName];

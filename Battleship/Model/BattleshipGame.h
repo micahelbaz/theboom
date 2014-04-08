@@ -41,5 +41,6 @@
 -(void)removeBaseSquare:(Coordinate*) destroyedBaseSquare;
 -(void)updateDockingZone;
 -(void) isAbleToDropMine:(MineLayer *)mineLayer;
+-(void) isAbleToPickupMine:(MineLayer *)mineLayer;
 
 @end

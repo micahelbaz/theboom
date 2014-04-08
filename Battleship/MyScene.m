@@ -349,12 +349,26 @@ typedef struct {
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
                 
-             
+                MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                s.numMines--;
                 [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:MINE] atIndex:squareTouched.yCoord];
-                   [_mainGameController.background addMine:squareTouched];
-                
+                [_mainGameController.background addMine:squareTouched];
+                [self sendTurn];
                 
             }
+            if([_nodeTouched.parent isEqual:_mainGameController.foreground.pickupMineRangeSprites]){
+                [_mainGameController.foreground.pickupMineRangeSprites removeAllChildren];
+                Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+                [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
+                MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                s.numMines++;
+                [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:squareTouched.yCoord];
+                [_mainGameController.background removeMine:squareTouched];
+                [self sendTurn];
+                
+            }
+            
+            
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
                 NSLog(@"CANNON HIT TO BASE");
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
