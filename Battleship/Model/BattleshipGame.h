@@ -30,10 +30,12 @@
 -(Coordinate*) fireTorpedo: (Coordinate*) origin;
 -(NSMutableArray*) getShipDamages: (Coordinate*) origin;
 -(NSMutableArray*) getValidRotationsFrom:(Coordinate*)origin;
+-(int)getShipIndexWithName:(NSString*)shipName;
 -(NSMutableArray*) getCanonRange:(Coordinate*)origin;
 -(void) damageShipSegment:(Coordinate*)impactCoord;
 -(void)updateMap:(Fleet*) updatedFleet;
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination;
 -(BOOL)isShipDestroyed:(NSString *) shipName;
+-(void) isAbleToDropMine:(MineLayer *)mineLayer;
 
 @end
