@@ -129,9 +129,9 @@
     }
     else{
         int xRange = shipLocation.xCoord-1;
-        int yRange = shipLocation.yCoord-2;
+        int yRange = shipLocation.yCoord;
         for(int i = xRange; i < xRange+3; i++){
-            for(int j = yRange; j<yRange+4; j++){
+            for(int j = yRange; j<yRange+2; j++){
                 Coordinate *c = [[Coordinate alloc]init];
                 c.xCoord = i;
                 c.yCoord = j;

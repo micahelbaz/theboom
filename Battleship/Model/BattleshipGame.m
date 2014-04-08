@@ -285,9 +285,9 @@ static BattleshipGame *sharedGame = nil;
     [mineLayer.viableActions removeObject:@"DropMine"];
     if(mineLayer.location.direction == NORTH){
         int xRange = mineLayer.location.xCoord-1;
-        int yRange = mineLayer.location.yCoord-2;
+        int yRange = mineLayer.location.yCoord-1;
         for(int i = xRange; i < xRange+3; i++){
-            for(int j = yRange; j<yRange+4; j++){
+            for(int j = yRange; j<yRange+3; j++){
                 Coordinate *c = [[Coordinate alloc]init];
                 c.xCoord = i;
                 c.yCoord = j;
@@ -303,12 +303,33 @@ static BattleshipGame *sharedGame = nil;
                 }
             }
         }
-    }
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        belowShip.xCoord = mineLayer.location.xCoord;
+        aboveShip.xCoord = mineLayer.location.xCoord;
+        aboveShip.yCoord = mineLayer.location.yCoord+1;
+        belowShip.yCoord = mineLayer.location.yCoord-2;
+        belowShip.direction = NORTH;
+        aboveShip.direction = NORTH;
+        NSMutableArray *coords = [[NSMutableArray alloc]init];
+        [coords addObject:aboveShip];
+        [coords addObject:belowShip];
+        for(Coordinate *coord in coords){
+            if([coord isWithinMap]){
+                if ([_gameMap.grid[coord.xCoord][coord.yCoord] isKindOfClass:[NSNumber class]]) {
+                    [mineLayer.viableActions addObject:@"DropMine"];
+                    goto endOfMethod;
+                    }
+                }
+            }
+            
+        }
+    
     else{
         int xRange = mineLayer.location.xCoord-1;
-        int yRange = mineLayer.location.yCoord-1;
+        int yRange = mineLayer.location.yCoord;
         for(int i = xRange; i < xRange+3; i++){
-            for(int j = yRange; j<yRange+4; j++){
+            for(int j = yRange; j<yRange+2; j++){
                 Coordinate *c = [[Coordinate alloc]init];
                 c.xCoord = i;
                 c.yCoord = j;
@@ -326,7 +347,7 @@ static BattleshipGame *sharedGame = nil;
         }
 
     }
-    endOfMethod:;
+endOfMethod:;
 }
 
 @end
