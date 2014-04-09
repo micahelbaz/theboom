@@ -36,6 +36,7 @@ typedef struct {
         _mainGameController = [[MainGameController alloc] initMainGameControllerWithGame:_game andFrame:self.frame.size];
         [self addChild:_mainGameController.containers.overallNode];
         [self drawRadar];
+        [self drawSonar];
     }
     return self;
 }
@@ -500,6 +501,7 @@ typedef struct {
                     
                 }
                 [self drawRadar];
+                [self drawSonar];
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
@@ -629,7 +631,7 @@ typedef struct {
                             [_game damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
                         }
                         else {
-                            [_game damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
+                            [_game damageShipSegment:c ownedBy:TRUE with:TRUE and:FALSE];
                         }
                     }
                     if ([_game isShipDestroyed:seg.shipName]) {
@@ -755,6 +757,33 @@ typedef struct {
         }
     }
     [_mainGameController.background drawRadarToMap:_game.localPlayer.radarGrid];
+}
+
+-(void)drawSonar{
+    //    NSMutableArray *shipsToBeRemoved = [[NSMutableArray alloc] init];
+    //    for (SKSpriteNode *child in self.children) {
+    //        if ([child.name isEqualToString:@"radar"]) {
+    //            [shipsToBeRemoved addObject:child];
+    //        }
+    //    }
+    //    [self removeChildrenInArray:shipsToBeRemoved];
+    [_game.localPlayer updateSonarRange];
+    for (int i = 0; i < GRID_SIZE; i++) {
+        for (int j = 0; j < GRID_SIZE; j++) {
+            if ([_game.gameMap.grid[i][j] isKindOfClass:[NSNumber class]]) {
+                Terrain ter = [_game.gameMap.grid[i][j] intValue];
+                if (ter == MINE) {
+                    [_mainGameController.background removeMine:[[Coordinate alloc] initWithXCoordinate:i YCoordinate:j initiallyFacing:NONE]];
+                     for (Coordinate *c in _game.localPlayer.sonarGrid) {
+                         if (c.xCoord == i && c.yCoord == j) {
+                             [_mainGameController.background addMine:c];
+                             break;
+                         }
+                     }
+                }
+            }
+        }
+    }
 }
 //    SKSpriteNode* sprite = [SKSpriteNode spriteNodeWithImageNamed:miniMapImageName];
 //    sprite.yScale = tileWidth/sprite.frame.size.height;
