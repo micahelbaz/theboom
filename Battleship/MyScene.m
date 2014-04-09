@@ -201,7 +201,7 @@ typedef struct {
 -(void)sendPickupMine:(Coordinate*)mineLocation{
     NSError* error;
     NSMutableArray* mineDetails = [[NSMutableArray alloc] init];
-    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"pickupMineHitData"]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"pickupMineData"]];
     [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.xCoord]]];
     [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.yCoord]]];
     NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:mineDetails];
@@ -210,6 +210,20 @@ typedef struct {
         NSLog(@"error");
     }
 }
+
+-(void)sendMineHit:(Coordinate*)mineLocation{
+    NSError* error;
+    NSMutableArray* mineDetails = [[NSMutableArray alloc] init];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"mineCrashData"]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.xCoord]]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.yCoord]]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:mineDetails];
+    [_game.gameCenter.match sendDataToAllPlayers: packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+}
+
 
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -346,6 +360,18 @@ typedef struct {
         [_mainGameController.background removeMine:c];
         
     }
+    
+    else if([type isEqualToString:@"mineCrashData"]){
+        int hitCoordX =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        int hitCoordY =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]] intValue];
+        Coordinate *c = [[Coordinate alloc]init];
+        c.xCoord = hitCoordX;
+        c.yCoord = hitCoordY;
+        [_game.gameMap.grid[hitCoordX] removeObjectAtIndex:hitCoordY];
+        ///////////////////////
+        [_game.gameMap.grid[hitCoordX] insertObject:[NSNumber numberWithInt:WATER] atIndex:hitCoordY];
+        [_mainGameController.background removeMine:c];
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -456,6 +482,7 @@ typedef struct {
                     Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
                     if(terType == MINE){
                         [_mainGameController.background removeMine:_game.mineImpactCoordinate];
+                        [self sendMineHit:_game.mineImpactCoordinate];
                     }
 
                 }
