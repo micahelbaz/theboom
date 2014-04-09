@@ -195,8 +195,19 @@ static BattleshipGame *sharedGame = nil;
                                 c.yCoord = i-1;
                                 [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                                 [self updateMap:_localPlayer.playerFleet];
-                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                        
+                                if (![s isKindOfClass:[MineLayer class]]) {
+                                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                }
+                                NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
+                                for (int j = 0; j < 30; j++) {
+                                    for (int k = 0; k < 30; k++) {
+                                        if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
+                                            ShipSegment *seggy = _gameMap.grid[j][k];
+                                            NSLog(@"%@", seggy.shipName);
+                                             NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
+                                        }
+                                    }
+                                }
                        
 
                     }
@@ -273,8 +284,21 @@ static BattleshipGame *sharedGame = nil;
                         c.yCoord = i+1;
                         [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                         [self updateMap:_localPlayer.playerFleet];
-                        [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                      
+                        if (![s isKindOfClass:[MineLayer class]]) {
+                            [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                        }
+                        NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
+                        for (int j = 0; j < 30; j++) {
+                            for (int k = 0; k < 30; k++) {
+                                if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
+                                    ShipSegment *seggy = _gameMap.grid[j][k];
+                                    NSLog(@"%@", seggy.shipName);
+                                    NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
+                                }
+                            }
+                        }
+                        //                            }
+                        //                        }
                     }
                 }
             }

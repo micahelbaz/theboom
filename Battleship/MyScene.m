@@ -480,7 +480,7 @@ typedef struct {
                 Coordinate *destination = [_mainGameController.ships updateShipLocation:_nodeTouched];
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
                 [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:destination];
-                NSLog(@"%d, %d", _game.mineImpactCoordinate.xCoord, _game.mineImpactCoordinate.yCoord);
+                [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 if([_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
                     
