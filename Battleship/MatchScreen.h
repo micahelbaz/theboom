@@ -9,7 +9,11 @@
 #import <SpriteKit/SpriteKit.h>
 #import "ViewController.h"
 #import "GCHelper.h"
-@interface MatchScreen : SKScene
+#import "BattleshipGame.h"
+@interface MatchScreen : SKScene <GKMatchDelegate>
+
 @property (strong, nonatomic) UIViewController* parentView;
+@property (nonatomic, strong) BattleshipGame *game;
+@property BOOL opponentTouched;
 @end
 

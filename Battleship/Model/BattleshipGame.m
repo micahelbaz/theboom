@@ -228,7 +228,7 @@ static BattleshipGame *sharedGame = nil;
             }
         }
         //Move Backwards
-        if(origin.yCoord>destination.yCoord){
+        if(origin.yCoord<destination.yCoord){
             if([_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] isKindOfClass:[NSNumber class]]){
                 Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] intValue];
                 if(terType == MINE){
@@ -246,7 +246,7 @@ static BattleshipGame *sharedGame = nil;
             }
         }
         //Move Forwards
-        if(origin.yCoord<destination.yCoord){
+        if(origin.yCoord>destination.yCoord){
             for(int i =origin.yCoord-1; i>=destination.yCoord; i--){
                 if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];

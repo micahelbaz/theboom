@@ -13,6 +13,8 @@
 -(id)initWithSize:(CGSize)size {
     if (self = [super initWithSize:size]) {
         _parentView = [[ViewController alloc] init];
+        _game = [BattleshipGame sharedInstance];
+        _game.gameCenter.match.delegate = self;
         SKTexture *textureImage = [SKTexture textureWithImageNamed:@"menu background"];
         SKSpriteNode *backgroundSprite = [SKSpriteNode spriteNodeWithTexture:textureImage];
         backgroundSprite = [SKSpriteNode spriteNodeWithTexture:textureImage];
@@ -28,16 +30,38 @@
         [[GCHelper sharedInstance:nil] joinBattleshipMatch:[GKLocalPlayer localPlayer]];
         //SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
         //[self.scene.view presentScene:scene];
+        _opponentTouched = FALSE;
     }
     
     return self;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([GCHelper sharedInstance:nil].match.playerIDs[0] != 0) {
+    if (_opponentTouched && [GCHelper sharedInstance:nil].match.playerIDs[0] != 0) {
         SKScene * scene = [FleetScene sceneWithSize:self.scene.view.bounds.size];
         [self.scene.view presentScene:scene];
     }
 }
-         
+
+-(BOOL)sendBegin {
+    NSError* error;
+    NSMutableArray* message = [[NSMutableArray alloc] init];
+    [message addObject:[NSKeyedArchiver archivedDataWithRootObject:@"begin"]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:message];
+    [_game.gameCenter.match sendDataToAllPlayers:packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+    return false;
+}
+
+-(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
+    
+    NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
+    if ([type isEqualToString:@"begin"]) {
+        _opponentTouched = TRUE;
+    }
+}
+
 @end
