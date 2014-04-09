@@ -134,6 +134,7 @@ static BattleshipGame *sharedGame = nil;
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = origin.yCoord-i;
+                                NSLog(@"x: %i, y: %i", c.xCoord, c.yCoord);
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                             }
                         }
