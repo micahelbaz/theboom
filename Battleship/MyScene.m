@@ -301,8 +301,6 @@ typedef struct {
         Coordinate *c = [[Coordinate alloc]init];
         c.xCoord = hitCoordX;
         c.yCoord = hitCoordY;
-        MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
-        s.numMines--;
         [_game.gameMap.grid[hitCoordX] insertObject:[NSNumber numberWithInt:MINE] atIndex:hitCoordY];
         [_mainGameController.background addMine:c];
         _game.myTurn = FALSE;
