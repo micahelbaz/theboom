@@ -28,11 +28,13 @@
         _canonRangeSprites = [[SKNode alloc] init];
         _mineRangeSprites = [[SKNode alloc]init];
         _pickupMineRangeSprites = [[SKNode alloc] init];
+        _selfDistructSprites = [[SKNode alloc] init];
         [_foregroundNode addChild:_canonRangeSprites];
         [_foregroundNode addChild:_movementLocationsSprites];
         [_foregroundNode addChild:_torpedoSprites];
         [_foregroundNode addChild:_mineRangeSprites];
         [_foregroundNode addChild:_pickupMineRangeSprites];
+        [_foregroundNode addChild:_selfDistructSprites];
     }
     return self;
 }
@@ -70,6 +72,20 @@
                                      c.yCoord * tileHeight + tileHeight/2);
         //range.zPosition = 1;
         [_canonRangeSprites addChild:range];
+    }
+}
+
+- (void) displaySelfDistructRange:(SKNode*)shipActuallyClicked{
+    [_selfDistructSprites removeAllChildren];
+    NSMutableArray* rangeCoordinates = [_game getValidMovesFrom:[_helper fromTextureToCoordinate:shipActuallyClicked.position] withRadarPositions:FALSE];
+    NSLog(@"%d", rangeCoordinates.count);
+    for(Coordinate *c in rangeCoordinates){
+        SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
+        range.xScale = (tileWidth/range.frame.size.width)*0.95;
+        range.yScale = (tileHeight/range.frame.size.height)*0.95;
+        range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
+                                     c.yCoord * tileHeight + tileHeight/2);
+        [_selfDistructSprites addChild:range];
     }
 }
 

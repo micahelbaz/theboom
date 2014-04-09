@@ -196,6 +196,10 @@
     else if([functionSprite.name isEqualToString:@"PickupMine"]){
         [_foreground displayPickupMineRange:_shipActuallyClicked];
     }
+    else if([functionSprite.name isEqualToString:@"SelfDistruct"]){
+        NSLog(@"ASDFASDFSAD");
+        [_foreground displaySelfDistructRange:_shipActuallyClicked];
+    }
     
     
 }

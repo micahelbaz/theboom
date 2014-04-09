@@ -43,7 +43,7 @@
                         andMiniMap:(MiniMap*) miniMap
                         andConsole:(Console*) console;
 
-- (void) updateShipLocation:(SKNode*) newShipLocation;
+- (Coordinate*) updateShipLocation:(SKNode*) newShipLocation;
 - (void) animateShips;
 - (NSString*) shipName: (NSString*) carbon;
 -(CGPoint)positionShipSprite:(SKNode *)sprite atCoordinate:(Coordinate *)c;

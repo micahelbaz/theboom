@@ -25,6 +25,7 @@
 @property (strong, nonatomic) SKNode *canonRangeSprites;
 @property (strong, nonatomic) SKNode *mineRangeSprites;
 @property (strong, nonatomic) SKNode *pickupMineRangeSprites;
+@property (strong, nonatomic) SKNode *selfDistructSprites;
 
 @property (strong, nonatomic) NSMutableArray *torpedoShot;
 @property (strong, nonatomic) NSMutableArray *torpedoShooter;
@@ -44,5 +45,6 @@
 - (void) displayCannonRange:(SKNode*)shipActuallyClicked;
 - (void) displayMineRange:(SKNode*)shipActuallyAclicked;
 - (void) displayPickupMineRange:(SKNode*)shipActuallyAclicked;
+- (void) displaySelfDistructRange:(SKNode*)shipActuallyClicked;
 
 @end

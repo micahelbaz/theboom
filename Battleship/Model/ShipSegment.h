@@ -27,5 +27,6 @@
                   withShipSize: (int) shipSize;
 
 -(BOOL) damageSegmentWithTorpedo;
+-(BOOL) damageSegmentWithHeavyCannon;
 @end
 

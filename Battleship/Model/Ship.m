@@ -69,6 +69,7 @@
 -(void)positionShip:(Coordinate *)destination isHost:(BOOL)host dockingArray:(NSMutableArray*)dock{
     Coordinate* newCoord = [[Coordinate alloc] initWithXCoordinate:destination.xCoord YCoordinate:destination.yCoord initiallyFacing:destination.direction];
     _location = newCoord;
+    
     int i = 0;
     for (ShipSegment* seg in self.blocks) {
         switch (newCoord.direction) {
@@ -400,11 +401,19 @@
     return viableMoves;
 }
 
--(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock{
+-(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock with:(BOOL)heavyCannon{
     ShipSegment* seg = _blocks[blockNumber];
-    if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
-        seg.segmentArmourType--;
+    if (heavyCannon) {
+        if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
+            seg.segmentArmourType = DESTROYED;
+        }
     }
+    else {
+        if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
+            seg.segmentArmourType--;
+        }
+    }
+
     [self changeSpeed];
     [self toggleRepairStatus:dock];
 }

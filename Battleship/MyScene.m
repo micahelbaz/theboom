@@ -388,9 +388,9 @@ typedef struct {
             // Move location touched
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.movementLocationsSprites])
             {
-                [_mainGameController.ships updateShipLocation:_nodeTouched];
+                Coordinate *destination = [_mainGameController.ships updateShipLocation:_nodeTouched];
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
-                [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:[_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position]];
+                [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:destination];
                 [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 //[self drawRadar];
                 [self sendTurn];
@@ -426,10 +426,9 @@ typedef struct {
             
             
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
-                NSLog(@"CANNON HIT TO BASE");
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
-                [_game damageShipSegment:squareTouched];
+                [_game damageShipSegment:squareTouched ownedBy:FALSE with:FALSE and:FALSE];
                 if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
                     [_mainGameController.console setConsoleText:@"Ship Hit"];
                     [self sendCannonHit:squareTouched and:@"Ship Hit"];
@@ -461,7 +460,12 @@ typedef struct {
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
-            
+            if([_nodeTouched.parent isEqual:_mainGameController.foreground.selfDistructSprites]){
+                [_mainGameController.foreground.selfDistructSprites removeAllChildren];
+                Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+                Kamikaze *k = (Kamikaze*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                [_game explodeKamikazeBoat:k at:squareTouched];
+            }
         }
     }
 }

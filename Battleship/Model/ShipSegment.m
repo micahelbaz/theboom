@@ -36,4 +36,18 @@
             break;
     }
 }
+-(BOOL) damageSegmentWithHeavyCannon {
+    switch (_segmentArmourType) {
+        case HEAVY_ARMOUR:
+            _segmentArmourType = DESTROYED;
+            return TRUE;
+            break;
+        case NORMAL_ARMOUR:
+            _segmentArmourType = DESTROYED;
+            return TRUE;
+        default:
+            return FALSE;
+            break;
+    }
+}
 @end
