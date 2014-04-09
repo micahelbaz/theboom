@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418710869.720807"
+            timestampString = "418718655.691946"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
             landmarkName = "-moveShipfrom:to:"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418710869.720807"
+            timestampString = "418718655.691946"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "746"
-            endingLineNumber = "746"
+            startingLineNumber = "722"
+            endingLineNumber = "722"
             landmarkName = "-isShipDestroyed:"
             landmarkType = "5">
          </BreakpointContent>

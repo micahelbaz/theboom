@@ -176,27 +176,16 @@ static BattleshipGame *sharedGame = nil;
                         _mineImpactCoordinate.xCoord = origin.xCoord;
                         _mineImpactCoordinate.yCoord = i;
                         destination.yCoord = i-1;
-//                        for(ShipSegment *seg in s.blocks){
-//                            if(seg.location.yCoord == i){
+
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = i-1;
                                 [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                                 [self updateMap:_localPlayer.playerFleet];
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                                NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
-                                for (int j = 0; j < 30; j++) {
-                                    for (int k = 0; k < 30; k++) {
-                                        if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
-                                            ShipSegment *seggy = _gameMap.grid[j][k];
-                                            NSLog(@"%@", seggy.shipName);
-                                             NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
-                                        }
-                                    }
-                                }
+                        
                        
-//                            }
-//                        }
+
                     }
                 }
             }
@@ -228,7 +217,7 @@ static BattleshipGame *sharedGame = nil;
             }
         }
         //Move Backwards
-        if(origin.yCoord>destination.yCoord){
+        if(origin.yCoord<destination.yCoord){
             if([_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] isKindOfClass:[NSNumber class]]){
                 Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] intValue];
                 if(terType == MINE){
@@ -246,7 +235,7 @@ static BattleshipGame *sharedGame = nil;
             }
         }
         //Move Forwards
-        if(origin.yCoord<destination.yCoord){
+        if(origin.yCoord>destination.yCoord){
             for(int i =origin.yCoord-1; i>=destination.yCoord; i--){
                 if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];
@@ -254,26 +243,13 @@ static BattleshipGame *sharedGame = nil;
                         _mineImpactCoordinate.xCoord = origin.xCoord;
                         _mineImpactCoordinate.yCoord = i;
                         destination.yCoord = i+1;
-                        //                        for(ShipSegment *seg in s.blocks){
-                        //                            if(seg.location.yCoord == i){
                         Coordinate *c = [[Coordinate alloc]init];
                         c.xCoord = origin.xCoord;
                         c.yCoord = i+1;
                         [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                         [self updateMap:_localPlayer.playerFleet];
                         [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                        NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
-                        for (int j = 0; j < 30; j++) {
-                            for (int k = 0; k < 30; k++) {
-                                if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
-                                    ShipSegment *seggy = _gameMap.grid[j][k];
-                                    NSLog(@"%@", seggy.shipName);
-                                    NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
-                                }
-                            }
-                        }
-                        //                            }
-                        //                        }
+                      
                     }
                 }
             }
