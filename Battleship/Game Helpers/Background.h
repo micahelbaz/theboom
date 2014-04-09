@@ -21,6 +21,7 @@
 - (instancetype) initBackgroundWithNode:(SKNode*) backgroundNode
                                 andGame:(BattleshipGame*) game;
 -(void) addMine:(Coordinate *) mineLocation;
+-(void) removeMine:(Coordinate *) mineLocation;
 - (void) scrollBackgrounds;
 -(void) removeBaseFromScreen: (int) xCoord and:(int) yCoord;
 @end

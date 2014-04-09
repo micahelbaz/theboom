@@ -92,7 +92,7 @@ static BattleshipGame *sharedGame = nil;
         
         for(ShipSegment* seg in ship.blocks) {
             
-            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
+            //NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
             
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             
@@ -154,6 +154,7 @@ static BattleshipGame *sharedGame = nil;
         if([ship isKindOfClass:[MineLayer class]]){
             
             [self isAbleToDropMine:(MineLayer*)ship];
+            [self isAbleToPickupMine:(MineLayer*)ship];
             
         }
         
@@ -674,7 +675,17 @@ endOfMethod:;
 }
 
 -(void) isAbleToPickupMine:(MineLayer *)mineLayer{
-    [mineLayer.viableActions removeObject:@"DropMine"];
+    for(int i = 0; i<30; i++){
+        for(int j = 0; j<30; j++){
+            if([_gameMap.grid[i][j] isKindOfClass:[NSNumber class]]){
+                Terrain tertype = [_gameMap.grid[i][j] intValue];
+                if(tertype == MINE){
+                    NSLog(@"MINE: x: %i y: %i", i, j);
+                }
+            }
+        }
+    }
+    [mineLayer.viableActions removeObject:@"PickupMine"];
     if(mineLayer.location.direction == NORTH){
         Coordinate *rightOfShip1 = [[Coordinate alloc]init];
         Coordinate *rightOfShip2 = [[Coordinate alloc]init];
@@ -710,6 +721,7 @@ endOfMethod:;
                     
                     Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
                     if(terType == MINE){
+                        
                         [mineLayer.viableActions addObject:@"PickupMine"];
                         goto endOfMethod;
                     }
@@ -757,9 +769,9 @@ endOfMethod:;
                     
                     Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
                     
-                    if(terType == WATER && mineLayer.numMines>0){
-                        
-                        [mineLayer.viableActions addObject:@"DropMine"];
+                    if(terType == MINE){
+                        NSLog(@"Test");
+                        [mineLayer.viableActions addObject:@"PickupMine"];
                         
                         goto endOfMethod;
                         
@@ -795,7 +807,7 @@ endOfMethod:;
     NSMutableArray *a = p.dockingCoordinates;
     NSLog(@"docking coordinates");
     for (Coordinate *c in a) {
-        NSLog(@"%d , %d", c.xCoord, c.yCoord);
+        //NSLog(@"%d , %d", c.xCoord, c.yCoord);
         
     }
 }

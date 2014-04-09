@@ -171,7 +171,7 @@
 
 
 - (void) displayPickupMineRange:(SKNode*)shipActuallyAclicked{
-    [_mineRangeSprites removeAllChildren];
+    [_pickupMineRangeSprites removeAllChildren];
     Coordinate *shipLocation = [_game.localPlayer.playerFleet getShipWithCoord:[_helper fromTextureToCoordinate:shipActuallyAclicked.position]].location;
     if(shipLocation.direction == NORTH){
         Coordinate *rightOfShip1 = [[Coordinate alloc]init];
@@ -205,7 +205,7 @@
             if([c isWithinMap]){
                 if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
                     Terrain terType = [_game.gameMap.grid[c.xCoord][c.yCoord] intValue];
-                    if(terType == WATER){
+                    if(terType == MINE){
                         SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
                         range.xScale = (tileWidth/range.frame.size.width)*0.95;
                         range.yScale = (tileHeight/range.frame.size.height)*0.95;
@@ -250,7 +250,7 @@
             if([c isWithinMap]){
                 if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
                     Terrain terType = [_game.gameMap.grid[c.xCoord][c.yCoord] intValue];
-                    if(terType == WATER){
+                    if(terType == MINE){
                         SKSpriteNode* range = [[SKSpriteNode alloc]initWithImageNamed:moveRangeImageName];
                         range.xScale = (tileWidth/range.frame.size.width)*0.95;
                         range.yScale = (tileHeight/range.frame.size.height)*0.95;
