@@ -485,12 +485,11 @@ typedef struct {
                     Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
                     
                     if(terType == MINE){
-                        [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] removeObjectAtIndex:_game.mineImpactCoordinate.yCoord];
-                        [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:_game.mineImpactCoordinate.yCoord];
                         [_mainGameController.background removeMine:_game.mineImpactCoordinate];
-                        [self sendMineHit:_game.mineImpactCoordinate];
                         [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] removeObjectAtIndex:_game.mineImpactCoordinate.yCoord];
                         [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:_game.mineImpactCoordinate.xCoord];
+                        [self sendPickupMine:_game.mineImpactCoordinate];
+                    
                         if ([_game isShipDestroyed:s.shipName]) {
                             [_mainGameController.ships removeShipFromScreen:s.shipName];
                         }
