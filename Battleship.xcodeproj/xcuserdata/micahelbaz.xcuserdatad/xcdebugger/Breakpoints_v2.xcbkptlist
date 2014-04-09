@@ -239,7 +239,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "746"
             endingLineNumber = "746"
-            landmarkName = "-isAbleToDropMine:"
+            landmarkName = "-isShipDestroyed:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

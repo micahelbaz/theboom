@@ -208,7 +208,7 @@ static BattleshipGame *sharedGame = nil;
         if(origin.yCoord == destination.yCoord){
             for(int i =0; i<s.size; i++){
                 if([_gameMap.grid[destination.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
-                    Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord-i] intValue];
+                    Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord+i] intValue];
                     if(terType == MINE){
                         _mineImpactCoordinate.xCoord = destination.xCoord;
                         _mineImpactCoordinate.yCoord = origin.yCoord+i;
