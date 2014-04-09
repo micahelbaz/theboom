@@ -10,10 +10,8 @@
 #import "ViewController.h"
 #import "GCHelper.h"
 #import "BattleshipGame.h"
-@interface MatchScreen : SKScene <GKMatchDelegate>
+@interface MatchScreen : SKScene
 
 @property (strong, nonatomic) UIViewController* parentView;
-@property (nonatomic, strong) BattleshipGame *game;
-@property BOOL opponentTouched;
 @end
 
