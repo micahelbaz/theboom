@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418700929.205904"
+            timestampString = "418704123.946165"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "-moveShipfrom:to:"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/MyScene.m"
-            timestampString = "418700178.943223"
+            timestampString = "418704537.309019"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "393"
-            endingLineNumber = "393"
+            startingLineNumber = "398"
+            endingLineNumber = "398"
             landmarkName = "-touchesBegan:withEvent:"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Battleship/Model/BattleshipGame.m"
-            timestampString = "418700929.205904"
+            timestampString = "418704123.946165"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "687"
-            endingLineNumber = "687"
+            startingLineNumber = "741"
+            endingLineNumber = "741"
             landmarkName = "-isAbleToPickupMine:"
             landmarkType = "5">
          </BreakpointContent>

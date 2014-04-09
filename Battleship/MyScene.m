@@ -178,6 +178,19 @@ typedef struct {
 
 }
 
+-(void)sendMine:(Coordinate*)hitLocation{
+    NSError* error;
+    NSMutableArray* mineDetails = [[NSMutableArray alloc] init];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"mineHitData"]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:hitLocation.xCoord]]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:hitLocation.yCoord]]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:mineDetails];
+    [_game.gameCenter.match sendDataToAllPlayers: packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+}
+
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
@@ -280,6 +293,22 @@ typedef struct {
         NSString *string = [NSString stringWithFormat:@"X: %i, Y: %i", hitCoordX, hitCoordY];
         [_mainGameController.console setConsoleText:string];
     }
+    else if([type isEqualToString:@"mineHitData"]){
+        int hitCoordX =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        int hitCoordY =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]] intValue];
+        [_mainGameController.foreground.mineRangeSprites removeAllChildren];
+        [_game.gameMap.grid[hitCoordX] removeObjectAtIndex:hitCoordY];
+        Coordinate *c = [[Coordinate alloc]init];
+        c.xCoord = hitCoordX;
+        c.yCoord = hitCoordY;
+        MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+        s.numMines--;
+        [_game.gameMap.grid[hitCoordX] insertObject:[NSNumber numberWithInt:MINE] atIndex:hitCoordY];
+        [_mainGameController.background addMine:c];
+        _game.myTurn = FALSE;
+        [self sendTurn];
+        
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -379,6 +408,7 @@ typedef struct {
                 [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:MINE] atIndex:squareTouched.yCoord];
                 [_mainGameController.background addMine:squareTouched];
                 _game.myTurn = FALSE;
+                [self sendMine:squareTouched];
                 [self sendTurn];
                 
             }
