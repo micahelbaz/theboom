@@ -189,8 +189,7 @@ static BattleshipGame *sharedGame = nil;
                         _mineImpactCoordinate.yCoord = i;
                         }
                         destination.yCoord = i-1;
-//                        for(ShipSegment *seg in s.blocks){
-//                            if(seg.location.yCoord == i){
+
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = i-1;
@@ -210,8 +209,7 @@ static BattleshipGame *sharedGame = nil;
                                     }
                                 }
                        
-//                            }
-//                        }
+
                     }
                 }
             }
@@ -281,8 +279,6 @@ static BattleshipGame *sharedGame = nil;
                             _mineImpactCoordinate.yCoord = i;
                         }
                         destination.yCoord = i+1;
-                        //                        for(ShipSegment *seg in s.blocks){
-                        //                            if(seg.location.yCoord == i){
                         Coordinate *c = [[Coordinate alloc]init];
                         c.xCoord = origin.xCoord;
                         c.yCoord = i+1;

@@ -289,7 +289,6 @@
                 [self.scene.view presentScene:scene];
             }
         }
-        if ([nodeTouched.name length] > 3) {
         if ([[nodeTouched.name substringToIndex:4] isEqualToString:@"base"] && _configurationSet){
             int index = [[nodeTouched.name substringFromIndex:4] intValue];
             [self placeNextShipAtIndex:index];
@@ -316,7 +315,7 @@
         }
         }
     }
-}
+
 
 
 -(void) placeNextShipAtIndex: (int) index {

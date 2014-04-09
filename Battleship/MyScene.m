@@ -483,9 +483,8 @@ typedef struct {
                 [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 if([_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
+                    
                     if(terType == MINE){
-                        [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] removeObjectAtIndex:_game.mineImpactCoordinate.yCoord];
-                        [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:_game.mineImpactCoordinate.yCoord];
                         [_mainGameController.background removeMine:_game.mineImpactCoordinate];
                         [self sendPickupMine:_game.mineImpactCoordinate];
                     }
