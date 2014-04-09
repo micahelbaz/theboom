@@ -480,16 +480,16 @@ typedef struct {
                 Coordinate *destination = [_mainGameController.ships updateShipLocation:_nodeTouched];
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
                 [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:destination];
+                [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 if([_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
                     if(terType == MINE){
                         [_mainGameController.background removeMine:_game.mineImpactCoordinate];
                         [self sendMineHit:_game.mineImpactCoordinate];
                     }
-
+                    
                 }
-                [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
-                //[self drawRadar];
+                [self drawRadar];
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
@@ -649,6 +649,10 @@ typedef struct {
                         [_mainGameController.background removeBaseFromScreen:c.xCoord and:c.yCoord];
                         [self sendBaseHit:c.xCoord and:c.yCoord];
                     }
+                    else if (t == MINE) {
+                        [_mainGameController.background removeMine:c];
+                        [self sendPickupMine:c];
+                    }
                 }
             }
         }
@@ -720,13 +724,13 @@ typedef struct {
 }
 
 -(void)drawRadar{
-    NSMutableArray *shipsToBeRemoved = [[NSMutableArray alloc] init];
-    for (SKSpriteNode *child in self.children) {
-        if ([child.name isEqualToString:@"radar"]) {
-            [shipsToBeRemoved addObject:child];
-        }
-    }
-    [self removeChildrenInArray:shipsToBeRemoved];
+//    NSMutableArray *shipsToBeRemoved = [[NSMutableArray alloc] init];
+//    for (SKSpriteNode *child in self.children) {
+//        if ([child.name isEqualToString:@"radar"]) {
+//            [shipsToBeRemoved addObject:child];
+//        }
+//    }
+//    [self removeChildrenInArray:shipsToBeRemoved];
     [_game.localPlayer updateRadarRange];
     for (int i = 0; i < GRID_SIZE; i++) {
         for (int j = 0; j < GRID_SIZE; j++) {
@@ -740,20 +744,7 @@ typedef struct {
             }
         }
     }
-    for (int i = 0; i < GRID_SIZE; i++) {
-        for (int j = 0; j < GRID_SIZE; j++) {
-            if ([_game.localPlayer.radarGrid[i][j] intValue] == 0) {
-                SKSpriteNode *sprite = [[SKSpriteNode alloc] init];
-                sprite = [SKSpriteNode spriteNodeWithImageNamed:@"black"];
-                sprite.name = @"radar";
-                sprite.xScale = tileWidth/sprite.frame.size.width;
-                sprite.yScale = tileHeight/sprite.frame.size.height;
-                sprite.position = CGPointMake(i * tileWidth + tileWidth/2,
-                                              j * tileHeight + tileWidth/2);
-                [self addChild:sprite];
-            }
-        }
-    }
+    [_mainGameController.background drawRadarToMap:_game.localPlayer.radarGrid];
 }
 //    SKSpriteNode* sprite = [SKSpriteNode spriteNodeWithImageNamed:miniMapImageName];
 //    sprite.yScale = tileWidth/sprite.frame.size.height;

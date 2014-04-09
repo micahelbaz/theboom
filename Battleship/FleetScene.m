@@ -221,10 +221,10 @@
             [enemyShips addObject:(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[i]]];
         }
         if (_game.localPlayer.isHost) {
-            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:enemyShips];
+            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:FALSE andShips:enemyShips fromHostPlayer:TRUE];
         }
         else {
-            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:TRUE andShips:enemyShips];
+            _game.localPlayer.enemyFleet = [[Fleet alloc] initWith:TRUE andShips:enemyShips fromHostPlayer:FALSE];
         }
         if (_opponentReady && _youReady) {
             SKScene * scene = [MyScene sceneWithSize:self.scene.view.bounds.size];
@@ -306,10 +306,10 @@
                 start.name = @"start game";
                 [self addChild:start];
                 if (_game.localPlayer.isHost) {
-                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip];
+                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:TRUE andShips:_placedShip fromHostPlayer:TRUE];
                 }
                 else {
-                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:FALSE andShips:_placedShip];
+                    _game.localPlayer.playerFleet = [[Fleet alloc] initWith:FALSE andShips:_placedShip fromHostPlayer:FALSE];
                 }
               
             }

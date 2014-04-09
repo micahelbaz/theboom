@@ -12,7 +12,7 @@
 
 #pragma mark - TODO: the coordinate setting system is broken. please fix.
 
-- (instancetype)initWith:(BOOL)isHost andShips:(NSMutableArray*) ships
+- (instancetype)initWith:(BOOL)isHost andShips:(NSMutableArray*) ships fromHostPlayer:(BOOL)itIS
 {
     self = [super init];
     if(self){
@@ -40,6 +40,32 @@
         Kamikaze *k1;
         self.dockingCoordinates = [[NSMutableArray alloc]init];
         self.baseCoordinates = [[NSMutableArray alloc]init];
+        //should this go here
+        if(isHost){
+            for(int i = 10; i<20; i++){
+                Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:0 initiallyFacing:NONE];
+                [self.baseCoordinates addObject:c];
+                Coordinate *coord = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:1 initiallyFacing:NONE];
+                [self.dockingCoordinates addObject:coord];
+            }
+            Coordinate *leftOfBase = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:0 initiallyFacing:NONE];
+            Coordinate *rightOfBase = [[Coordinate alloc] initWithXCoordinate:20 YCoordinate:0 initiallyFacing:NONE];
+            [self.dockingCoordinates addObject:leftOfBase];
+            [self.dockingCoordinates addObject:rightOfBase];
+        }
+        else{
+            for(int i = 10; i<20; i++){
+                Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:29 initiallyFacing:NONE];
+                [self.baseCoordinates addObject:c];
+                Coordinate *coord = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:28 initiallyFacing:NONE];
+                [self.dockingCoordinates addObject:coord];
+                Coordinate *leftOfBase = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:29 initiallyFacing:NONE];
+                Coordinate *rightOfBase = [[Coordinate alloc] initWithXCoordinate:20 YCoordinate:29 initiallyFacing:NONE];
+                [self.dockingCoordinates addObject:leftOfBase];
+                [self.dockingCoordinates addObject:rightOfBase];
+                
+            }
+        }
         if(isHost){
             for (int i = 0; i < ships.count; i++) {
                 if ([ships[i] intValue] == 0) {
@@ -96,17 +122,17 @@
             m2 = [[MineLayer alloc] initWithLocation: mineLayer2 andName:@"HostMineLayer2"];
             r1 = [[RadarBoat alloc] initWithLocation: radar1 andName:@"HostRadarBoat1"];
             k1 = [[Kamikaze alloc] initWithLocation:kamakaze1 andName:@"HostKamikaze1"];
-        [c1 positionShip:cruiser1 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [c2 positionShip:cruiser2 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [d1 positionShip:destroyer1 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [d2 positionShip:destroyer2 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [d3 positionShip:destroyer3 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [t1 positionShip:torpedo1 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [t2 positionShip:torpedo2 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [m1 positionShip:mineLayer1 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [m2 positionShip:mineLayer2 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [r1 positionShip:radar1 isHost:TRUE dockingArray:self.dockingCoordinates];
-        [k1 positionShip:kamakaze1 isHost:TRUE dockingArray:self.dockingCoordinates];
+        [c1 positionShip:cruiser1 isHost:itIS dockingArray:self.dockingCoordinates];
+        [c2 positionShip:cruiser2 isHost:itIS dockingArray:self.dockingCoordinates];
+        [d1 positionShip:destroyer1 isHost:itIS dockingArray:self.dockingCoordinates];
+        [d2 positionShip:destroyer2 isHost:itIS dockingArray:self.dockingCoordinates];
+        [d3 positionShip:destroyer3 isHost:itIS dockingArray:self.dockingCoordinates];
+        [t1 positionShip:torpedo1 isHost:itIS dockingArray:self.dockingCoordinates];
+        [t2 positionShip:torpedo2 isHost:itIS dockingArray:self.dockingCoordinates];
+        [m1 positionShip:mineLayer1 isHost:itIS dockingArray:self.dockingCoordinates];
+        [m2 positionShip:mineLayer2 isHost:itIS dockingArray:self.dockingCoordinates];
+        [r1 positionShip:radar1 isHost:itIS dockingArray:self.dockingCoordinates];
+        [k1 positionShip:kamakaze1 isHost:itIS dockingArray:self.dockingCoordinates];
         }
         else{
             for (int i = 0; i < ships.count; i++) {
@@ -163,42 +189,18 @@
             m2 = [[MineLayer alloc] initWithLocation: mineLayer2 andName:@"JoinMineLayer2"];
             r1 = [[RadarBoat alloc] initWithLocation: radar1 andName:@"JoinRadarBoat1"];
             k1 = [[Kamikaze alloc] initWithLocation:kamakaze1 andName:@"JoinKamikaze1"];
-            if(isHost){
-                for(int i = 10; i<20; i++){
-                    Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:0 initiallyFacing:NONE];
-                    [self.baseCoordinates addObject:c];
-                    Coordinate *coord = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:1 initiallyFacing:NONE];
-                    [self.dockingCoordinates addObject:coord];
-                }
-                Coordinate *leftOfBase = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:0 initiallyFacing:NONE];
-                Coordinate *rightOfBase = [[Coordinate alloc] initWithXCoordinate:20 YCoordinate:0 initiallyFacing:NONE];
-                [self.dockingCoordinates addObject:leftOfBase];
-                [self.dockingCoordinates addObject:rightOfBase];
-            }
-            else{
-                for(int i = 10; i<20; i++){
-                    Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:29 initiallyFacing:NONE];
-                    [self.baseCoordinates addObject:c];
-                    Coordinate *coord = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:28 initiallyFacing:NONE];
-                    [self.dockingCoordinates addObject:coord];
-                    Coordinate *leftOfBase = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:29 initiallyFacing:NONE];
-                    Coordinate *rightOfBase = [[Coordinate alloc] initWithXCoordinate:20 YCoordinate:29 initiallyFacing:NONE];
-                    [self.dockingCoordinates addObject:leftOfBase];
-                    [self.dockingCoordinates addObject:rightOfBase];
-                    
-                }
-            }
-        [c1 positionShip:cruiser1 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [c2 positionShip:cruiser2 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [d1 positionShip:destroyer1 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [d2 positionShip:destroyer2 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [d3 positionShip:destroyer3 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [t1 positionShip:torpedo1 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [t2 positionShip:torpedo2 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [m1 positionShip:mineLayer1 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [m2 positionShip:mineLayer2 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [r1 positionShip:radar1 isHost:FALSE dockingArray:self.dockingCoordinates];
-        [k1 positionShip:kamakaze1 isHost:FALSE dockingArray:self.dockingCoordinates];
+
+        [c1 positionShip:cruiser1 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [c2 positionShip:cruiser2 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [d1 positionShip:destroyer1 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [d2 positionShip:destroyer2 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [d3 positionShip:destroyer3 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [t1 positionShip:torpedo1 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [t2 positionShip:torpedo2 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [m1 positionShip:mineLayer1 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [m2 positionShip:mineLayer2 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [r1 positionShip:radar1 isHost:!itIS dockingArray:self.dockingCoordinates];
+        [k1 positionShip:kamakaze1 isHost:!itIS dockingArray:self.dockingCoordinates];
     
         }
      

@@ -24,4 +24,5 @@
 -(void) removeMine:(Coordinate *) mineLocation;
 - (void) scrollBackgrounds;
 -(void) removeBaseFromScreen: (int) xCoord and:(int) yCoord;
+-(void) drawRadarToMap: (NSMutableArray*) grid;
 @end

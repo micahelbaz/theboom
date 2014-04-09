@@ -122,6 +122,8 @@ static BattleshipGame *sharedGame = nil;
     Ship* s = [_localPlayer.playerFleet getShipWithCoord:origin];
     
     [self removeShipFromMap: s];
+    //added this line
+    _mineImpactCoordinate = [[Coordinate alloc]init];
     if(destination.direction == NORTH){
         //Move Sideways
         if(origin.yCoord == destination.yCoord){
@@ -129,8 +131,10 @@ static BattleshipGame *sharedGame = nil;
                 if([_gameMap.grid[destination.xCoord][origin.yCoord-i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord-i] intValue];
                     if(terType == MINE){
+                        if (![s isKindOfClass:[MineLayer class]]) {
                         _mineImpactCoordinate.xCoord = destination.xCoord;
                         _mineImpactCoordinate.yCoord = origin.yCoord-i;
+                        }
                         destination = origin;
                         for(ShipSegment *seg in s.blocks){
                             if(seg.location.yCoord == origin.yCoord-i){
@@ -139,7 +143,9 @@ static BattleshipGame *sharedGame = nil;
                                 c.yCoord = origin.yCoord-i;
                                 [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                                 [self updateMap:_localPlayer.playerFleet];
-                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                if (![s isKindOfClass:[MineLayer class]]) {
+                                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                }
                                 [_gameMap.grid[destination.xCoord] removeObjectAtIndex:origin.yCoord-i];
                                 [_gameMap.grid[destination.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:origin.yCoord-i];
                             }
@@ -153,17 +159,22 @@ static BattleshipGame *sharedGame = nil;
             if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size+1] isKindOfClass:[NSNumber class]]){
                 Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size+1] intValue];
                 if(terType == MINE){
+                    if (![s isKindOfClass:[MineLayer class]]) {
                     _mineImpactCoordinate.xCoord = destination.xCoord;
                     _mineImpactCoordinate.yCoord = destination.yCoord-s.size+1;
+                    }
                     destination = origin;
+                    
+                    //shouldnt you only move back one
                     ShipSegment *seg = s.blocks.lastObject;
                     Coordinate *c = [[Coordinate alloc]init];
                     c.yCoord = seg.location.yCoord;
                     c.xCoord = seg.location.xCoord;
                     [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                     [self updateMap:_localPlayer.playerFleet];
-                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                   
+                    if (![s isKindOfClass:[MineLayer class]]) {
+                        [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                    }
                 }
             }
         }
@@ -173,8 +184,10 @@ static BattleshipGame *sharedGame = nil;
                 if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];
                     if(terType == MINE){
+                        if (![s isKindOfClass:[MineLayer class]]) {
                         _mineImpactCoordinate.xCoord = origin.xCoord;
                         _mineImpactCoordinate.yCoord = i;
+                        }
                         destination.yCoord = i-1;
 //                        for(ShipSegment *seg in s.blocks){
 //                            if(seg.location.yCoord == i){
@@ -183,7 +196,9 @@ static BattleshipGame *sharedGame = nil;
                                 c.yCoord = i-1;
                                 [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                                 [self updateMap:_localPlayer.playerFleet];
-                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                if (![s isKindOfClass:[MineLayer class]]) {
+                                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                }
                                 NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
                                 for (int j = 0; j < 30; j++) {
                                     for (int k = 0; k < 30; k++) {
@@ -210,8 +225,10 @@ static BattleshipGame *sharedGame = nil;
                 if([_gameMap.grid[destination.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord+i] intValue];
                     if(terType == MINE){
+                        if (![s isKindOfClass:[MineLayer class]]) {
                         _mineImpactCoordinate.xCoord = destination.xCoord;
                         _mineImpactCoordinate.yCoord = origin.yCoord+i;
+                        }
                         destination = origin;
                         for(ShipSegment *seg in s.blocks){
                             if(seg.location.yCoord == origin.yCoord+i){
@@ -220,7 +237,9 @@ static BattleshipGame *sharedGame = nil;
                                 c.yCoord = origin.yCoord+i;
                                 [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                                 [self updateMap:_localPlayer.playerFleet];
-                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                if (![s isKindOfClass:[MineLayer class]]) {
+                                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                }
                             }
                         }
                     }
@@ -232,16 +251,22 @@ static BattleshipGame *sharedGame = nil;
             if([_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] isKindOfClass:[NSNumber class]]){
                 Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] intValue];
                 if(terType == MINE){
+                    if (![s isKindOfClass:[MineLayer class]]) {
                     _mineImpactCoordinate.xCoord = destination.xCoord;
                     _mineImpactCoordinate.yCoord = destination.yCoord+s.size-1;
+                    }
                     destination = origin;
+                    
+                    //lastObject
                     ShipSegment *seg = s.blocks.lastObject;
                     Coordinate *c = [[Coordinate alloc]init];
                     c.yCoord = seg.location.yCoord;
                     c.xCoord = seg.location.xCoord;
                     [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                     [self updateMap:_localPlayer.playerFleet];
-                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                    if (![s isKindOfClass:[MineLayer class]]) {
+                        [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                    }
                 }
             }
         }
@@ -251,8 +276,10 @@ static BattleshipGame *sharedGame = nil;
                 if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];
                     if(terType == MINE){
-                        _mineImpactCoordinate.xCoord = origin.xCoord;
-                        _mineImpactCoordinate.yCoord = i;
+                        if (![s isKindOfClass:[MineLayer class]]) {
+                            _mineImpactCoordinate.xCoord = origin.xCoord;
+                            _mineImpactCoordinate.yCoord = i;
+                        }
                         destination.yCoord = i+1;
                         //                        for(ShipSegment *seg in s.blocks){
                         //                            if(seg.location.yCoord == i){
@@ -261,7 +288,9 @@ static BattleshipGame *sharedGame = nil;
                         c.yCoord = i+1;
                         [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                         [self updateMap:_localPlayer.playerFleet];
-                        [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                        if (![s isKindOfClass:[MineLayer class]]) {
+                            [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                        }
                         NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
                         for (int j = 0; j < 30; j++) {
                             for (int k = 0; k < 30; k++) {
@@ -571,7 +600,6 @@ static BattleshipGame *sharedGame = nil;
     Ship *s;
     if ([_gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[ShipSegment class]]) {
         ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
-        NSLog(@"HELLOWORLD");
         int shipBlock = shipSeg.block;
         if (you) {
             s = [_localPlayer.playerFleet getShipWithCoord:impactCoord];

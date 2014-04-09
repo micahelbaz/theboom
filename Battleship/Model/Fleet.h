@@ -21,10 +21,9 @@
 @property int playerID;
 @property (strong, nonatomic) NSArray* shipArray;
 
-- (instancetype)initWith:(BOOL)isHost andShips:(NSMutableArray*) ships;
+- (instancetype)initWith:(BOOL)isHost andShips:(NSMutableArray*) ships fromHostPlayer:(BOOL) itIS;
 @property (strong, nonatomic) NSMutableArray* baseCoordinates;
 @property (strong, nonatomic) NSMutableArray* dockingCoordinates;
-- (instancetype)initWith:(BOOL)isHost;
 - (Ship*)getShipWithCoord:(Coordinate*) location;
 - (NSMutableArray*)getRotationRangeOf:(Ship*) s;
 @end
