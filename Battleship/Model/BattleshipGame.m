@@ -92,7 +92,7 @@ static BattleshipGame *sharedGame = nil;
         
         for(ShipSegment* seg in ship.blocks) {
             
-    
+            
             
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             
@@ -153,29 +153,43 @@ static BattleshipGame *sharedGame = nil;
                     Coordinate *c = [[Coordinate alloc]init];
                     c.yCoord = seg.location.yCoord;
                     c.xCoord = seg.location.xCoord;
+                    [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                    [self updateMap:_localPlayer.playerFleet];
                     [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                 }
             }
         }
         //Move Forwards
         if(origin.yCoord<destination.yCoord){
-            for(int i =0; i<s.size; i++){
-                if([_gameMap.grid[origin.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
-                    Terrain terType = [_gameMap.grid[origin.xCoord][origin.yCoord+i] intValue];
+            for(int i =origin.yCoord+1; i<=destination.yCoord; i++){
+                if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];
                     if(terType == MINE){
-                        destination.yCoord = origin.xCoord+i;
-                        for(ShipSegment *seg in s.blocks){
-                            if(seg.location.yCoord == origin.yCoord+i){
+                        destination.yCoord = i-1;
+//                        for(ShipSegment *seg in s.blocks){
+//                            if(seg.location.yCoord == i){
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
-                                c.yCoord = origin.yCoord+i;
+                                c.yCoord = i-1;
+                                [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                                [self updateMap:_localPlayer.playerFleet];
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                            }
-                        }
+                                NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
+                                for (int j = 0; j < 30; j++) {
+                                    for (int k = 0; k < 30; k++) {
+                                        if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
+                                            ShipSegment *seggy = _gameMap.grid[j][k];
+                                            NSLog(@"%@", seggy.shipName);
+                                             NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
+                                        }
+                                    }
+                                }
+//                            }
+//                        }
                     }
                 }
             }
-
+            
         }
     }
     else{
@@ -267,155 +281,31 @@ static BattleshipGame *sharedGame = nil;
     }
     else {
         validMoves = [s getHeadLocationsOfMove];
-    for (NSMutableArray* move in validMoves) {
-        
-        for(Coordinate* segmentLocation in move) {
+        for (NSMutableArray* move in validMoves) {
             
-            if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[ShipSegment class]]) {
+            for(Coordinate* segmentLocation in move) {
                 
-                ShipSegment *seg =_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord];
-                
-                if (![seg.shipName isEqualToString:s.shipName]) {
+                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[ShipSegment class]]) {
                     
-                    [movesToBeRemoved addObject:move];
+                    ShipSegment *seg =_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord];
                     
-                }
-                
-            }
-            
-            else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
-                
-                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER && [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
-                    
-                    [movesToBeRemoved addObject: move];
-                    
-                }
-                
-                
-                
-            }
-            
-        }
-        
-        
-        
-    }
-    
-    for (NSMutableArray* move in movesToBeRemoved) {
-        
-        [validMoves removeObject:move];
-        
-    }
-    
-    
-    
-    NSMutableArray *validSegmentLocations = [[NSMutableArray alloc] init];
-    
-    for (NSMutableArray* move in validMoves) {
-        
-        Coordinate *c = move[0];
-        
-        [validSegmentLocations addObject:c];
-        
-    }
-    
-    if (!radarPositions) {
-        
-        return validSegmentLocations;
-        
-    }
-    
-    else {
-        
-        NSMutableArray *segmentsWithinMoveRange = [[NSMutableArray alloc] init];
-        
-        for (Coordinate* headLocation in validSegmentLocations) {
-            
-            [segmentsWithinMoveRange addObject:headLocation];
-            
-            if (headLocation.direction == NORTH) {
-                
-                if (headLocation.xCoord+1 == s.location.xCoord || headLocation.xCoord-1 == s.location.xCoord) {
-                    
-                    for (int i = 1; i < s.size; i++) {
+                    if (![seg.shipName isEqualToString:s.shipName]) {
                         
-                        Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
-                        
-                        segLocation.xCoord = headLocation.xCoord;
-                        
-                        segLocation.yCoord = headLocation.yCoord - i;
-                        
-                        segLocation.direction = headLocation.direction;
-                        
-                        [segmentsWithinMoveRange addObject:segLocation];
+                        [movesToBeRemoved addObject:move];
                         
                     }
                     
                 }
                 
-            }
-            
-            else if (headLocation.direction == SOUTH) {
-                
-                if (headLocation.xCoord+1 == s.location.xCoord || headLocation.xCoord-1 == s.location.xCoord) {
+                else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
                     
-                    for (int i = 1; i < s.size; i++) {
+                    if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER && [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
                         
-                        Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
-                        
-                        segLocation.xCoord = headLocation.xCoord;
-                        
-                        segLocation.yCoord = headLocation.yCoord + i;
-                        
-                        segLocation.direction = headLocation.direction;
-                        
-                        [segmentsWithinMoveRange addObject:segLocation];
+                        [movesToBeRemoved addObject: move];
                         
                     }
                     
-                }
-                
-            }
-            
-            else if (headLocation.direction == WEST) {
-                
-                if (headLocation.yCoord+1 == s.location.yCoord || headLocation.yCoord-1 == s.location.yCoord) {
                     
-                    for (int i = 1; i < s.size; i++) {
-                        
-                        Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
-                        
-                        segLocation.xCoord = headLocation.xCoord + i;
-                        
-                        segLocation.yCoord = headLocation.yCoord;
-                        
-                        segLocation.direction = headLocation.direction;
-                        
-                        [segmentsWithinMoveRange addObject:segLocation];
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            else if (headLocation.direction == EAST) {
-                
-                if (headLocation.xCoord+1 == s.location.yCoord || headLocation.xCoord-1 == s.location.yCoord) {
-                    
-                    for (int i = 1; i < s.size; i++) {
-                        
-                        Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
-                        
-                        segLocation.xCoord = headLocation.xCoord;
-                        
-                        segLocation.yCoord = headLocation.yCoord;
-                        
-                        segLocation.direction = headLocation.direction;
-                        
-                        [segmentsWithinMoveRange addObject:segLocation];
-                        
-                    }
                     
                 }
                 
@@ -425,8 +315,132 @@ static BattleshipGame *sharedGame = nil;
             
         }
         
-        return segmentsWithinMoveRange;
-    }
+        for (NSMutableArray* move in movesToBeRemoved) {
+            
+            [validMoves removeObject:move];
+            
+        }
+        
+        
+        
+        NSMutableArray *validSegmentLocations = [[NSMutableArray alloc] init];
+        
+        for (NSMutableArray* move in validMoves) {
+            
+            Coordinate *c = move[0];
+            
+            [validSegmentLocations addObject:c];
+            
+        }
+        
+        if (!radarPositions) {
+            
+            return validSegmentLocations;
+            
+        }
+        
+        else {
+            
+            NSMutableArray *segmentsWithinMoveRange = [[NSMutableArray alloc] init];
+            
+            for (Coordinate* headLocation in validSegmentLocations) {
+                
+                [segmentsWithinMoveRange addObject:headLocation];
+                
+                if (headLocation.direction == NORTH) {
+                    
+                    if (headLocation.xCoord+1 == s.location.xCoord || headLocation.xCoord-1 == s.location.xCoord) {
+                        
+                        for (int i = 1; i < s.size; i++) {
+                            
+                            Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
+                            
+                            segLocation.xCoord = headLocation.xCoord;
+                            
+                            segLocation.yCoord = headLocation.yCoord - i;
+                            
+                            segLocation.direction = headLocation.direction;
+                            
+                            [segmentsWithinMoveRange addObject:segLocation];
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                else if (headLocation.direction == SOUTH) {
+                    
+                    if (headLocation.xCoord+1 == s.location.xCoord || headLocation.xCoord-1 == s.location.xCoord) {
+                        
+                        for (int i = 1; i < s.size; i++) {
+                            
+                            Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
+                            
+                            segLocation.xCoord = headLocation.xCoord;
+                            
+                            segLocation.yCoord = headLocation.yCoord + i;
+                            
+                            segLocation.direction = headLocation.direction;
+                            
+                            [segmentsWithinMoveRange addObject:segLocation];
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                else if (headLocation.direction == WEST) {
+                    
+                    if (headLocation.yCoord+1 == s.location.yCoord || headLocation.yCoord-1 == s.location.yCoord) {
+                        
+                        for (int i = 1; i < s.size; i++) {
+                            
+                            Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
+                            
+                            segLocation.xCoord = headLocation.xCoord + i;
+                            
+                            segLocation.yCoord = headLocation.yCoord;
+                            
+                            segLocation.direction = headLocation.direction;
+                            
+                            [segmentsWithinMoveRange addObject:segLocation];
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                else if (headLocation.direction == EAST) {
+                    
+                    if (headLocation.xCoord+1 == s.location.yCoord || headLocation.xCoord-1 == s.location.yCoord) {
+                        
+                        for (int i = 1; i < s.size; i++) {
+                            
+                            Coordinate* segLocation = [[Coordinate alloc] initWithXCoordinate:0 YCoordinate:0 initiallyFacing:NONE];
+                            
+                            segLocation.xCoord = headLocation.xCoord;
+                            
+                            segLocation.yCoord = headLocation.yCoord;
+                            
+                            segLocation.direction = headLocation.direction;
+                            
+                            [segmentsWithinMoveRange addObject:segLocation];
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                
+                
+            }
+            
+            return segmentsWithinMoveRange;
+        }
     }
     
 }
@@ -472,7 +486,7 @@ static BattleshipGame *sharedGame = nil;
     Ship *s;
     if ([_gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[ShipSegment class]]) {
         ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
-        
+        NSLog(@"HELLOWORLD");
         int shipBlock = shipSeg.block;
         if (you) {
             s = [_localPlayer.playerFleet getShipWithCoord:impactCoord];
@@ -502,7 +516,7 @@ static BattleshipGame *sharedGame = nil;
                     NSLog(@"damage next ship index part 1");
                     [s damageShipWithTorpedoAt:shipBlock+1 and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
                 }
-
+                
             }
         }
     }
@@ -916,8 +930,8 @@ endOfMethod:;
             [self updateDockingZone];
         }
     }
-
-
+    
+    
 }
 -(void)updateDockingZone {
     _localPlayer.playerFleet.dockingCoordinates = [[NSMutableArray alloc] init];
@@ -989,28 +1003,29 @@ endOfMethod:;
 -(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation{
     k.isDestroyed = TRUE;
     for (int i = -1; i <= 1; i++) {
-        for (int j = -1; i <= 1; j++) {
+        for (int j = -1; j <= 1; j++) {
             Coordinate *c = [[Coordinate alloc] initWithXCoordinate:explosionLocation.xCoord+i YCoordinate:explosionLocation.yCoord+j initiallyFacing:NONE];
             if ([c isWithinMap]) {
-            if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[ShipSegment class]]) {
-                ShipSegment *seg = (ShipSegment*) _gameMap.grid[c.xCoord][c.yCoord];
-                if (_localPlayer.isHost) {
-                    if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"h"]) {
-                        [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
+                if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[ShipSegment class]]) {
+                    ShipSegment *seg = (ShipSegment*) _gameMap.grid[c.xCoord][c.yCoord];
+                    if (_localPlayer.isHost) {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            NSLog(@"hello");
+                            [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
+                        }
+                        else {
+                            [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
+                        }
                     }
                     else {
-                        [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
+                        }
+                        else {
+                            [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
+                        }
                     }
                 }
-                else {
-                    if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"h"]) {
-                        [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
-                    }
-                    else {
-                        [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
-                    }
-                }
-            }
             }
         }
     }

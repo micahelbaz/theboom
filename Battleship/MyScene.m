@@ -464,7 +464,10 @@ typedef struct {
                 [_mainGameController.foreground.selfDistructSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 Kamikaze *k = (Kamikaze*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                NSLog(@"%@", k.shipName);
                 [_game explodeKamikazeBoat:k at:squareTouched];
+                [self sendTurn];
+                _game.myTurn = FALSE;
             }
         }
     }
