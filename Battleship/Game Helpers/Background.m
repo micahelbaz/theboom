@@ -153,7 +153,6 @@
     NSMutableArray *child = [[NSMutableArray alloc]init];
    
     for(SKNode *n in _backgroundNode.children){
-         NSLog(@"%@", [n.name substringWithRange:NSMakeRange(0, 8)]);
         if([[n.name substringWithRange:NSMakeRange(0, 4)] isEqualToString:@"mine"]){
             if((mineLocation.xCoord/10)>0){
                 if([[n.name substringWithRange:NSMakeRange(4, 2)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.xCoord]]){
