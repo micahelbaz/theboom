@@ -70,7 +70,7 @@
         range.yScale = (tileHeight/range.frame.size.height)*0.95;
         range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
                                      c.yCoord * tileHeight + tileHeight/2);
-        //range.zPosition = 1;
+        range.zPosition = 1;
         [_canonRangeSprites addChild:range];
     }
 }
@@ -85,6 +85,7 @@
         range.yScale = (tileHeight/range.frame.size.height)*0.95;
         range.position = CGPointMake(c.xCoord * tileWidth + tileWidth/2,
                                      c.yCoord * tileHeight + tileHeight/2);
+        range.zPosition = 1;
         [_selfDistructSprites addChild:range];
     }
 }

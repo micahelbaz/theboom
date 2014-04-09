@@ -39,6 +39,7 @@
     }
 }
 -(void) updateSonarRange {
+    _sonarGrid = [[NSMutableArray alloc] init];
     for(int i = 0; i<GRID_SIZE; i++){
         self.radarGrid[i] = [[NSMutableArray alloc] init];
         for(int j = 0; j < GRID_SIZE; j++){
@@ -48,8 +49,7 @@
     for (Ship *s in self.playerFleet.shipArray) {
         if ([s isKindOfClass:[MineLayer class]])
         for (Coordinate *c in s.visibleCoordinates) {
-            [self.sonarGrid[c.xCoord] removeObjectAtIndex:c.yCoord];
-            [self.sonarGrid[c.xCoord] insertObject:[NSNumber numberWithBool:YES] atIndex:c.yCoord];
+            [_sonarGrid addObject:c];
         }
     }
 }
