@@ -191,6 +191,19 @@ typedef struct {
     }
 }
 
+-(void)sendPickupMine:(Coordinate*)mineLocation{
+    NSError* error;
+    NSMutableArray* mineDetails = [[NSMutableArray alloc] init];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"pickupMineHitData"]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.xCoord]]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.yCoord]]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:mineDetails];
+    [_game.gameCenter.match sendDataToAllPlayers: packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+}
+
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
@@ -307,6 +320,18 @@ typedef struct {
         [self sendTurn];
         
     }
+    else if ([type isEqualToString:@"pickupMineData"]){
+        int hitCoordX =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        int hitCoordY =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]] intValue];
+        Coordinate *c = [[Coordinate alloc]init];
+        c.xCoord = hitCoordX;
+        c.yCoord = hitCoordY;
+        [_game.gameMap.grid[hitCoordX] removeObjectAtIndex:hitCoordY];
+        ///////////////////////
+        [_game.gameMap.grid[hitCoordX] insertObject:[NSNumber numberWithInt:WATER] atIndex:hitCoordY];
+        [_mainGameController.background removeMine:c];
+        
+    }
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -391,6 +416,13 @@ typedef struct {
                 Coordinate *destination = [_mainGameController.ships updateShipLocation:_nodeTouched];
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
                 [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:destination];
+                if([_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
+                    if(terType == MINE){
+                        [_mainGameController.background removeMine:_game.mineImpactCoordinate];
+                    }
+
+                }
                 [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 //[self drawRadar];
                 [self sendTurn];
@@ -419,6 +451,7 @@ typedef struct {
                 ///////////////////////
                 [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:squareTouched.yCoord];
                 [_mainGameController.background removeMine:squareTouched];
+                [self sendPickupMine:squareTouched];
                 _game.myTurn = FALSE;
                 [self sendTurn];
                 

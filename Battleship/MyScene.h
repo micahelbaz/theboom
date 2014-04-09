@@ -39,6 +39,7 @@
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 -(void)sendCannonHit:(Coordinate*)hitLocation and:(NSString*)hitType;
+-(void)sendPickupMine:(Coordinate*)mineLocation;
 - (IBAction) handlePinch:(UIPinchGestureRecognizer *)recognizer;
 
 @end

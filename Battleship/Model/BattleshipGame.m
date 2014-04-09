@@ -52,6 +52,7 @@ static BattleshipGame *sharedGame = nil;
     
     if (self) {
         
+        _mineImpactCoordinate = [[Coordinate alloc]init];
         _gameCenter = [GCHelper sharedInstance:nil];
         
         NSString* loc = [GKLocalPlayer localPlayer].playerID;
@@ -128,12 +129,95 @@ static BattleshipGame *sharedGame = nil;
                 if([_gameMap.grid[destination.xCoord][origin.yCoord-i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord-i] intValue];
                     if(terType == MINE){
+                        _mineImpactCoordinate.xCoord = destination.xCoord;
+                        _mineImpactCoordinate.yCoord = origin.yCoord-i;
                         destination = origin;
                         for(ShipSegment *seg in s.blocks){
                             if(seg.location.yCoord == origin.yCoord-i){
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = origin.yCoord-i;
+                                [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                                [self updateMap:_localPlayer.playerFleet];
+                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                [_gameMap.grid[destination.xCoord] removeObjectAtIndex:origin.yCoord-i];
+                                [_gameMap.grid[destination.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:origin.yCoord-i];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //Move Backwards
+        if(origin.yCoord>destination.yCoord){
+            if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size] isKindOfClass:[NSNumber class]]){
+                Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size] intValue];
+                if(terType == MINE){
+                    _mineImpactCoordinate.xCoord = destination.xCoord;
+                    _mineImpactCoordinate.yCoord = destination.yCoord-s.size;
+                    destination = origin;
+                    ShipSegment *seg = s.blocks.lastObject;
+                    Coordinate *c = [[Coordinate alloc]init];
+                    c.yCoord = seg.location.yCoord;
+                    c.xCoord = seg.location.xCoord;
+                    [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                    [self updateMap:_localPlayer.playerFleet];
+                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                   
+                }
+            }
+        }
+        //Move Forwards
+        if(origin.yCoord<destination.yCoord){
+            for(int i =origin.yCoord+1; i<=destination.yCoord; i++){
+                if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];
+                    if(terType == MINE){
+                        _mineImpactCoordinate.xCoord = origin.xCoord;
+                        _mineImpactCoordinate.yCoord = i;
+                        destination.yCoord = i-1;
+//                        for(ShipSegment *seg in s.blocks){
+//                            if(seg.location.yCoord == i){
+                                Coordinate *c = [[Coordinate alloc]init];
+                                c.xCoord = origin.xCoord;
+                                c.yCoord = i-1;
+                                [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                                [self updateMap:_localPlayer.playerFleet];
+                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                                NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
+                                for (int j = 0; j < 30; j++) {
+                                    for (int k = 0; k < 30; k++) {
+                                        if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
+                                            ShipSegment *seggy = _gameMap.grid[j][k];
+                                            NSLog(@"%@", seggy.shipName);
+                                             NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
+                                        }
+                                    }
+                                }
+                       
+//                            }
+//                        }
+                    }
+                }
+            }
+            
+        }
+    }
+    else{
+        //Move Sideways
+        if(origin.yCoord == destination.yCoord){
+            for(int i =0; i<s.size; i++){
+                if([_gameMap.grid[destination.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord-i] intValue];
+                    if(terType == MINE){
+                        _mineImpactCoordinate.xCoord = destination.xCoord;
+                        _mineImpactCoordinate.yCoord = origin.yCoord+i;
+                        destination = origin;
+                        for(ShipSegment *seg in s.blocks){
+                            if(seg.location.yCoord == origin.yCoord+i){
+                                Coordinate *c = [[Coordinate alloc]init];
+                                c.xCoord = origin.xCoord;
+                                c.yCoord = origin.yCoord+i;
                                 [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                                 [self updateMap:_localPlayer.playerFleet];
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
@@ -148,6 +232,8 @@ static BattleshipGame *sharedGame = nil;
             if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size] isKindOfClass:[NSNumber class]]){
                 Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size] intValue];
                 if(terType == MINE){
+                    _mineImpactCoordinate.xCoord = destination.xCoord;
+                    _mineImpactCoordinate.yCoord = destination.yCoord-s.size;
                     destination = origin;
                     ShipSegment *seg = s.blocks.lastObject;
                     Coordinate *c = [[Coordinate alloc]init];
@@ -161,38 +247,37 @@ static BattleshipGame *sharedGame = nil;
         }
         //Move Forwards
         if(origin.yCoord<destination.yCoord){
-            for(int i =origin.yCoord; i<destination.yCoord; i++){
-                if([_gameMap.grid[origin.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
-                    Terrain terType = [_gameMap.grid[origin.xCoord][origin.yCoord+i] intValue];
+            for(int i =origin.yCoord-1; i>=destination.yCoord; i--){
+                if([_gameMap.grid[origin.xCoord][i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[origin.xCoord][i] intValue];
                     if(terType == MINE){
-                        destination.yCoord = origin.yCoord+i;
-                        for(ShipSegment *seg in s.blocks){
-                            if(seg.location.yCoord == origin.yCoord+i){
-                                Coordinate *c = [[Coordinate alloc]init];
-                                c.xCoord = origin.xCoord;
-                                c.yCoord = origin.yCoord+i;
-                                [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
-                                [self updateMap:_localPlayer.playerFleet];
-                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                                NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
-                                for (int j = 0; j < 30; j++) {
-                                    for (int k = 0; k < 30; k++) {
-                                        if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
-                                            ShipSegment *seggy = _gameMap.grid[j][k];
-                                            NSLog(@"%@", seggy.shipName);
-                                             NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
-                                        }
-                                    }
+                        _mineImpactCoordinate.xCoord = origin.xCoord;
+                        _mineImpactCoordinate.yCoord = i;
+                        destination.yCoord = i+1;
+                        //                        for(ShipSegment *seg in s.blocks){
+                        //                            if(seg.location.yCoord == i){
+                        Coordinate *c = [[Coordinate alloc]init];
+                        c.xCoord = origin.xCoord;
+                        c.yCoord = i+1;
+                        [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                        [self updateMap:_localPlayer.playerFleet];
+                        [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
+                        NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
+                        for (int j = 0; j < 30; j++) {
+                            for (int k = 0; k < 30; k++) {
+                                if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
+                                    ShipSegment *seggy = _gameMap.grid[j][k];
+                                    NSLog(@"%@", seggy.shipName);
+                                    NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
                                 }
-//                            }
-//                        }
+                            }
+                        }
+                        //                            }
+                        //                        }
                     }
                 }
             }
-            
         }
-    }
-    else{
         
     }
     

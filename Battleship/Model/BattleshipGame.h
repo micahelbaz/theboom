@@ -21,10 +21,12 @@
 @property BOOL dataSent;
 @property(strong, nonatomic) GCHelper* gameCenter;
 @property(strong, nonatomic) Player* localPlayer;
+@property(strong, nonatomic) Coordinate* mineImpactCoordinate;
 
 + (BattleshipGame *)sharedInstance;
 -(Coordinate*)moveShipfrom: (Coordinate*) origin
                  to:(Coordinate*) destination;
+
 -(NSMutableArray*) getValidMovesFrom:(Coordinate*)origin
                   withRadarPositions:(BOOL) radarPositions;
 //-(Coordinate*) getCoordOfShip: (NSString*) shipName;
