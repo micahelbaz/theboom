@@ -69,8 +69,10 @@
 -(void)positionShip:(Coordinate *)destination isHost:(BOOL)host dockingArray:(NSMutableArray*)dock{
     Coordinate* newCoord = [[Coordinate alloc] initWithXCoordinate:destination.xCoord YCoordinate:destination.yCoord initiallyFacing:destination.direction];
     _location = newCoord;
+    
     int i = 0;
     for (ShipSegment* seg in self.blocks) {
+        NSLog(@"BLOOOOoocks");
         switch (newCoord.direction) {
             case NORTH:
                 seg.location.xCoord = newCoord.xCoord;

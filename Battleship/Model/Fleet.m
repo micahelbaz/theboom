@@ -140,8 +140,8 @@
                 if ([ships[i] intValue] == 9) {
                     radar1 = [[Coordinate alloc] initWithXCoordinate:19-i YCoordinate:26 initiallyFacing:SOUTH];
                 }
-                kamakaze1 = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:29 initiallyFacing:SOUTH];
             }
+            kamakaze1 = [[Coordinate alloc] initWithXCoordinate:9 YCoordinate:29 initiallyFacing:SOUTH];
 //            cruiser1 = [[Coordinate alloc] initWithXCoordinate:19 YCoordinate:24 initiallyFacing:SOUTH];
 //            cruiser2 = [[Coordinate alloc] initWithXCoordinate:18 YCoordinate:24 initiallyFacing:SOUTH];
 //            destroyer1 = [[Coordinate alloc] initWithXCoordinate:17 YCoordinate:25 initiallyFacing:SOUTH];
@@ -162,6 +162,7 @@
             m1 = [[MineLayer alloc] initWithLocation: mineLayer1 andName:@"JoinMineLayer1"];
             m2 = [[MineLayer alloc] initWithLocation: mineLayer2 andName:@"JoinMineLayer2"];
             r1 = [[RadarBoat alloc] initWithLocation: radar1 andName:@"JoinRadarBoat1"];
+            k1 = [[Kamikaze alloc] initWithLocation:kamakaze1 andName:@"JoinKamikaze1"];
             if(isHost){
                 for(int i = 10; i<20; i++){
                     Coordinate *c = [[Coordinate alloc] initWithXCoordinate:i YCoordinate:0 initiallyFacing:NONE];

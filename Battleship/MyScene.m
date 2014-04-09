@@ -356,7 +356,6 @@ typedef struct {
                 
             }
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
-                NSLog(@"CANNON HIT TO BASE");
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 [_game damageShipSegment:squareTouched];
@@ -386,7 +385,12 @@ typedef struct {
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
-            
+            if([_nodeTouched.parent isEqual:_mainGameController.foreground.selfDistructSprites]){
+                [_mainGameController.foreground.selfDistructSprites removeAllChildren];
+                Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+                [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
+                
+            }
         }
     }
 }

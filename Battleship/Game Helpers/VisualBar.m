@@ -193,7 +193,9 @@
     else if([functionSprite.name isEqualToString:@"DropMine"]){
         [_foreground displayMineRange:_shipActuallyClicked];
     }
-    
+    else if([functionSprite.name isEqualToString:@"SelfDestruct"]){
+        [_foreground displaySelfDistructRange:_shipActuallyClicked];
+    }
     
 }
 

@@ -92,7 +92,7 @@ static BattleshipGame *sharedGame = nil;
         
         for(ShipSegment* seg in ship.blocks) {
             
-            NSLog(@"%d, %d", seg.location.xCoord, seg.location.yCoord);
+    
             
             [_gameMap.grid[seg.location.xCoord] removeObjectAtIndex:seg.location.yCoord];
             
@@ -171,11 +171,39 @@ static BattleshipGame *sharedGame = nil;
     if ([s isKindOfClass:[Kamikaze class]]) {
         Kamikaze *k = (Kamikaze*) s;
         validMoves = [k getMoveLocations];
-        
+        NSLog(@"valid moves");
+        for(Coordinate *segmentLocation in validMoves) {
+            if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[ShipSegment class]]) {
+                
+                ShipSegment *seg =_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord];
+                
+                if (![seg.shipName isEqualToString:s.shipName]) {
+                    
+                    [movesToBeRemoved addObject:segmentLocation];
+                    
+                }
+                
+            }
+            
+            else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
+                
+                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER) {
+                    
+                    [movesToBeRemoved addObject: segmentLocation];
+                    
+                }
+                
+                
+                
+            }
+        }
+        for (Coordinate *move in movesToBeRemoved) {
+            [validMoves removeObject:move];
+        }
+        return validMoves;
     }
     else {
         validMoves = [s getHeadLocationsOfMove];
-    }
     for (NSMutableArray* move in validMoves) {
         
         for(Coordinate* segmentLocation in move) {
@@ -335,7 +363,7 @@ static BattleshipGame *sharedGame = nil;
         }
         
         return segmentsWithinMoveRange;
-        
+    }
     }
     
 }
@@ -685,13 +713,8 @@ endOfMethod:;
             [self updateDockingZone];
         }
     }
-    Fleet *p = _localPlayer.playerFleet;
-    NSMutableArray *a = p.dockingCoordinates;
-    NSLog(@"docking coordinates");
-    for (Coordinate *c in a) {
-        NSLog(@"%d , %d", c.xCoord, c.yCoord);
-        
-    }
+
+
 }
 -(void)updateDockingZone {
     _localPlayer.playerFleet.dockingCoordinates = [[NSMutableArray alloc] init];
