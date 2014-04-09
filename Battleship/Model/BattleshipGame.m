@@ -134,7 +134,7 @@ static BattleshipGame *sharedGame = nil;
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = origin.yCoord+i;
-                                [self damageShipSegment:c];
+                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                             }
                         }
                     }
@@ -151,7 +151,7 @@ static BattleshipGame *sharedGame = nil;
                     Coordinate *c = [[Coordinate alloc]init];
                     c.yCoord = seg.location.yCoord;
                     c.xCoord = seg.location.xCoord;
-                    [self damageShipSegment:c];
+                    [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                 }
             }
         }
@@ -167,7 +167,7 @@ static BattleshipGame *sharedGame = nil;
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = origin.yCoord+i;
-                                [self damageShipSegment:c];
+                                [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                             }
                         }
                     }
@@ -248,7 +248,7 @@ static BattleshipGame *sharedGame = nil;
             
             else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
                 
-                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER || [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
+                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER && [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
                     
                     [movesToBeRemoved addObject: segmentLocation];
                     
@@ -283,7 +283,7 @@ static BattleshipGame *sharedGame = nil;
             
             else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
                 
-                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER || [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
+                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER && [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
                     
                     [movesToBeRemoved addObject: move];
                     
@@ -976,12 +976,28 @@ endOfMethod:;
     }
 }
 
--(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation inFleet:(BOOL) yours{
+-(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation{
     k.isDestroyed = TRUE;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; i <= 1; j++) {
             if ([_gameMap.grid[explosionLocation.xCoord+i][explosionLocation.yCoord+j] isKindOfClass:[ShipSegment class]]) {
-                [self damageShipSegment:explosionLocation ownedBy:yours with:FALSE and:FALSE];
+                ShipSegment *seg = (ShipSegment*) _gameMap.grid[explosionLocation.xCoord+i][explosionLocation.yCoord+j];
+                if (_localPlayer.isHost) {
+                    if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"h"]) {
+                        [self damageShipSegment:explosionLocation ownedBy:TRUE with:FALSE and:FALSE];
+                    }
+                    else {
+                        [self damageShipSegment:explosionLocation ownedBy:FALSE with:FALSE and:FALSE];
+                    }
+                }
+                else {
+                    if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"h"]) {
+                        [self damageShipSegment:explosionLocation ownedBy:FALSE with:FALSE and:FALSE];
+                    }
+                    else {
+                        [self damageShipSegment:explosionLocation ownedBy:TRUE with:FALSE and:FALSE];
+                    }
+                }
             }
         }
     }
