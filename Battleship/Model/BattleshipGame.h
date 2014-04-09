@@ -44,6 +44,5 @@
 -(void)updateDockingZone;
 -(void) isAbleToDropMine:(MineLayer *)mineLayer;
 -(void) isAbleToPickupMine:(MineLayer *)mineLayer;
--(void) explodeKamikazeBoat: (Kamikaze*)k at: (Coordinate*) explosionLocation;
 
 @end

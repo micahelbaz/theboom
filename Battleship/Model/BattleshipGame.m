@@ -150,11 +150,11 @@ static BattleshipGame *sharedGame = nil;
         }
         //Move Backwards
         if(origin.yCoord>destination.yCoord){
-            if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size] isKindOfClass:[NSNumber class]]){
-                Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size] intValue];
+            if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size+1] isKindOfClass:[NSNumber class]]){
+                Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size+1] intValue];
                 if(terType == MINE){
                     _mineImpactCoordinate.xCoord = destination.xCoord;
-                    _mineImpactCoordinate.yCoord = destination.yCoord-s.size;
+                    _mineImpactCoordinate.yCoord = destination.yCoord-s.size+1;
                     destination = origin;
                     ShipSegment *seg = s.blocks.lastObject;
                     Coordinate *c = [[Coordinate alloc]init];
@@ -229,11 +229,11 @@ static BattleshipGame *sharedGame = nil;
         }
         //Move Backwards
         if(origin.yCoord>destination.yCoord){
-            if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size] isKindOfClass:[NSNumber class]]){
-                Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size] intValue];
+            if([_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] isKindOfClass:[NSNumber class]]){
+                Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord+s.size-1] intValue];
                 if(terType == MINE){
                     _mineImpactCoordinate.xCoord = destination.xCoord;
-                    _mineImpactCoordinate.yCoord = destination.yCoord-s.size;
+                    _mineImpactCoordinate.yCoord = destination.yCoord+s.size-1;
                     destination = origin;
                     ShipSegment *seg = s.blocks.lastObject;
                     Coordinate *c = [[Coordinate alloc]init];

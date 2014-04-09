@@ -453,7 +453,7 @@ typedef struct {
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
                 [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:destination];
                 if([_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] isKindOfClass:[NSNumber class]]){
-                    Terrain terType = [_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
+                    Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
                     if(terType == MINE){
                         [_mainGameController.background removeMine:_game.mineImpactCoordinate];
                     }
@@ -553,7 +553,7 @@ typedef struct {
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 Kamikaze *k = (Kamikaze*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
                 NSLog(@"%@", k.shipName);
-                [_game explodeKamikazeBoat:k at:squareTouched];
+                [self explodeKamikazeBoat:k at:squareTouched];
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
