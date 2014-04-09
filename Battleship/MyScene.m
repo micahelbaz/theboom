@@ -106,12 +106,19 @@ typedef struct {
     return false;
 }
 
--(BOOL)sendTorpedoHit:(int) i{
+-(BOOL)sendTorpedoHit:(int) i inEnemyFleet:(BOOL) didHappen{
     NSError* error;
     NSMutableArray* shipDetails = [[NSMutableArray alloc] init];
     [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"torpedoHitData"]];
+    [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:didHappen]]];
     [shipDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:i]]];
-    Ship* s = _game.localPlayer.enemyFleet.shipArray[i];
+    Ship* s;
+    if (didHappen) {
+        s = _game.localPlayer.enemyFleet.shipArray[i];
+    }
+    else {
+        s = _game.localPlayer.playerFleet.shipArray[i];
+    }
     NSMutableArray* shipDamages = [[NSMutableArray alloc] init];
     for (int j = 0; j < s.size; j++) {
         ShipSegment *seg = s.blocks[j];
@@ -241,10 +248,17 @@ typedef struct {
         [_game moveEnemyShipfrom:oldPosition to:newPosition];
     }
     else if([type isEqualToString:@"torpedoHitData"]){
-        int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
-        NSMutableArray *damageArray = (NSMutableArray *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]];
-        int newSpeed = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[3]] intValue];
-        NSArray* localShips = _game.localPlayer.playerFleet.shipArray;
+        BOOL isMyFleet = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        int hitIndex =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]] intValue];
+        NSMutableArray *damageArray = (NSMutableArray *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[3]];
+        int newSpeed = [(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[4]] intValue];
+        NSArray* localShips;
+        if (isMyFleet) {
+            localShips = _game.localPlayer.playerFleet.shipArray;
+        }
+        else {
+            localShips = _game.localPlayer.enemyFleet.shipArray;
+        }
         Ship *s = localShips[hitIndex];
         s.speed = newSpeed;
         for(int i=0; i<s.size; i++){
@@ -354,12 +368,18 @@ typedef struct {
                         Terrain terType = [_game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] intValue];
                         if (terType == CORAL) {
                             [_mainGameController.console setConsoleText:@"Coral Hit"];
+                            [self sendCannonHit:impactCoord and:@"Coral Hit"];
                         }
                         else if (terType == WATER) {
                             [_mainGameController.console setConsoleText:@"Shot Fell into the Water"];
+                            [self sendCannonHit:impactCoord and:@"Shot Fell into the Water"];
+                        }
+                        else if (terType == MINE) {
+                            [_mainGameController.console setConsoleText:@"Mine Hit"];
                         }
                         else {
                             [_mainGameController.console setConsoleText:@"Base Hit"];
+                            [self sendCannonHit:impactCoord and:@"Base Hit"];
                             [_mainGameController.background removeBaseFromScreen:impactCoord.xCoord and:impactCoord.yCoord];
                             [self sendBaseHit:impactCoord.xCoord and:impactCoord.yCoord];
                             [_game removeBaseSquare:impactCoord];
@@ -368,7 +388,23 @@ typedef struct {
                     else {
                         ShipSegment *seg = (ShipSegment*) _game.gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
                         [_mainGameController.console setConsoleText:@"Ship Hit"];
-                        [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
+                        [self sendCannonHit:impactCoord and:@"Ship Hit"];
+                        if (_game.localPlayer.isHost) {
+                            if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                                [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:FALSE];
+                            }
+                            else {
+                                [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:TRUE];
+                            }
+                        }
+                        else {
+                            if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                                [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:TRUE];
+                            }
+                            else {
+                                [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:FALSE];
+                            }
+                        }
                         if ([_game isShipDestroyed:seg.shipName]) {
                             [_mainGameController.ships removeShipFromScreen:seg.shipName];
                         }
@@ -433,7 +469,22 @@ typedef struct {
                     [_mainGameController.console setConsoleText:@"Ship Hit"];
                     [self sendCannonHit:squareTouched and:@"Ship Hit"];
                     ShipSegment *seg = _game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord];
-                    [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
+                    if (_game.localPlayer.isHost) {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:FALSE];
+                        }
+                        else {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:TRUE];
+                        }
+                    }
+                    else {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:TRUE];
+                        }
+                        else {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:FALSE];
+                        }
+                    }
                     if ([_game isShipDestroyed:seg.shipName]) {
                         [_mainGameController.ships removeShipFromScreen:seg.shipName];
                     }
@@ -447,6 +498,10 @@ typedef struct {
                     else if (terType == WATER) {
                         [self sendCannonHit:squareTouched and:@"Shot Fell into the Water"];
                         [_mainGameController.console setConsoleText:@"Shot Fell into the Water"];
+                    }
+                    else if (terType == MINE) {
+                        [self sendCannonHit:squareTouched and:@"Mine Hit"];
+                        [_mainGameController.console setConsoleText:@"Mine Hit"];
                     }
                     else {
                         [_mainGameController.console setConsoleText:@"Base Hit"];
@@ -473,7 +528,59 @@ typedef struct {
     }
 }
 
-
+-(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation{
+    k.isDestroyed = TRUE;
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            Coordinate *c = [[Coordinate alloc] initWithXCoordinate:explosionLocation.xCoord+i YCoordinate:explosionLocation.yCoord+j initiallyFacing:NONE];
+            if ([c isWithinMap]) {
+                if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[ShipSegment class]]) {
+                    ShipSegment *seg = (ShipSegment*) _game.gameMap.grid[c.xCoord][c.yCoord];
+                    if (_game.localPlayer.isHost) {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [_game damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
+                        }
+                        else {
+                            [_game damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
+                        }
+                    }
+                    else {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [_game damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
+                        }
+                        else {
+                            [_game damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
+                        }
+                    }
+                    if (_game.localPlayer.isHost) {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:FALSE];
+                        }
+                        else {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:TRUE];
+                        }
+                    }
+                    else {
+                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:TRUE];
+                        }
+                        else {
+                            [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName] inEnemyFleet:FALSE];
+                        }
+                    }
+                }
+                if ([_game.gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    Terrain t   = [(NSNumber*) _game.gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    if (t == HOST_BASE || t == JOIN_BASE) {
+                        [_game removeBaseSquare:c];
+                        [_mainGameController.background removeBaseFromScreen:c.xCoord and:c.yCoord];
+                        [self sendBaseHit:c.xCoord and:c.yCoord];
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 
