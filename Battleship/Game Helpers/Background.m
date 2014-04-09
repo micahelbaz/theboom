@@ -228,6 +228,7 @@
                 sprite.yScale = tileHeight/sprite.frame.size.height;
                 sprite.position = CGPointMake(i * tileWidth + tileWidth/2,
                                               j * tileHeight + tileWidth/2);
+                sprite.zPosition = 1;
                 [_backgroundNode addChild:sprite];
             }
         }
