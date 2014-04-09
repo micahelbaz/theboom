@@ -93,38 +93,38 @@
         for(Coordinate *c in dock){
             [self.visibleCoordinates addObject:c];
         }
-
-    Coordinate *firstBlock = [[Coordinate alloc] initWithXCoordinate:newCoord.xCoord YCoordinate:newCoord.yCoord initiallyFacing:newCoord.direction];
-    if(newCoord.direction == NORTH){
-        BOOL shipPresent = FALSE;
-        firstBlock.yCoord-=(self.size-1);
-        [self.visibleCoordinates addObject:firstBlock];
-        int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
         
-        int yRange = newCoord.yCoord-self.size+2+self.radarRange.startRange;
-        int xCannonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
-        int yCannonRange = newCoord.yCoord-self.size+2+self.canonRange.startRange;
-   
-        
-        for(int z = xCannonRange; z<=firstBlock.xCoord+self.canonRange.rangeWidth; z++){
+        Coordinate *firstBlock = [[Coordinate alloc] initWithXCoordinate:newCoord.xCoord YCoordinate:newCoord.yCoord initiallyFacing:newCoord.direction];
+        if(newCoord.direction == NORTH){
             BOOL shipPresent = FALSE;
-            for(int x = yCannonRange; x<newCoord.yCoord+self.canonRange.rangeHeight; x++){
+            firstBlock.yCoord-=(self.size-1);
+            [self.visibleCoordinates addObject:firstBlock];
+            int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
+            
+            int yRange = newCoord.yCoord-self.size+2+self.radarRange.startRange;
+            int xCannonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
+            int yCannonRange = newCoord.yCoord-self.size+2+self.canonRange.startRange;
+            
+            
+            for(int z = xCannonRange; z<=firstBlock.xCoord+self.canonRange.rangeWidth; z++){
                 BOOL shipPresent = FALSE;
-                Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:z YCoordinate:x initiallyFacing:NORTH];
-                if([coord isWithinMap]){
-                    for(ShipSegment *seg in self.blocks){
-                        if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){
-                            shipPresent = TRUE;
+                for(int x = yCannonRange; x<newCoord.yCoord+self.canonRange.rangeHeight; x++){
+                    BOOL shipPresent = FALSE;
+                    Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:z YCoordinate:x initiallyFacing:NORTH];
+                    if([coord isWithinMap]){
+                        for(ShipSegment *seg in self.blocks){
+                            if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){
+                                shipPresent = TRUE;
+                            }
                         }
+                        if(!shipPresent){
+                            [self.visibleCannonCoordinates addObject:coord];
+                        }
+                        
                     }
-                    if(!shipPresent){
-                        [self.visibleCannonCoordinates addObject:coord];
-                    }
- 
                 }
             }
-            
-            
+                
             for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){
                 for(int j = yRange; j<newCoord.yCoord+self.radarRange.rangeHeight; j++){
                     Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:NORTH];
@@ -135,103 +135,101 @@
             }
             
         }
-        
-    }
-    if(newCoord.direction == SOUTH){
-        
-        firstBlock.yCoord+=(self.size-1);
-        [self.visibleCoordinates addObject:firstBlock];
-        int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
-        int yRange = newCoord.yCoord+self.size-2-self.radarRange.startRange;
-        int xCanonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
-        int yCanonRange = newCoord.yCoord+self.size-2-self.canonRange.startRange;
-        for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){
-            for(int j = yRange; j>newCoord.yCoord-self.radarRange.rangeHeight-self.radarRange.startRange; j--){
-                Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:SOUTH];
-                if([c isWithinMap]){
-                    [self.visibleCoordinates addObject:c];
-                   
+        if(newCoord.direction == SOUTH){
+            
+            firstBlock.yCoord+=(self.size-1);
+            [self.visibleCoordinates addObject:firstBlock];
+            int xRange = firstBlock.xCoord-self.radarRange.rangeWidth;
+            int yRange = newCoord.yCoord+self.size-2-self.radarRange.startRange;
+            int xCanonRange = firstBlock.xCoord-self.canonRange.rangeWidth;
+            int yCanonRange = newCoord.yCoord+self.size-2-self.canonRange.startRange;
+            for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.rangeWidth; i++){
+                for(int j = yRange; j>newCoord.yCoord-self.radarRange.rangeHeight-self.radarRange.startRange; j--){
+                    Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:SOUTH];
+                    if([c isWithinMap]){
+                        [self.visibleCoordinates addObject:c];
+                        
+                    }
                 }
             }
-        }
-        for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.rangeWidth; x++){
-        BOOL shipPresent = FALSE;
-            for(int z = yCanonRange; z>newCoord.yCoord-self.canonRange.rangeHeight-self.canonRange.startRange; z--){
+            for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.rangeWidth; x++){
                 BOOL shipPresent = FALSE;
-                Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:z initiallyFacing:SOUTH];
-                if([coord isWithinMap]){
+                for(int z = yCanonRange; z>newCoord.yCoord-self.canonRange.rangeHeight-self.canonRange.startRange; z--){
+                    BOOL shipPresent = FALSE;
+                    Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:z initiallyFacing:SOUTH];
                     if([coord isWithinMap]){
-                        for(ShipSegment *seg in self.blocks){
-                            if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){
-                                shipPresent = TRUE;
+                        if([coord isWithinMap]){
+                            for(ShipSegment *seg in self.blocks){
+                                if(coord.xCoord == seg.location.xCoord && coord.yCoord == seg.location.yCoord){
+                                    shipPresent = TRUE;
+                                }
+                            }
+                            if(!shipPresent){
+                                [self.visibleCannonCoordinates addObject:coord];
                             }
                         }
-                        if(!shipPresent){
-                            [self.visibleCannonCoordinates addObject:coord];
-                        }
+                        
+                        
                     }
-
-               
                 }
             }
+            
         }
         
-    }
-    
-    if(newCoord.direction == WEST){
-        firstBlock.xCoord+=(self.size-1);
-        [self.visibleCoordinates addObject:firstBlock];
-        int xRange = (newCoord.xCoord)-self.radarRange.rangeHeight;
-        int yRange = firstBlock.yCoord-self.radarRange.rangeWidth;
-        int xCanonRange = newCoord.xCoord-self.canonRange.rangeHeight;
-        int yCanonRange = firstBlock.yCoord-self.canonRange.rangeWidth;
-        
-        for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.startRange; x++){
-            for(int y = yCanonRange; y>firstBlock.yCoord+self.canonRange.rangeWidth; y--){
-                Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:y initiallyFacing:WEST];
-                if([coord isWithinMap]){
-                    [self.visibleCannonCoordinates addObject:coord];
+        if(newCoord.direction == WEST){
+            firstBlock.xCoord+=(self.size-1);
+            [self.visibleCoordinates addObject:firstBlock];
+            int xRange = (newCoord.xCoord)-self.radarRange.rangeHeight;
+            int yRange = firstBlock.yCoord-self.radarRange.rangeWidth;
+            int xCanonRange = newCoord.xCoord-self.canonRange.rangeHeight;
+            int yCanonRange = firstBlock.yCoord-self.canonRange.rangeWidth;
+            
+            for(int x = xCanonRange; x<=firstBlock.xCoord+self.canonRange.startRange; x++){
+                for(int y = yCanonRange; y>firstBlock.yCoord+self.canonRange.rangeWidth; y--){
+                    Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:y initiallyFacing:WEST];
+                    if([coord isWithinMap]){
+                        [self.visibleCannonCoordinates addObject:coord];
+                    }
                 }
             }
-        }
-       
-        for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.startRange; i++){
-            for(int j = yRange; j>firstBlock.yCoord+self.radarRange.rangeWidth; j--){
-                Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:WEST];
-                if([c isWithinMap]){
-                    [self.visibleCoordinates addObject:c];
+            
+            for(int i = xRange; i<=firstBlock.xCoord+self.radarRange.startRange; i++){
+                for(int j = yRange; j>firstBlock.yCoord+self.radarRange.rangeWidth; j--){
+                    Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:WEST];
+                    if([c isWithinMap]){
+                        [self.visibleCoordinates addObject:c];
+                    }
                 }
             }
+            
         }
-        
-    }
-    if(newCoord.direction == EAST){
-        firstBlock.xCoord+=(self.size-1);
-        [self.visibleCoordinates addObject:firstBlock];
-        int xRange = (firstBlock.xCoord+1)+self.radarRange.startRange;
-        int yRange = firstBlock.yCoord-self.radarRange.rangeWidth;
-        int xCanonRange = (firstBlock.xCoord+1)+self.canonRange.startRange;
-        int yCanonRange = firstBlock.yCoord-self.canonRange.rangeWidth;
-        for(int i = xRange; i<=newCoord.xCoord+self.radarRange.rangeHeight; i++){
-            for(int j = yRange; j>firstBlock.yCoord+self.radarRange.rangeWidth; j--){
-                Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:EAST];
-                if([c isWithinMap]){
-                    [self.visibleCoordinates addObject:c];
+        if(newCoord.direction == EAST){
+            firstBlock.xCoord+=(self.size-1);
+            [self.visibleCoordinates addObject:firstBlock];
+            int xRange = (firstBlock.xCoord+1)+self.radarRange.startRange;
+            int yRange = firstBlock.yCoord-self.radarRange.rangeWidth;
+            int xCanonRange = (firstBlock.xCoord+1)+self.canonRange.startRange;
+            int yCanonRange = firstBlock.yCoord-self.canonRange.rangeWidth;
+            for(int i = xRange; i<=newCoord.xCoord+self.radarRange.rangeHeight; i++){
+                for(int j = yRange; j>firstBlock.yCoord+self.radarRange.rangeWidth; j--){
+                    Coordinate *c = [[Coordinate alloc]initWithXCoordinate:i YCoordinate:j initiallyFacing:EAST];
+                    if([c isWithinMap]){
+                        [self.visibleCoordinates addObject:c];
+                    }
                 }
             }
-        }
-        
-        for(int x = xCanonRange; x<=newCoord.xCoord+self.canonRange.rangeHeight; x--){
-            for(int y = yCanonRange; y>firstBlock.yCoord+self.canonRange.rangeWidth; y--){
-                Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:y initiallyFacing:EAST];
-                if([coord isWithinMap]){
-                    [self.visibleCannonCoordinates addObject:coord];
+            
+            for(int x = xCanonRange; x<=newCoord.xCoord+self.canonRange.rangeHeight; x--){
+                for(int y = yCanonRange; y>firstBlock.yCoord+self.canonRange.rangeWidth; y--){
+                    Coordinate *coord = [[Coordinate alloc]initWithXCoordinate:x YCoordinate:y initiallyFacing:EAST];
+                    if([coord isWithinMap]){
+                        [self.visibleCannonCoordinates addObject:coord];
+                    }
                 }
             }
+            
         }
         
-    }
-    
     }
 }
 
@@ -413,7 +411,7 @@
             seg.segmentArmourType--;
         }
     }
-
+    
     [self changeSpeed];
     [self toggleRepairStatus:dock];
 }

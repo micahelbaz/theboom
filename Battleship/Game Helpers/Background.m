@@ -210,6 +210,28 @@
                                            background2.position.y);
     }
 }
-
+-(void)drawRadarToMap:(NSMutableArray *)grid {
+    NSMutableArray *removed = [[NSMutableArray alloc] init];
+    for (SKSpriteNode *s in _backgroundNode.children) {
+        if([s.name isEqualToString:@"radar"]) {
+            [removed addObject:s];
+        }
+    }
+    [_backgroundNode removeChildrenInArray:removed];
+    for (int i = 0; i < GRID_SIZE; i++) {
+        for (int j = 0; j < GRID_SIZE; j++) {
+            if ([_game.localPlayer.radarGrid[i][j] intValue] == 0) {
+                SKSpriteNode *sprite = [[SKSpriteNode alloc] init];
+                sprite = [SKSpriteNode spriteNodeWithImageNamed:@"black"];
+                sprite.name = @"radar";
+                sprite.xScale = tileWidth/sprite.frame.size.width;
+                sprite.yScale = tileHeight/sprite.frame.size.height;
+                sprite.position = CGPointMake(i * tileWidth + tileWidth/2,
+                                              j * tileHeight + tileWidth/2);
+                [_backgroundNode addChild:sprite];
+            }
+        }
+    }
+}
 
 @end

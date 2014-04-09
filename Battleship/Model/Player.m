@@ -16,6 +16,7 @@
         _playerID = playerID;
         _isHost = player;
         self.radarGrid = [[NSMutableArray alloc] init];
+        self.sonarGrid = [[NSMutableArray alloc] init];
 
     }
     //self.playerFleet = [[Fleet alloc] initWith:_isHost];
@@ -34,6 +35,21 @@
         for (Coordinate *c in s.visibleCoordinates) {
             [self.radarGrid[c.xCoord] removeObjectAtIndex:c.yCoord];
             [self.radarGrid[c.xCoord] insertObject:[NSNumber numberWithBool:YES] atIndex:c.yCoord];
+        }
+    }
+}
+-(void) updateSonarRange {
+    for(int i = 0; i<GRID_SIZE; i++){
+        self.radarGrid[i] = [[NSMutableArray alloc] init];
+        for(int j = 0; j < GRID_SIZE; j++){
+            [self.radarGrid[i] insertObject:[NSNumber numberWithBool:NO] atIndex:j];
+        }
+    }
+    for (Ship *s in self.playerFleet.shipArray) {
+        if ([s isKindOfClass:[MineLayer class]])
+        for (Coordinate *c in s.visibleCoordinates) {
+            [self.sonarGrid[c.xCoord] removeObjectAtIndex:c.yCoord];
+            [self.sonarGrid[c.xCoord] insertObject:[NSNumber numberWithBool:YES] atIndex:c.yCoord];
         }
     }
 }
