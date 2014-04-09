@@ -487,6 +487,8 @@ typedef struct {
                     if(terType == MINE){
                         [_mainGameController.background removeMine:_game.mineImpactCoordinate];
                         [self sendMineHit:_game.mineImpactCoordinate];
+                        [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] removeObjectAtIndex:_game.mineImpactCoordinate.yCoord];
+                        [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:_game.mineImpactCoordinate.xCoord];
                         if ([_game isShipDestroyed:s.shipName]) {
                             [_mainGameController.ships removeShipFromScreen:s.shipName];
                         }
