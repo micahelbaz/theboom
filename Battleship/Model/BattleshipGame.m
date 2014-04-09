@@ -134,7 +134,8 @@ static BattleshipGame *sharedGame = nil;
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = origin.yCoord-i;
-                                NSLog(@"x: %i, y: %i", c.xCoord, c.yCoord);
+                                [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                                [self updateMap:_localPlayer.playerFleet];
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                             }
                         }
@@ -152,22 +153,26 @@ static BattleshipGame *sharedGame = nil;
                     Coordinate *c = [[Coordinate alloc]init];
                     c.yCoord = seg.location.yCoord;
                     c.xCoord = seg.location.xCoord;
+                    [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                    [self updateMap:_localPlayer.playerFleet];
                     [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                 }
             }
         }
         //Move Forwards
         if(origin.yCoord<destination.yCoord){
-            for(int i =0; i<s.size; i++){
+            for(int i =origin.yCoord; i<destination.yCoord; i++){
                 if([_gameMap.grid[origin.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_gameMap.grid[origin.xCoord][origin.yCoord+i] intValue];
                     if(terType == MINE){
-                        destination.yCoord = origin.xCoord+i;
+                        destination.yCoord = origin.yCoord+i;
                         for(ShipSegment *seg in s.blocks){
                             if(seg.location.yCoord == origin.yCoord+i){
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
                                 c.yCoord = origin.yCoord+i;
+                                [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
+                                [self updateMap:_localPlayer.playerFleet];
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                             }
                         }
