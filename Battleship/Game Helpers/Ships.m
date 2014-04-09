@@ -70,7 +70,7 @@
 }
 
 // Updates the ship location based on foreground node
-- (void) updateShipLocation:(SKNode*) newShipLocation
+- (Coordinate*) updateShipLocation:(SKNode*) newShipLocation
 {
     Coordinate* newLoc = [_helper fromTextureToCoordinate:newShipLocation.position];
     Ship *s = [_game.localPlayer.playerFleet getShipWithCoord:[ _helper fromTextureToCoordinate:_visualBar.shipActuallyClicked.position]];
@@ -85,7 +85,7 @@
     [_visualBar.shipClicked removeAllChildren];
     [_visualBar.shipClickedName removeAllChildren];
     [_foreground.movementLocationsSprites removeAllChildren];
-    [_game moveShipfrom:oldLoc to:newLoc];
+    return [_game moveShipfrom:oldLoc to:newLoc];
 }
 
 // Animates the ship movement - seems to work imperfectly

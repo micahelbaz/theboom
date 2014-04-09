@@ -23,7 +23,7 @@
 @property(strong, nonatomic) Player* localPlayer;
 
 + (BattleshipGame *)sharedInstance;
--(void)moveShipfrom: (Coordinate*) origin
+-(Coordinate*)moveShipfrom: (Coordinate*) origin
                  to:(Coordinate*) destination;
 -(NSMutableArray*) getValidMovesFrom:(Coordinate*)origin
                   withRadarPositions:(BOOL) radarPositions;

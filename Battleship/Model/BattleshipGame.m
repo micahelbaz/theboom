@@ -116,7 +116,7 @@ static BattleshipGame *sharedGame = nil;
     
 }
 
--(void)moveShipfrom:(Coordinate *)origin to:(Coordinate *)destination {
+-(Coordinate*)moveShipfrom:(Coordinate *)origin to:(Coordinate *)destination {
     
     Ship* s = [_localPlayer.playerFleet getShipWithCoord:origin];
     
@@ -125,15 +125,15 @@ static BattleshipGame *sharedGame = nil;
         //Move Sideways
         if(origin.yCoord == destination.yCoord){
             for(int i =0; i<s.size; i++){
-                if([_gameMap.grid[destination.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
-                    Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord+i] intValue];
+                if([_gameMap.grid[destination.xCoord][origin.yCoord-i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord-i] intValue];
                     if(terType == MINE){
                         destination = origin;
                         for(ShipSegment *seg in s.blocks){
-                            if(seg.location.yCoord == origin.yCoord+i){
+                            if(seg.location.yCoord == origin.yCoord-i){
                                 Coordinate *c = [[Coordinate alloc]init];
                                 c.xCoord = origin.xCoord;
-                                c.yCoord = origin.yCoord+i;
+                                c.yCoord = origin.yCoord-i;
                                 [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
                             }
                         }
@@ -196,7 +196,7 @@ static BattleshipGame *sharedGame = nil;
         }
         
     }
-    
+    return destination;
 }
 
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination {
@@ -980,24 +980,27 @@ endOfMethod:;
     k.isDestroyed = TRUE;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; i <= 1; j++) {
-            if ([_gameMap.grid[explosionLocation.xCoord+i][explosionLocation.yCoord+j] isKindOfClass:[ShipSegment class]]) {
-                ShipSegment *seg = (ShipSegment*) _gameMap.grid[explosionLocation.xCoord+i][explosionLocation.yCoord+j];
+            Coordinate *c = [[Coordinate alloc] initWithXCoordinate:explosionLocation.xCoord+i YCoordinate:explosionLocation.yCoord+j initiallyFacing:NONE];
+            if ([c isWithinMap]) {
+            if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[ShipSegment class]]) {
+                ShipSegment *seg = (ShipSegment*) _gameMap.grid[c.xCoord][c.yCoord];
                 if (_localPlayer.isHost) {
                     if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"h"]) {
-                        [self damageShipSegment:explosionLocation ownedBy:TRUE with:FALSE and:FALSE];
+                        [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
                     }
                     else {
-                        [self damageShipSegment:explosionLocation ownedBy:FALSE with:FALSE and:FALSE];
+                        [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
                     }
                 }
                 else {
                     if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"h"]) {
-                        [self damageShipSegment:explosionLocation ownedBy:FALSE with:FALSE and:FALSE];
+                        [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
                     }
                     else {
-                        [self damageShipSegment:explosionLocation ownedBy:TRUE with:FALSE and:FALSE];
+                        [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
                     }
                 }
+            }
             }
         }
     }

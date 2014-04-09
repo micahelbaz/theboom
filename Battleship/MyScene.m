@@ -301,8 +301,6 @@ typedef struct {
         Coordinate *c = [[Coordinate alloc]init];
         c.xCoord = hitCoordX;
         c.yCoord = hitCoordY;
-        MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
-        s.numMines--;
         [_game.gameMap.grid[hitCoordX] insertObject:[NSNumber numberWithInt:MINE] atIndex:hitCoordY];
         [_mainGameController.background addMine:c];
         _game.myTurn = FALSE;
@@ -390,9 +388,9 @@ typedef struct {
             // Move location touched
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.movementLocationsSprites])
             {
-                [_mainGameController.ships updateShipLocation:_nodeTouched];
+                Coordinate *destination = [_mainGameController.ships updateShipLocation:_nodeTouched];
                 Ship *s = _game.localPlayer.playerFleet.shipArray[_shipIndex];
-                [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:[_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position]];
+                [_mainGameController.ships.shipsNode childNodeWithName:s.shipName].position = [_mainGameController.ships positionShipSprite:[_mainGameController.ships.shipsNode childNodeWithName:s.shipName] atCoordinate:destination];
                 [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 //[self drawRadar];
                 [self sendTurn];
