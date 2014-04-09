@@ -427,6 +427,8 @@ typedef struct {
                         }
                         else if (terType == MINE) {
                             [_mainGameController.console setConsoleText:@"Mine Hit"];
+                            [_mainGameController.background removeMine:impactCoord];
+                            [self sendPickupMine:impactCoord];
                         }
                         else {
                             [_mainGameController.console setConsoleText:@"Base Hit"];
@@ -568,6 +570,8 @@ typedef struct {
                     else if (terType == MINE) {
                         [self sendCannonHit:squareTouched and:@"Mine Hit"];
                         [_mainGameController.console setConsoleText:@"Mine Hit"];
+                        [_mainGameController.background removeMine:squareTouched];
+                        [self sendPickupMine:squareTouched];
                     }
                     else {
                         [_mainGameController.console setConsoleText:@"Base Hit"];
@@ -596,6 +600,12 @@ typedef struct {
 
 -(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation{
     k.isDestroyed = TRUE;
+    ShipSegment *seg = k.blocks[0];
+    seg.segmentArmourType = DESTROYED;
+    if ([_game isShipDestroyed:k.shipName]) {
+        [_mainGameController.ships removeShipFromScreen:k.shipName];
+    }
+    [self sendTorpedoHit:[_game getShipIndexWithName:k.shipName] inEnemyFleet:FALSE];
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             Coordinate *c = [[Coordinate alloc] initWithXCoordinate:explosionLocation.xCoord+i YCoordinate:explosionLocation.yCoord+j initiallyFacing:NONE];
