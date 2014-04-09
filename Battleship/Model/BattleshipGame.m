@@ -469,9 +469,7 @@ static BattleshipGame *sharedGame = nil;
 -(void) damageShipSegment:(Coordinate*)impactCoord ownedBy:(BOOL) you with:(BOOL) heavyCannon and:(BOOL) adjacentSquare{
     
     Ship *s;
-    
     if ([_gameMap.grid[impactCoord.xCoord][impactCoord.yCoord] isKindOfClass:[ShipSegment class]]) {
-        
         ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
         
         int shipBlock = shipSeg.block;
@@ -487,13 +485,23 @@ static BattleshipGame *sharedGame = nil;
             if (shipBlock != 0) {
                 ShipSegment *adjacentSeg = s.blocks[shipBlock-1];
                 if (adjacentSeg.segmentArmourType != DESTROYED) {
+                    NSLog(@"damage next ship index part 1");
                     [s damageShipWithTorpedoAt:shipBlock-1 and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
                 }
                 else {
                     if (shipBlock != s.size-1) {
+                        NSLog(@"damage next ship index part 2");
                         [s damageShipWithTorpedoAt:shipBlock+1 and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
                     }
                 }
+            }
+            else if (shipBlock!= s.size-1){
+                ShipSegment *adjacentSeg = s.blocks[shipBlock+1];
+                if (adjacentSeg.segmentArmourType != DESTROYED) {
+                    NSLog(@"damage next ship index part 1");
+                    [s damageShipWithTorpedoAt:shipBlock+1 and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
+                }
+
             }
         }
     }
