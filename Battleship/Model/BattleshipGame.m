@@ -173,7 +173,6 @@ static BattleshipGame *sharedGame = nil;
     if ([s isKindOfClass:[Kamikaze class]]) {
         Kamikaze *k = (Kamikaze*) s;
         validMoves = [k getMoveLocations];
-        NSLog(@"valid moves");
         for(Coordinate *segmentLocation in validMoves) {
             if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[ShipSegment class]]) {
                 
@@ -189,7 +188,7 @@ static BattleshipGame *sharedGame = nil;
             
             else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
                 
-                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER) {
+                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER || [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
                     
                     [movesToBeRemoved addObject: segmentLocation];
                     
@@ -224,7 +223,7 @@ static BattleshipGame *sharedGame = nil;
             
             else if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] isKindOfClass:[NSNumber class]]) {
                 
-                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER) {
+                if ([_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != WATER || [_gameMap.grid[segmentLocation.xCoord][segmentLocation.yCoord] intValue] != MINE) {
                     
                     [movesToBeRemoved addObject: move];
                     
@@ -394,7 +393,7 @@ static BattleshipGame *sharedGame = nil;
         
         s = [_localPlayer.enemyFleet getShipWithCoord:impactCoord];
         
-        [s damageShipWithTorpedoAt:shipBlock and:_localPlayer.playerFleet.dockingCoordinates];
+        [s damageShipWithTorpedoAt:shipBlock and:_localPlayer.playerFleet.dockingCoordinates with:FALSE];
         
     }
     
@@ -406,7 +405,7 @@ static BattleshipGame *sharedGame = nil;
 
 
 
--(void) damageShipSegment:(Coordinate*)impactCoord{
+-(void) damageShipSegment:(Coordinate*)impactCoord ownedBy:(BOOL) you with:(BOOL) heavyCannon and:(BOOL) adjacentSquare{
     
     Ship *s;
     
@@ -415,11 +414,27 @@ static BattleshipGame *sharedGame = nil;
         ShipSegment *shipSeg = _gameMap.grid[impactCoord.xCoord][impactCoord.yCoord];
         
         int shipBlock = shipSeg.block;
-        
-        s = [_localPlayer.enemyFleet getShipWithCoord:impactCoord];
-        
-        [s damageShipWithTorpedoAt:shipBlock and:_localPlayer.playerFleet.dockingCoordinates];
-        
+        if (you) {
+            s = [_localPlayer.playerFleet getShipWithCoord:impactCoord];
+            
+        }
+        else {
+            s = [_localPlayer.enemyFleet getShipWithCoord:impactCoord];
+        }
+        [s damageShipWithTorpedoAt:shipBlock and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
+        if (adjacentSquare) {
+            if (shipBlock != 0) {
+                ShipSegment *adjacentSeg = s.blocks[shipBlock-1];
+                if (adjacentSeg.segmentArmourType != DESTROYED) {
+                    [s damageShipWithTorpedoAt:shipBlock-1 and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
+                }
+                else {
+                    if (shipBlock != s.size-1) {
+                        [s damageShipWithTorpedoAt:shipBlock+1 and:_localPlayer.playerFleet.dockingCoordinates with:heavyCannon];
+                    }
+                }
+            }
+        }
     }
     
 }
@@ -896,6 +911,17 @@ endOfMethod:;
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+-(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation inFleet:(BOOL) yours{
+    k.isDestroyed = TRUE;
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; i <= 1; j++) {
+            if ([_gameMap.grid[explosionLocation.xCoord+i][explosionLocation.yCoord+j] isKindOfClass:[ShipSegment class]]) {
+                [self damageShipSegment:explosionLocation ownedBy:yours with:FALSE and:FALSE];
             }
         }
     }

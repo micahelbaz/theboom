@@ -27,7 +27,6 @@
         [_textView setUserInteractionEnabled:YES];
         [_textView setEditable:NO];
         [_textView setBackgroundColor:[UIColor grayColor]];
-        [_textView setText:@"Welcome to Battleship"];
         
     }
     return self;

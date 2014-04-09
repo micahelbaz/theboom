@@ -400,7 +400,7 @@ typedef struct {
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
-                [_game damageShipSegment:squareTouched];
+                [_game damageShipSegment:squareTouched ownedBy:FALSE with:FALSE and:FALSE];
                 if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
                     [_mainGameController.console setConsoleText:@"Ship Hit"];
                     [self sendCannonHit:squareTouched and:@"Ship Hit"];
@@ -435,8 +435,8 @@ typedef struct {
             if([_nodeTouched.parent isEqual:_mainGameController.foreground.selfDistructSprites]){
                 [_mainGameController.foreground.selfDistructSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
-                [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
-                
+                Kamikaze *k = (Kamikaze*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                [_game explodeKamikazeBoat:k at:_nodeTouched];
             }
         }
     }

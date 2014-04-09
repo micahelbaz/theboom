@@ -37,7 +37,7 @@
 - (void)repair;
 - (void)rotate: (Rotation)destination;
 - (NSMutableArray*) getHeadLocationsOfMove;
--(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock;
+-(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock with:(BOOL)heavyCannon;
 -(void) toggleRepairStatus: (NSMutableArray*) dock;
 -(void) changeSpeed;
 @end

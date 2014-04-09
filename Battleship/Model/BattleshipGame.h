@@ -34,7 +34,7 @@
 -(NSMutableArray*) getValidRotationsFrom:(Coordinate*)origin;
 -(int)getShipIndexWithName:(NSString*)shipName;
 -(NSMutableArray*) getCanonRange:(Coordinate*)origin;
--(void) damageShipSegment:(Coordinate*)impactCoord;
+-(void) damageShipSegment:(Coordinate*)impactCoord ownedBy:(BOOL) you with:(BOOL) heavyCannon and:(BOOL) adjacentSquare;
 -(void)updateMap:(Fleet*) updatedFleet;
 -(void)moveEnemyShipfrom:(Coordinate *)origin to:(Coordinate *)destination;
 -(BOOL)isShipDestroyed:(NSString *) shipName;
@@ -42,5 +42,6 @@
 -(void)updateDockingZone;
 -(void) isAbleToDropMine:(MineLayer *)mineLayer;
 -(void) isAbleToPickupMine:(MineLayer *)mineLayer;
+-(void) explodeKamikazeBoat: (Kamikaze*)k at: (Coordinate*) explosionLocation;
 
 @end

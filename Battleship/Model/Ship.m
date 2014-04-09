@@ -72,7 +72,6 @@
     
     int i = 0;
     for (ShipSegment* seg in self.blocks) {
-        NSLog(@"BLOOOOoocks");
         switch (newCoord.direction) {
             case NORTH:
                 seg.location.xCoord = newCoord.xCoord;
@@ -402,11 +401,19 @@
     return viableMoves;
 }
 
--(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock{
+-(void) damageShipWithTorpedoAt:(int)blockNumber and:(NSMutableArray*)dock with:(BOOL)heavyCannon{
     ShipSegment* seg = _blocks[blockNumber];
-    if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
-        seg.segmentArmourType--;
+    if (heavyCannon) {
+        if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
+            seg.segmentArmourType = DESTROYED;
+        }
     }
+    else {
+        if (seg.segmentArmourType == HEAVY_ARMOUR || seg.segmentArmourType == NORMAL_ARMOUR) {
+            seg.segmentArmourType--;
+        }
+    }
+
     [self changeSpeed];
     [self toggleRepairStatus:dock];
 }
