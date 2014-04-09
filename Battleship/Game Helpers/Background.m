@@ -129,12 +129,13 @@
 
 -(void) addMine:(Coordinate *) mineLocation{
     SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:@"mine"];
+    
     NSMutableString *name = [[NSMutableString alloc]init];
-    [name appendString:@"mine"];
-    [name stringByAppendingFormat:@"%i", mineLocation.xCoord];
-    [name appendString:@"y"];
-    [name stringByAppendingFormat:@"%i", mineLocation.yCoord];
-
+    [name appendFormat:@"%@", @"mine"];
+    [name appendFormat:@"%i", mineLocation.xCoord];
+    [name appendFormat:@"%@", @"y"];
+    [name appendFormat:@"%i", mineLocation.yCoord];
+                             
     sprite.name = name;
     sprite.zRotation =  M_PI / 2;
     sprite.xScale = tileWidth/sprite.frame.size.height;
@@ -147,6 +148,49 @@
     
     
 }
+
+-(void)removeMine:(Coordinate*) mineLocation{
+    NSMutableArray *child = [[NSMutableArray alloc]init];
+   
+    for(SKNode *n in _backgroundNode.children){
+         NSLog(@"%@", [n.name substringWithRange:NSMakeRange(0, 8)]);
+        if([[n.name substringWithRange:NSMakeRange(0, 4)] isEqualToString:@"mine"]){
+            if((mineLocation.xCoord/10)>0){
+                if([[n.name substringWithRange:NSMakeRange(4, 2)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.xCoord]]){
+                    if(mineLocation.yCoord/10>0){
+                        if([[n.name substringWithRange:NSMakeRange(7, 2)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.yCoord]]){
+                            [child addObject:n];
+                            [_backgroundNode removeChildrenInArray:child];
+                        }
+                    }
+                    else{
+                        if([[n.name substringWithRange:NSMakeRange(7, 1)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.yCoord]]){
+                            [child addObject:n];
+                            [_backgroundNode removeChildrenInArray:child];
+                        }
+                    }
+                }
+            }
+            else{
+                if([[n.name substringWithRange:NSMakeRange(4, 1)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.xCoord]]){
+                    if(mineLocation.yCoord/10>0){
+                        if([[n.name substringWithRange:NSMakeRange(6, 2)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.yCoord]]){
+                            [child addObject:n];
+                            [_backgroundNode removeChildrenInArray:child];
+                        }
+                    }
+                    else{
+                        if([[n.name substringWithRange:NSMakeRange(6, 1)] isEqualToString:[NSString stringWithFormat:@"%i", mineLocation.yCoord]]){
+                            [child addObject:n];
+                            [_backgroundNode removeChildrenInArray:child];
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 // Scolls the background screens
 - (void) scrollBackgrounds {
     SKNode* background1 = [_backgroundNode childNodeWithName:background1SpriteName];

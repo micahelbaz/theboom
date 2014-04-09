@@ -131,6 +131,7 @@ static BattleshipGame *sharedGame = nil;
         if([ship isKindOfClass:[MineLayer class]]){
             
             [self isAbleToDropMine:(MineLayer*)ship];
+            [self isAbleToPickupMine:(MineLayer*)ship];
             
         }
         
@@ -153,6 +154,7 @@ static BattleshipGame *sharedGame = nil;
         if([ship isKindOfClass:[MineLayer class]]){
             
             [self isAbleToDropMine:(MineLayer*)ship];
+            [self isAbleToPickupMine:(MineLayer*)ship];
             
         }
         
@@ -625,19 +627,17 @@ static BattleshipGame *sharedGame = nil;
         
         
         for(Coordinate *c in coordinates){
-                if([c isWithinMap]){
+            if([c isWithinMap]){
+                
+                if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
                     
-                    if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    if(terType == WATER && mineLayer.numMines>0){
                         
-                        Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
                         
-                        if(terType == WATER && mineLayer.numMines>0){
-                            
-                            [mineLayer.viableActions addObject:@"DropMine"];
-                            
-                            goto endOfMethod;
-                            
-                        }
+                        [mineLayer.viableActions addObject:@"DropMine"];
+                        
+                        goto endOfMethod;
                         
                     }
                     
@@ -646,48 +646,48 @@ static BattleshipGame *sharedGame = nil;
             }
             
         }
-        else{
         
-            Coordinate *rightOfShip1 = [[Coordinate alloc]init];
-            Coordinate *rightOfShip2 = [[Coordinate alloc]init];
-            Coordinate *leftOfShip1 = [[Coordinate alloc]init];
-            Coordinate *leftOfShip2 = [[Coordinate alloc]init];
-            Coordinate *aboveShip = [[Coordinate alloc]init];
-            Coordinate *belowShip = [[Coordinate alloc]init];
-            rightOfShip1.xCoord = mineLayer.location.xCoord+1;
-            rightOfShip1.yCoord = mineLayer.location.yCoord;
-            rightOfShip2.xCoord = mineLayer.location.xCoord+1;
-            rightOfShip2.yCoord = mineLayer.location.yCoord+1;
-            leftOfShip1.xCoord = mineLayer.location.xCoord-1;
-            leftOfShip1.yCoord = mineLayer.location.yCoord;
-            leftOfShip2.xCoord = mineLayer.location.xCoord-1;
-            leftOfShip2.yCoord = mineLayer.location.yCoord+1;
-            aboveShip.yCoord = mineLayer.location.yCoord-1;
-            aboveShip.xCoord = mineLayer.location.xCoord;
-            belowShip.xCoord = mineLayer.location.xCoord;
-            belowShip.yCoord = mineLayer.location.yCoord+2;
-            NSMutableArray *coordinates = [[NSMutableArray alloc]init];
-            [coordinates addObject:leftOfShip1];
-            [coordinates addObject:leftOfShip2];
-            [coordinates addObject:rightOfShip1];
-            [coordinates addObject:rightOfShip2];
-            [coordinates addObject:aboveShip];
-            [coordinates addObject:belowShip];
-            for(Coordinate *c in coordinates){
+    }
+    else{
+        
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        rightOfShip1.xCoord = mineLayer.location.xCoord+1;
+        rightOfShip1.yCoord = mineLayer.location.yCoord;
+        rightOfShip2.xCoord = mineLayer.location.xCoord+1;
+        rightOfShip2.yCoord = mineLayer.location.yCoord+1;
+        leftOfShip1.xCoord = mineLayer.location.xCoord-1;
+        leftOfShip1.yCoord = mineLayer.location.yCoord;
+        leftOfShip2.xCoord = mineLayer.location.xCoord-1;
+        leftOfShip2.yCoord = mineLayer.location.yCoord+1;
+        aboveShip.yCoord = mineLayer.location.yCoord-1;
+        aboveShip.xCoord = mineLayer.location.xCoord;
+        belowShip.xCoord = mineLayer.location.xCoord;
+        belowShip.yCoord = mineLayer.location.yCoord+2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        for(Coordinate *c in coordinates){
+            
+            if([c isWithinMap]){
                 
-                if([c isWithinMap]){
+                if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
                     
-                    if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    
+                    if(terType == WATER && mineLayer.numMines>0){
                         
-                        Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
+                        [mineLayer.viableActions addObject:@"DropMine"];
                         
-                        if(terType == WATER && mineLayer.numMines>0){
-                            
-                            [mineLayer.viableActions addObject:@"DropMine"];
-                            
-                            goto endOfMethod;
-                            
-                        }
+                        goto endOfMethod;
                         
                     }
                     
@@ -696,9 +696,127 @@ static BattleshipGame *sharedGame = nil;
             }
             
         }
+        
+    }
 endOfMethod:;
     
 }
+
+-(void) isAbleToPickupMine:(MineLayer *)mineLayer{
+    for(int i = 0; i<30; i++){
+        for(int j = 0; j<30; j++){
+            if([_gameMap.grid[i][j] isKindOfClass:[NSNumber class]]){
+                Terrain tertype = [_gameMap.grid[i][j] intValue];
+                if(tertype == MINE){
+                    NSLog(@"MINE: x: %i y: %i", i, j);
+                }
+            }
+        }
+    }
+    [mineLayer.viableActions removeObject:@"PickupMine"];
+    if(mineLayer.location.direction == NORTH){
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        rightOfShip1.xCoord = mineLayer.location.xCoord+1;
+        rightOfShip1.yCoord = mineLayer.location.yCoord;
+        rightOfShip2.xCoord = mineLayer.location.xCoord+1;
+        rightOfShip2.yCoord = mineLayer.location.yCoord-1;
+        leftOfShip1.xCoord = mineLayer.location.xCoord-1;
+        leftOfShip1.yCoord = mineLayer.location.yCoord;
+        leftOfShip2.xCoord = mineLayer.location.xCoord-1;
+        leftOfShip2.yCoord = mineLayer.location.yCoord-1;
+        aboveShip.yCoord = mineLayer.location.yCoord+1;
+        aboveShip.xCoord = mineLayer.location.xCoord;
+        belowShip.xCoord = mineLayer.location.xCoord;
+        belowShip.yCoord = mineLayer.location.yCoord-2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        
+        
+        for(Coordinate *c in coordinates){
+            if([c isWithinMap]){
+                
+                if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    
+                    Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    if(terType == MINE){
+                        
+                        [mineLayer.viableActions addObject:@"PickupMine"];
+                        goto endOfMethod;
+                    }
+
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    else{
+        
+        Coordinate *rightOfShip1 = [[Coordinate alloc]init];
+        Coordinate *rightOfShip2 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip1 = [[Coordinate alloc]init];
+        Coordinate *leftOfShip2 = [[Coordinate alloc]init];
+        Coordinate *aboveShip = [[Coordinate alloc]init];
+        Coordinate *belowShip = [[Coordinate alloc]init];
+        rightOfShip1.xCoord = mineLayer.location.xCoord+1;
+        rightOfShip1.yCoord = mineLayer.location.yCoord;
+        rightOfShip2.xCoord = mineLayer.location.xCoord+1;
+        rightOfShip2.yCoord = mineLayer.location.yCoord+1;
+        leftOfShip1.xCoord = mineLayer.location.xCoord-1;
+        leftOfShip1.yCoord = mineLayer.location.yCoord;
+        leftOfShip2.xCoord = mineLayer.location.xCoord-1;
+        leftOfShip2.yCoord = mineLayer.location.yCoord+1;
+        aboveShip.yCoord = mineLayer.location.yCoord-1;
+        aboveShip.xCoord = mineLayer.location.xCoord;
+        belowShip.xCoord = mineLayer.location.xCoord;
+        belowShip.yCoord = mineLayer.location.yCoord+2;
+        NSMutableArray *coordinates = [[NSMutableArray alloc]init];
+        [coordinates addObject:leftOfShip1];
+        [coordinates addObject:leftOfShip2];
+        [coordinates addObject:rightOfShip1];
+        [coordinates addObject:rightOfShip2];
+        [coordinates addObject:aboveShip];
+        [coordinates addObject:belowShip];
+        for(Coordinate *c in coordinates){
+            
+            if([c isWithinMap]){
+                
+                if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[NSNumber class]]) {
+                    
+                    Terrain terType = [_gameMap.grid[c.xCoord][c.yCoord] intValue];
+                    
+                    if(terType == MINE){
+                        NSLog(@"Test");
+                        [mineLayer.viableActions addObject:@"PickupMine"];
+                        
+                        goto endOfMethod;
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+endOfMethod:;
+    
+}
+
+
 
 -(void) removeBaseSquare:(Coordinate *)destroyedBaseSquare {
     [_gameMap.grid[destroyedBaseSquare.xCoord] removeObjectAtIndex:destroyedBaseSquare.yCoord];

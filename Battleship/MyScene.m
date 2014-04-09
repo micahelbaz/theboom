@@ -163,6 +163,21 @@ typedef struct {
     
 }
 
+-(void)sendCannonHit:(Coordinate*)hitLocation and:(NSString*)hitType{
+    NSError* error;
+    NSMutableArray* cannonDetails = [[NSMutableArray alloc] init];
+    [cannonDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"cannonHitData"]];
+    [cannonDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:hitLocation.xCoord]]];
+    [cannonDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:hitLocation.yCoord]]];
+    [cannonDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:hitType]];
+    NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:cannonDetails];
+    [_game.gameCenter.match sendDataToAllPlayers: packet withDataMode:GKMatchSendDataUnreliable error:&error];
+    if (error != nil) {
+        NSLog(@"error");
+    }
+
+}
+
 -(void) match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID {
     NSMutableArray* receivedMessage = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSString* type = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[0]];
@@ -254,6 +269,16 @@ typedef struct {
     }
     else if([type isEqualToString:@"turnTaken"]) {
         _game.myTurn = TRUE;
+    }
+    else if([type isEqualToString:@"cannonHitData"]){
+        int hitCoordX =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[1]] intValue];
+        int hitCoordY =[(NSNumber *)[NSKeyedUnarchiver unarchiveObjectWithData: receivedMessage[2]] intValue];
+        NSString *hitType = (NSString*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedMessage[3]];
+        [_mainGameController.console setConsoleText:hitType];
+        [_mainGameController.console setConsoleText:@"\n"];
+        [_mainGameController.console setConsoleText:@"At Coordinate:\n"];
+        NSString *string = [NSString stringWithFormat:@"X: %i, Y: %i", hitCoordX, hitCoordY];
+        [_mainGameController.console setConsoleText:string];
     }
 }
 
@@ -349,18 +374,36 @@ typedef struct {
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
                 
-             
+                MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                s.numMines--;
                 [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:MINE] atIndex:squareTouched.yCoord];
-                   [_mainGameController.background addMine:squareTouched];
-                
+                [_mainGameController.background addMine:squareTouched];
+                _game.myTurn = FALSE;
+                [self sendTurn];
                 
             }
+            if([_nodeTouched.parent isEqual:_mainGameController.foreground.pickupMineRangeSprites]){
+                [_mainGameController.foreground.pickupMineRangeSprites removeAllChildren];
+                Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
+                [_game.gameMap.grid[squareTouched.xCoord] removeObjectAtIndex:squareTouched.yCoord];
+                MineLayer *s = (MineLayer*) _game.localPlayer.playerFleet.shipArray[_shipIndex];
+                s.numMines++;
+                ///////////////////////
+                [_game.gameMap.grid[squareTouched.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:squareTouched.yCoord];
+                [_mainGameController.background removeMine:squareTouched];
+                _game.myTurn = FALSE;
+                [self sendTurn];
+                
+            }
+            
+            
             if ([_nodeTouched.parent isEqual:_mainGameController.foreground.canonRangeSprites]){
                 [_mainGameController.foreground.canonRangeSprites removeAllChildren];
                 Coordinate *squareTouched = [_mainGameController.helper fromTextureToCoordinate:_nodeTouched.position];
                 [_game damageShipSegment:squareTouched];
                 if([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[ShipSegment class]]){
                     [_mainGameController.console setConsoleText:@"Ship Hit"];
+                    [self sendCannonHit:squareTouched and:@"Ship Hit"];
                     ShipSegment *seg = _game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord];
                     [self sendTorpedoHit:[self getShipIndexFromName:seg.shipName]];
                     if ([_game isShipDestroyed:seg.shipName]) {
@@ -370,18 +413,22 @@ typedef struct {
                 if ([_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] isKindOfClass:[NSNumber class]]) {
                     Terrain terType = [_game.gameMap.grid[squareTouched.xCoord][squareTouched.yCoord] intValue];
                     if (terType == CORAL) {
+                        [self sendCannonHit:squareTouched and:@"Coral Hit"];
                         [_mainGameController.console setConsoleText:@"Coral Hit"];
                     }
                     else if (terType == WATER) {
+                        [self sendCannonHit:squareTouched and:@"Shot Fell into the Water"];
                         [_mainGameController.console setConsoleText:@"Shot Fell into the Water"];
                     }
                     else {
                         [_mainGameController.console setConsoleText:@"Base Hit"];
+                        [self sendCannonHit:squareTouched and:@"Base Hit"];
                         [self sendBaseHit:squareTouched.xCoord and:squareTouched.yCoord];
                         [_mainGameController.background removeBaseFromScreen:squareTouched.xCoord and:squareTouched.yCoord];
                         [_game removeBaseSquare:squareTouched];
                     }
                 }
+                
                 [self sendTurn];
                 _game.myTurn = FALSE;
             }
@@ -394,6 +441,8 @@ typedef struct {
         }
     }
 }
+
+
 
 
 
