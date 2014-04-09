@@ -201,7 +201,7 @@ typedef struct {
 -(void)sendPickupMine:(Coordinate*)mineLocation{
     NSError* error;
     NSMutableArray* mineDetails = [[NSMutableArray alloc] init];
-    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"pickupMineHitData"]];
+    [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject:@"pickupMineData"]];
     [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.xCoord]]];
     [mineDetails addObject: [NSKeyedArchiver archivedDataWithRootObject: [NSNumber numberWithInt:mineLocation.yCoord]]];
     NSData *packet = [NSKeyedArchiver archivedDataWithRootObject:mineDetails];
@@ -584,6 +584,9 @@ typedef struct {
                         else {
                             [_game damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
                         }
+                    }
+                    if ([_game isShipDestroyed:seg.shipName]) {
+                        [_mainGameController.ships removeShipFromScreen:seg.shipName];
                     }
                     if (_game.localPlayer.isHost) {
                         if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {

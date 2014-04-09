@@ -379,7 +379,7 @@
     ship.name = [NSString stringWithFormat:@"%i", index];
     ship.xScale = _fleetBackground.frame.size.width/24/ship.frame.size.width;
     ship.yScale = _fleetBackground.frame.size.width/24/ship.frame.size.height * [sizes[shipIndex]intValue];
-    ship.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame) + (7.5 + index)*ship.frame.size.width, [sizes[shipIndex]intValue] * _fleetBackground.frame.size.width/24 - ship.frame.size.height/2 + _fleetBackground.frame.size.height/10);
+    ship.position = CGPointMake(CGRectGetMinX(_fleetBackground.frame) + (7.5 + index)*ship.frame.size.width, [sizes[shipIndex]intValue] * _fleetBackground.frame.size.width/24 - ship.frame.size.height/2 + 2*_fleetBackground.frame.size.height/10);
     [self addChild:ship];
     _placedShip[index] = [NSNumber numberWithInt:shipIndex];
     _unplacedShips[shipIndex] = @"nil";
