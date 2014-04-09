@@ -1085,36 +1085,7 @@ endOfMethod:;
     }
 }
 
--(void) explodeKamikazeBoat:(Kamikaze *) k at:(Coordinate *)explosionLocation{
-    k.isDestroyed = TRUE;
-    for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-            Coordinate *c = [[Coordinate alloc] initWithXCoordinate:explosionLocation.xCoord+i YCoordinate:explosionLocation.yCoord+j initiallyFacing:NONE];
-            if ([c isWithinMap]) {
-                if ([_gameMap.grid[c.xCoord][c.yCoord] isKindOfClass:[ShipSegment class]]) {
-                    ShipSegment *seg = (ShipSegment*) _gameMap.grid[c.xCoord][c.yCoord];
-                    if (_localPlayer.isHost) {
-                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
-                            NSLog(@"hello");
-                            [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
-                        }
-                        else {
-                            [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
-                        }
-                    }
-                    else {
-                        if ([[seg.shipName substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"H"]) {
-                            [self damageShipSegment:c ownedBy:FALSE with:FALSE and:FALSE];
-                        }
-                        else {
-                            [self damageShipSegment:c ownedBy:TRUE with:FALSE and:FALSE];
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+
 
 
 @end
