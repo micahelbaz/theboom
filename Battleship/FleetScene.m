@@ -315,7 +315,7 @@
         }
         }
     }
-}
+
 
 
 -(void) placeNextShipAtIndex: (int) index {
