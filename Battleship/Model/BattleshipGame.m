@@ -123,7 +123,6 @@ static BattleshipGame *sharedGame = nil;
     
     [self removeShipFromMap: s];
     //added this line
-    _mineImpactCoordinate = [[Coordinate alloc]init];
     if(destination.direction == NORTH){
         //Move Sideways
         if(origin.yCoord == destination.yCoord){
@@ -282,20 +281,11 @@ static BattleshipGame *sharedGame = nil;
                         Coordinate *c = [[Coordinate alloc]init];
                         c.xCoord = origin.xCoord;
                         c.yCoord = i+1;
+                        NSLog(@"Impact Coordinate in BattleshipGame: %d,%d", _mineImpactCoordinate.xCoord, _mineImpactCoordinate.yCoord);
                         [s positionShip: c isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
                         [self updateMap:_localPlayer.playerFleet];
                         if (![s isKindOfClass:[MineLayer class]]) {
                             [self damageShipSegment:c ownedBy:TRUE with:TRUE and:TRUE];
-                        }
-                        NSLog(@"x:%d , y:%d", c.xCoord, c.yCoord);
-                        for (int j = 0; j < 30; j++) {
-                            for (int k = 0; k < 30; k++) {
-                                if ([_gameMap.grid[j][k] isKindOfClass:[ShipSegment class]]) {
-                                    ShipSegment *seggy = _gameMap.grid[j][k];
-                                    NSLog(@"%@", seggy.shipName);
-                                    NSLog(@"xCoord:%d , yCoord:%d", seggy.location.xCoord, seggy.location.yCoord);
-                                }
-                            }
                         }
                         //                            }
                         //                        }

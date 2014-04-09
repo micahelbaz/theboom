@@ -483,9 +483,10 @@ typedef struct {
                 [self sendMoveFromShipAtIndex:_shipIndex fromOrigin:_moveFromCoordinate];
                 if([_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] isKindOfClass:[NSNumber class]]){
                     Terrain terType = [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord][_game.mineImpactCoordinate.yCoord] intValue];
-                    
+                     NSLog(@"Impact Coordinate in MyScene: %d,%d", _game.mineImpactCoordinate.xCoord, _game.mineImpactCoordinate.yCoord);
                     if(terType == MINE){
-                        [_mainGameController.background removeMine:_game.mineImpactCoordinate];
+                       
+                        
                         [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] removeObjectAtIndex:_game.mineImpactCoordinate.yCoord];
                         [_game.gameMap.grid[_game.mineImpactCoordinate.xCoord] insertObject:[NSNumber numberWithInt:WATER] atIndex:_game.mineImpactCoordinate.xCoord];
                         [self sendPickupMine:_game.mineImpactCoordinate];
@@ -494,6 +495,7 @@ typedef struct {
                             [_mainGameController.ships removeShipFromScreen:s.shipName];
                         }
                         [self sendTorpedoHit:[_game getShipIndexWithName:s.shipName] inEnemyFleet:FALSE];
+                        [_mainGameController.background removeMine:_game.mineImpactCoordinate];
                     }
                     
                 }
