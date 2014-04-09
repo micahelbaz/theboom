@@ -88,7 +88,7 @@ static BattleshipGame *sharedGame = nil;
     
     for(Ship* ship in updatedFleet.shipArray) {
         
-
+        
         
         for(ShipSegment* seg in ship.blocks) {
             
@@ -121,10 +121,70 @@ static BattleshipGame *sharedGame = nil;
     Ship* s = [_localPlayer.playerFleet getShipWithCoord:origin];
     
     [self removeShipFromMap: s];
+    if(destination.direction == NORTH){
+        //Move Sideways
+        if(origin.yCoord == destination.yCoord){
+            for(int i =0; i<s.size; i++){
+                if([_gameMap.grid[destination.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[destination.xCoord][origin.yCoord+i] intValue];
+                    if(terType == MINE){
+                        destination = origin;
+                        for(ShipSegment *seg in s.blocks){
+                            if(seg.location.yCoord == origin.yCoord+i){
+                                Coordinate *c = [[Coordinate alloc]init];
+                                c.xCoord = origin.xCoord;
+                                c.yCoord = origin.yCoord+i;
+                                [self damageShipSegment:c];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //Move Backwards
+        if(origin.yCoord>destination.yCoord){
+            if([_gameMap.grid[destination.xCoord][destination.yCoord-s.size] isKindOfClass:[NSNumber class]]){
+                Terrain terType = [_gameMap.grid[destination.xCoord][destination.yCoord-s.size] intValue];
+                if(terType == MINE){
+                    destination = origin;
+                    ShipSegment *seg = s.blocks.lastObject;
+                    Coordinate *c = [[Coordinate alloc]init];
+                    c.yCoord = seg.location.yCoord;
+                    c.xCoord = seg.location.xCoord;
+                    [self damageShipSegment:c];
+                }
+            }
+        }
+        //Move Forwards
+        if(origin.yCoord<destination.yCoord){
+            for(int i =0; i<s.size; i++){
+                if([_gameMap.grid[origin.xCoord][origin.yCoord+i] isKindOfClass:[NSNumber class]]){
+                    Terrain terType = [_gameMap.grid[origin.xCoord][origin.yCoord+i] intValue];
+                    if(terType == MINE){
+                        destination.yCoord = origin.xCoord+i;
+                        for(ShipSegment *seg in s.blocks){
+                            if(seg.location.yCoord == origin.yCoord+i){
+                                Coordinate *c = [[Coordinate alloc]init];
+                                c.xCoord = origin.xCoord;
+                                c.yCoord = origin.yCoord+i;
+                                [self damageShipSegment:c];
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    else{
+        
+    }
     
     [s positionShip: destination isHost:TRUE dockingArray:_localPlayer.playerFleet.dockingCoordinates];
     
     [self updateMap:_localPlayer.playerFleet];
+    
+    
     
     for(Ship* ship in _localPlayer.playerFleet.shipArray){
         
@@ -768,7 +828,7 @@ endOfMethod:;
                         [mineLayer.viableActions addObject:@"PickupMine"];
                         goto endOfMethod;
                     }
-
+                    
                     
                 }
                 
